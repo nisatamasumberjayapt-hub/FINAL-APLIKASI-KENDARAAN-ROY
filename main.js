@@ -4,7 +4,7 @@
  ****************************************************/
 
 // ===== KONFIGURASI =====
-const API_URL = "https://script.google.com/macros/s/AKfycbw6J5kgoQQYzYZZ5_BeI2P4_1A34HdeUuMnIElupuUqm1aobByMtNctcWNlxcnZePZW/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwzk2xRIy-DMHuP_AUMtwAbKKEvFa1i3dycK7eSFwsHInh3MX5oSBP5ngCVHAWSzfvc/exec";
 console.log("✅ main.js dimuat — PT ANISA JAYA UTAMA");
 
 // ===== HELPER FETCH TANPA CORS =====
@@ -123,6 +123,29 @@ async function simpanKendaraan() {
     toast("⚠️ Terjadi kesalahan koneksi atau server.");
   }
 }
+// ===== LOAD USERS (dummy) =====
+async function loadUsers() {
+  const tbl = document.getElementById("tblUser");
+  if (!tbl) return;
+
+  try {
+    const data = await api("getUsers");
+    if (data.success && data.users && data.users.length > 0) {
+      tbl.innerHTML = data.users.map(u =>
+        `<tr>
+          <td>${u.nama}</td>
+          <td>${u.username}</td>
+          <td>${u.role}</td>
+        </tr>`
+      ).join("");
+    } else {
+      tbl.innerHTML = `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
+    }
+  } catch (err) {
+    console.error(err);
+    tbl.innerHTML = `<tr><td colspan="3" align="center">⚠️ Gagal memuat data user</td></tr>`;
+  }
+}
 
 // ===== EVENT BIND =====
 document.addEventListener("DOMContentLoaded", () => {
@@ -143,3 +166,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("🔍 Semua fungsi siap — PT ANISA JAYA UTAMA");
 });
+
