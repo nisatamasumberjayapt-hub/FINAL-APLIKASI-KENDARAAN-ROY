@@ -4,8 +4,8 @@
  ****************************************************/
 
 // =================== KONFIGURASI ===================
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec"; // GANTI jika perlu
+const API_URL = "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec");
+// GANTI jika perlu
 
 // =================== UTILITAS ===================
 function toast(msg) {
