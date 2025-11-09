@@ -1,89 +1,136 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * Frontend Logic (main.js) FINAL FIX (CORS-SAFE)
+ * Frontend Logic (main.js) — FINAL STABIL v1.0
+ * Sudah terhubung ke database utama
  ****************************************************/
 
-// ===== KONFIGURASI =====
-const API_URL = "https://script.google.com/macros/s/AKfycbwzk2xRIy-DMHuP_AUMtwAbKKEvFa1i3dycK7eSFwsHInh3MX5oSBP5ngCVHAWSzfvc/exec";
-console.log("✅ main.js dimuat — PT ANISA JAYA UTAMA");
+const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec";
+console.log("✅ main.js aktif & terhubung ke database utama");
 
-// ===== HELPER FETCH TANPA CORS =====
+// === HELPER FETCH TANPA CORS ===
 async function api(action, payload = {}) {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" }, // ← kunci anti-preflight
-    body: JSON.stringify({ action, ...payload })
-  });
-
-  const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); }
-  catch { throw new Error("Response bukan JSON:\n" + text.slice(0, 500)); }
-  return data;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload })
+    });
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("⚠️ Response bukan JSON:", text);
+      return { success: false, message: "Response tidak valid" };
+    }
+  } catch (err) {
+    console.error("❌ Fetch error:", err);
+    return { success: false, message: "Gagal menghubungi server" };
+  }
 }
 
-// ===== UTILITAS =====
+// === UTILITAS ===
 function toast(msg) { alert(msg); }
 function getSession() { return JSON.parse(localStorage.getItem("aj_user") || "null"); }
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
 
-// ===== LOGIN =====
+// === LOGIN ===
 async function login() {
-  const btn = document.getElementById("btnLogin");
-  if (btn) btn.disabled = true;
+  const username = document.getElementById("username")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+  if (!username || !password) return toast("⚠️ Isi semua field!");
 
-  try {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if (!username || !password) {
-      toast("⚠️ Isi semua field!");
-      return;
-    }
-
-    const data = await api("login", { username, password });
-    if (data.success) {
-      setSession(data.user);
-      toast("✅ Login berhasil!");
-      location.href = "dashboard.html";
-    } else {
-      toast(data.message || "Login gagal.");
-    }
-  } catch (e) {
-    console.error(e);
-    toast("⚠️ Kesalahan koneksi atau server.");
-  } finally {
-    if (btn) btn.disabled = false;
+  const data = await api("login", { username, password });
+  if (data.success) {
+    setSession(data.user);
+    toast("✅ Login berhasil!");
+    location.href = "dashboard.html";
+  } else {
+    toast(data.message || "❌ Login gagal");
   }
 }
 
-// ===== REGISTER =====
+// === REGISTER ===
 async function register() {
-  const nama = document.getElementById("nama")?.value.trim() || "";
-  const username = document.getElementById("username")?.value.trim() || "";
-  const password = document.getElementById("password")?.value.trim() || "";
+  const nama = document.getElementById("nama")?.value.trim();
+  const username = document.getElementById("username")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+  if (!nama || !username || !password) return toast("⚠️ Semua field wajib diisi!");
 
-  if (!nama || !username || !password) {
-    toast("⚠️ Semua field wajib diisi.");
-    return;
-  }
-
-  try {
-    const data = await api("register", { nama, username, password });
-    if (data.success) {
-      toast("✅ Registrasi berhasil!");
-      location.href = "login.html";
-    } else {
-      toast(data.message || "Gagal mendaftar.");
-    }
-  } catch (e) {
-    console.error(e);
-    toast("⚠️ Kesalahan koneksi atau server.");
+  const data = await api("register", { nama, username, password });
+  if (data.success) {
+    toast("✅ Registrasi berhasil!");
+    location.href = "login.html";
+  } else {
+    toast(data.message || "❌ Gagal mendaftar");
   }
 }
 
-// ===== TOGGLE PASSWORD =====
+// === TAMBAH KENDARAAN ===
+async function simpanKendaraan() {
+  const PlatNomor = document.getElementById("PlatNomor")?.value.trim();
+  const Letak = document.getElementById("Letak")?.value.trim();
+  const STNK = document.getElementById("STNK")?.value.trim();
+  const KIR = document.getElementById("KIR")?.value.trim();
+  const ServisTerakhir = document.getElementById("ServisTerakhir")?.value.trim();
+
+  if (!PlatNomor || !Letak || !STNK || !KIR || !ServisTerakhir)
+    return toast("⚠️ Semua kolom wajib diisi!");
+
+  const data = await api("addKendaraan", { PlatNomor, Letak, STNK, KIR, ServisTerakhir });
+  if (data.success) {
+    toast("✅ Kendaraan berhasil disimpan!");
+    location.href = "dashboard.html";
+  } else {
+    toast("❌ " + (data.message || "Gagal menyimpan data kendaraan"));
+  }
+}
+
+// === AMBIL DATA USER (KHUSUS ADMIN) ===
+async function loadUsers() {
+  const tbl = document.getElementById("tblUser");
+  if (!tbl) return;
+  tbl.innerHTML = `<tr><td colspan="3" align="center">Memuat data...</td></tr>`;
+
+  const data = await api("getUsers");
+  if (data.success && data.data?.length) {
+    tbl.innerHTML = data.data.map(u => `
+      <tr>
+        <td>${u.nama}</td>
+        <td>${u.username}</td>
+        <td>${u.role}</td>
+      </tr>
+    `).join("");
+  } else {
+    tbl.innerHTML = `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
+  }
+}
+
+// === AMBIL DATA KENDARAAN UNTUK DASHBOARD ===
+async function doSearch() {
+  const qPlat = document.getElementById("qPlat")?.value.trim() || "";
+  const qLetak = document.getElementById("qLetak")?.value.trim() || "";
+  const tbody = document.querySelector("#tblKendaraan tbody");
+  tbody.innerHTML = `<tr><td colspan="6" align="center">Memuat...</td></tr>`;
+
+  const data = await api("getKendaraan", { qPlat, qLetak });
+  if (data.success && data.data?.length) {
+    tbody.innerHTML = data.data.map(k => `
+      <tr>
+        <td>${k.PlatNomor}</td>
+        <td>${k.Letak}</td>
+        <td>${k.STNK}</td>
+        <td>${k.KIR}</td>
+        <td>${k.ServisTerakhir}</td>
+        <td>-</td>
+      </tr>
+    `).join("");
+  } else {
+    tbody.innerHTML = `<tr><td colspan="6" align="center">Tidak ada data kendaraan</td></tr>`;
+  }
+}
+
+// === TOGGLE PASSWORD ===
 function togglePassword() {
   const p = document.getElementById("password");
   const t = document.getElementById("togglePass");
@@ -97,73 +144,11 @@ function togglePassword() {
   }
 }
 
-// ===== SIMPAN KENDARAAN (dummy dulu) =====
-async function simpanKendaraan() {
-  const PlatNomor = document.getElementById("PlatNomor").value.trim();
-  const Letak = document.getElementById("Letak").value.trim();
-  const STNK = document.getElementById("STNK").value.trim();
-  const KIR = document.getElementById("KIR").value.trim();
-  const ServisTerakhir = document.getElementById("ServisTerakhir").value.trim();
-
-  if (!PlatNomor || !Letak || !STNK || !KIR || !ServisTerakhir) {
-    toast("⚠️ Semua kolom wajib diisi!");
-    return;
-  }
-
-  try {
-    const data = await api("addKendaraan", { PlatNomor, Letak, STNK, KIR, ServisTerakhir });
-    if (data.success) {
-      toast("✅ Data kendaraan berhasil disimpan!");
-      location.href = "dashboard.html";
-    } else {
-      toast("❌ Gagal menyimpan data kendaraan.");
-    }
-  } catch (err) {
-    console.error(err);
-    toast("⚠️ Terjadi kesalahan koneksi atau server.");
-  }
-}
-// ===== LOAD USERS (dummy) =====
-async function loadUsers() {
-  const tbl = document.getElementById("tblUser");
-  if (!tbl) return;
-
-  try {
-    const data = await api("getUsers");
-    if (data.success && data.users && data.users.length > 0) {
-      tbl.innerHTML = data.users.map(u =>
-        `<tr>
-          <td>${u.nama}</td>
-          <td>${u.username}</td>
-          <td>${u.role}</td>
-        </tr>`
-      ).join("");
-    } else {
-      tbl.innerHTML = `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
-    }
-  } catch (err) {
-    console.error(err);
-    tbl.innerHTML = `<tr><td colspan="3" align="center">⚠️ Gagal memuat data user</td></tr>`;
-  }
-}
-
-// ===== EVENT BIND =====
+// === EVENT BIND ===
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("togglePass")?.addEventListener("click", e => {
-    e.preventDefault();
-    togglePassword();
-  });
-
-  document.getElementById("btnLogin")?.addEventListener("click", e => {
-    e.preventDefault();
-    login();
-  });
-
-  document.getElementById("btnRegister")?.addEventListener("click", e => {
-    e.preventDefault();
-    register();
-  });
-
-  console.log("🔍 Semua fungsi siap — PT ANISA JAYA UTAMA");
+  document.getElementById("btnLogin")?.addEventListener("click", e => { e.preventDefault(); login(); });
+  document.getElementById("btnRegister")?.addEventListener("click", e => { e.preventDefault(); register(); });
+  document.getElementById("btnSimpan")?.addEventListener("click", e => { e.preventDefault(); simpanKendaraan(); });
+  document.getElementById("togglePass")?.addEventListener("click", e => { e.preventDefault(); togglePassword(); });
+  console.log("🔧 Semua fungsi frontend aktif — PT ANISA JAYA UTAMA");
 });
-
