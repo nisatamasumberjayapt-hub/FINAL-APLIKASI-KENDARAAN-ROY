@@ -4,7 +4,8 @@
  * Kompatibel dengan backend terbaru (login, register, kendaraan, user)
  ****************************************************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwwp-A4sP0LKwnuseOobJNilG1z8mszHAeZXJCeqmsleUwFS0cJiSTdzl6Jzp6sZ7472A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxh57p_PBLvAAESYD5KLQMf9wcKvjvWt55hM9ytsJCTuxgAU-foe9pFSTTYcPq_Ad89Fw/exec";
+
 console.log("✅ main.js aktif — terhubung ke backend utama");
 
 /****************************************************
@@ -476,3 +477,4 @@ document.addEventListener("DOMContentLoaded", () => {
   const namaUser = document.getElementById("namaUser");
   if (namaUser && u) namaUser.textContent = u.nama || u.username || "-";
 });
+
