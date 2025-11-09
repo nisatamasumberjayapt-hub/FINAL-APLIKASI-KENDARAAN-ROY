@@ -12,9 +12,9 @@
     }
 
     .card {
-      max-width: 320px;
+      max-width: 340px;
       margin: 100px auto;
-      padding: 20px;
+      padding: 25px 20px;
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,38 +25,34 @@
       margin-bottom: 20px;
     }
 
+    .input-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
     input {
-      width: 100%;
+      flex: 1;
       padding: 10px;
-      margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 14px;
       box-sizing: border-box;
     }
 
-    .password-field {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    #password {
-      width: 100%;
-      padding-right: 35px; /* beri ruang untuk tombol mata */
-    }
-
     #togglePass {
-      position: absolute;
-      right: 8px;
+      margin-left: 8px;
       background: none;
-      border: none;
+      border: 1px solid #ccc;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 14px;
-      color: #333;
-      line-height: 1;
-      padding: 4px 6px;
-      border-radius: 4px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.2s;
     }
 
@@ -74,6 +70,7 @@
       cursor: pointer;
       font-size: 15px;
       margin-top: 10px;
+      transition: 0.2s;
     }
 
     #btnLogin:hover {
@@ -101,7 +98,7 @@
 
     <input id="username" type="text" placeholder="Username" required />
 
-    <div class="password-field">
+    <div class="input-row">
       <input id="password" type="password" placeholder="Password" required />
       <button id="togglePass" type="button" title="Lihat password">👁️</button>
     </div>
@@ -113,12 +110,14 @@
 
   <script src="app.js"></script>
   <script>
-    // fallback langsung disini (untuk jaga2 event listener gagal attach)
+    // Tombol login — pastikan selalu aktif walau event listener di app.js gagal attach
     document.getElementById("btnLogin").addEventListener("click", function (e) {
       e.preventDefault();
       if (typeof login === "function") login();
+      else alert("Fungsi login() tidak ditemukan!");
     });
 
+    // Tombol mata di luar input
     document.getElementById("togglePass").addEventListener("click", function (e) {
       e.preventDefault();
       const p = document.getElementById("password");
