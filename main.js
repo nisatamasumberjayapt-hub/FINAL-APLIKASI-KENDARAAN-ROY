@@ -107,26 +107,34 @@ async function loadUsers() {
 }
 
 // === AMBIL DATA KENDARAAN UNTUK DASHBOARD ===
+// ===== AMBIL DATA KENDARAAN (REAL DARI SERVER) =====
 async function doSearch() {
   const qPlat = document.getElementById("qPlat")?.value.trim() || "";
   const qLetak = document.getElementById("qLetak")?.value.trim() || "";
   const tbody = document.querySelector("#tblKendaraan tbody");
-  tbody.innerHTML = `<tr><td colspan="6" align="center">Memuat...</td></tr>`;
+  if (!tbody) return;
 
-  const data = await api("getKendaraan", { qPlat, qLetak });
-  if (data.success && data.data?.length) {
-    tbody.innerHTML = data.data.map(k => `
-      <tr>
-        <td>${k.PlatNomor}</td>
-        <td>${k.Letak}</td>
-        <td>${k.STNK}</td>
-        <td>${k.KIR}</td>
-        <td>${k.ServisTerakhir}</td>
-        <td>-</td>
-      </tr>
-    `).join("");
-  } else {
-    tbody.innerHTML = `<tr><td colspan="6" align="center">Tidak ada data kendaraan</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="6" align="center">🔄 Memuat data...</td></tr>`;
+
+  try {
+    const data = await api("getKendaraan", { qPlat, qLetak });
+    if (data.success && data.data?.length > 0) {
+      tbody.innerHTML = data.data.map(k => `
+        <tr>
+          <td>${k.PlatNomor}</td>
+          <td>${k.Letak}</td>
+          <td>${k.STNK}</td>
+          <td>${k.KIR}</td>
+          <td>${k.ServisTerakhir}</td>
+          <td>-</td>
+        </tr>
+      `).join("");
+    } else {
+      tbody.innerHTML = `<tr><td colspan="6" align="center">🚫 Tidak ada data kendaraan</td></tr>`;
+    }
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML = `<tr><td colspan="6" align="center">⚠️ Gagal memuat data kendaraan</td></tr>`;
   }
 }
 
@@ -152,3 +160,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("togglePass")?.addEventListener("click", e => { e.preventDefault(); togglePassword(); });
   console.log("🔧 Semua fungsi frontend aktif — PT ANISA JAYA UTAMA");
 });
+
