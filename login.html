@@ -1,23 +1,31 @@
-<!DOCTYPE html>
+
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login - PT ANISA JAYA UTAMA</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="card">
     <h2>Login</h2>
+
     <input id="username" type="text" placeholder="Username" required>
-    <div class="password-field">
+
+    <div class="password-field" style="position:relative;">
       <input id="password" type="password" placeholder="Password" required>
-      <button id="togglePass">👁️</button>
+      <!-- tipe button agar tidak submit -->
+      <button id="togglePass" type="button" style="position:absolute; right:8px; top:6px;">👁️</button>
     </div>
-    <button id="btnLogin" onclick="login()">Masuk</button>
+
+    <!-- tipe button agar tidak submit -->
+    <button id="btnLogin" type="button">Masuk</button>
+
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
 
   <script src="app.js"></script>
 </body>
+</html>
+
 </html>
