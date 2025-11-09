@@ -1,41 +1,153 @@
-  <!-- Muat main.js tanpa PHP dan dengan anti-cache aman -->
-  <script>
-    const script = document.createElement("script");
-    script.src = "main.js?v=" + new Date().getTime(); // anti-cache tanpa PHP
-    script.defer = true;
-    script.onload = () => console.log("✅ main.js berhasil dimuat.");
-    script.onerror = () => alert("❌ main.js tidak ditemukan! Pastikan file ada di folder yang sama.");
-    document.body.appendChild(script);
-  </script>
-
-  <script>
-    // Tunggu sampai fungsi login() siap
-    function waitForLogin() {
-      if (typeof login === "function") {
-        console.log("✅ Fungsi login() siap digunakan");
-        document.getElementById("btnLogin").disabled = false;
-      } else {
-        console.warn("⏳ login() belum siap, menunggu 0.5 detik lagi...");
-        setTimeout(waitForLogin, 500);
-      }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - PT ANISA JAYA UTAMA</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
     }
-    waitForLogin();
 
-    // Tombol login
+    .card {
+      max-width: 340px;
+      margin: 100px auto;
+      padding: 25px 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #114e24;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    #togglePass {
+      margin-left: 8px;
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    #togglePass:hover {
+      background: #eee;
+    }
+
+    #btnLogin {
+      width: 100%;
+      padding: 10px;
+      background-color: #1b6e2a;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+
+    #btnLogin:hover {
+      background-color: #13521d;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Login Pengguna</h2>
+
+    <input id="username" type="text" placeholder="Username" required />
+
+    <div class="input-row">
+      <input id="password" type="password" placeholder="Password" required />
+      <button id="togglePass" type="button" title="Lihat password">👁️</button>
+    </div>
+
+    <button id="btnLogin" type="button">Masuk</button>
+
+    <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  </div>
+
+  <!-- Panggil main.js dengan versi cache buster -->
+  <script src="main.js?v=2.0"></script>
+
+  <script>
+    // Pastikan main.js termuat
+    window.addEventListener("load", () => {
+      console.log("🔍 Memeriksa apakah login() tersedia...");
+      if (typeof login !== "function") {
+        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat dan ada di folder yang sama.");
+        console.error("Kemungkinan: cache lama atau file main.js gagal dimuat dari GitHub Pages.");
+      } else {
+        console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
+      }
+    });
+
+    // Tombol LOGIN
     document.getElementById("btnLogin").addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof login === "function") {
         login();
       } else {
-        alert("⚠️ File main.js belum siap, coba reload (Ctrl+F5).");
+        alert("⚠️ File main.js belum termuat. Coba reload halaman (Ctrl + F5).");
       }
     });
 
     // Toggle password
     document.getElementById("togglePass").addEventListener("click", (e) => {
+      e.preventDefault();
       const p = document.getElementById("password");
-      p.type = p.type === "password" ? "text" : "password";
-      e.target.textContent = p.type === "password" ? "👁️" : "🙈";
+      if (p.type === "password") {
+        p.type = "text";
+        e.target.textContent = "🙈";
+      } else {
+        p.type = "password";
+        e.target.textContent = "👁️";
+      }
     });
   </script>
 </body>
