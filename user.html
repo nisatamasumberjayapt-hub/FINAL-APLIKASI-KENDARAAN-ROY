@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data User - PT ANISA JAYA UTAMA</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #1b5e20;
+      color: white;
+    }
+    .navbar {
+      background-color: #1b5e20;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .menu a.active {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body onload="loadUsers()">
+  <div class="navbar">
+    <h2>PT ANISA JAYA UTAMA — BY ROY</h2>
+    <div class="menu">
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="kendaraan.html">🚗 Kendaraan</a>
+      <a href="user.html" class="active">👥 User</a>
+      <a href="#" onclick="logout()">🚪 Logout</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Daftar User</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Lengkap</th>
+          <th>Username</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody id="tblUser">
+        <tr><td colspan="3" align="center">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="main.js?v=1"></script>
+</body>
+</html>
