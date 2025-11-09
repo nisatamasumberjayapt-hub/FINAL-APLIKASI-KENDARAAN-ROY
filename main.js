@@ -1,7 +1,7 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * Frontend Logic (main.js) — FINAL STABIL v1.1
- * Terhubung penuh ke database utama (Google Apps Script)
+ * Frontend Logic (main.js) — FINAL STABIL v1.2
+ * Dashboard terhubung penuh ke database utama
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec";
@@ -116,18 +116,17 @@ function fmt(d) {
   } catch { return d; }
 }
 
-// === AMBIL DATA KENDARAAN (REAL DARI SERVER) ===
+// === CARI KENDARAAN (otomatis 1 kolom) ===
 async function doSearch() {
-  const qPlat = document.getElementById("qPlat")?.value.trim() || "";
-  const qLetak = document.getElementById("qLetak")?.value.trim() || "";
+  const q = document.getElementById("qSearch")?.value.trim().toLowerCase() || "";
   const tbody = document.querySelector("#tblKendaraan tbody");
   if (!tbody) return;
 
   tbody.innerHTML = `<tr><td colspan="6" align="center">🔄 Memuat data...</td></tr>`;
 
   try {
-    const resp = await api("getKendaraan", { qPlat, qLetak });
-    console.log("getKendaraan =>", resp);
+    const resp = await api("getKendaraan", { qPlat: q, qLetak: q });
+    console.log("Hasil pencarian:", resp);
 
     const rows = Array.isArray(resp?.data) ? resp.data : [];
     if (resp.success && rows.length > 0) {
@@ -166,13 +165,15 @@ function togglePassword() {
 
 // === EVENT BIND ===
 document.addEventListener("DOMContentLoaded", () => {
-  // Login / Register / Simpan
   document.getElementById("btnLogin")?.addEventListener("click", e => { e.preventDefault(); login(); });
   document.getElementById("btnRegister")?.addEventListener("click", e => { e.preventDefault(); register(); });
   document.getElementById("btnSimpan")?.addEventListener("click", e => { e.preventDefault(); simpanKendaraan(); });
   document.getElementById("togglePass")?.addEventListener("click", e => { e.preventDefault(); togglePassword(); });
 
-  // Auto-load data kendaraan jika halaman dashboard
+  // 🔎 Auto cari saat mengetik
+  document.getElementById("qSearch")?.addEventListener("input", () => doSearch());
+
+  // Muat data awal (dashboard)
   if (location.pathname.includes("dashboard.html")) {
     doSearch();
   }
