@@ -94,7 +94,7 @@
 </head>
 <body>
   <div class="card">
-    <h2>Login</h2>
+    <h2>Login Pengguna</h2>
 
     <input id="username" type="text" placeholder="Username" required />
 
@@ -108,23 +108,21 @@
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
 
-   <!-- muat app.js dengan anti-cache -->
-<script src="main.js?v=1"></script>
+  <!-- Pastikan file main.js terbaca -->
+  <script src="./main.js?v=final20251109"></script>
+
   <script>
-    // Pastikan app.js benar-benar termuat
+    // Pastikan fungsi login tersedia
     window.addEventListener("load", () => {
       console.log("🔍 Memeriksa apakah login() tersedia...");
-
-      // Jika fungsi login() belum ditemukan, beri peringatan dan debug info
-      if (typeof login !== "function") {
-        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat.");
-        console.error("Kemungkinan: cache lama atau file main.js gagal dimuat dari GitHub Pages.");
+      if (typeof login === "function") {
+        console.log("✅ Fungsi login() ditemukan, siap digunakan.");
       } else {
-        console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
+        alert("⚠️ Fungsi login() belum terdeteksi. Coba reload halaman (Ctrl + F5).");
       }
     });
 
-    // Tombol LOGIN — selalu aktif, walau app.js delay
+    // Tombol Login
     document.getElementById("btnLogin").addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof login === "function") {
@@ -134,7 +132,7 @@
       }
     });
 
-    // Tombol mata toggle password
+    // Toggle password
     document.getElementById("togglePass").addEventListener("click", (e) => {
       e.preventDefault();
       const p = document.getElementById("password");
@@ -147,8 +145,5 @@
       }
     });
   </script>
-</body>
-</html>
-
 </body>
 </html>
