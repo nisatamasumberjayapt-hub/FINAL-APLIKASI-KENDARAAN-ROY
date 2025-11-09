@@ -1,0 +1,72 @@
+:root {
+  --hijau-tua: #114e24;
+  --hijau-terang: #1f7a35;
+  --putih: #ffffff;
+  --abu: #f2f2f2;
+}
+
+body {
+  background: var(--abu);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  background: var(--hijau-tua);
+  color: var(--putih);
+  padding: 10px;
+}
+
+nav a {
+  color: var(--putih);
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.card, .container {
+  background: var(--putih);
+  margin: 30px auto;
+  padding: 20px;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+input, button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+button, .btn {
+  background: var(--hijau-terang);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+button:hover, .btn:hover {
+  background: #27a744;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 720px) {
+  .container { width: 90%; }
+}
