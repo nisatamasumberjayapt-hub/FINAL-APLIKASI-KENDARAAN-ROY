@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Kendaraan</title>
+  <title>Kendaraan - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
 </head>
-<body>
-  <div class="container">
-    <h2>Tambah Data Kendaraan</h2>
-    <input type="text" id="plat" placeholder="Plat Nomor">
-    <input type="text" id="letak" placeholder="Letak">
-    <input type="date" id="stnk">
-    <input type="date" id="kir">
-    <input type="date" id="servis">
-    <button onclick="tambahKendaraan()">Simpan</button>
-    <button onclick="window.location.href='dashboard.html'" class="secondary">Kembali</button>
+<body onload="initKendaraanForm()">
+  <div class="card">
+    <h2 id="formTitle">Tambah Kendaraan</h2>
+    <input id="PlatNomor" type="text" placeholder="Plat Nomor" required>
+    <input id="Letak" type="text" placeholder="Letak / Garasi" required>
+    <label>STNK</label><input id="STNK" type="date" required>
+    <label>KIR</label><input id="KIR" type="date" required>
+    <label>Servis Terakhir</label><input id="ServisTerakhir" type="date" required>
+    <button onclick="simpanKendaraan()">Simpan</button>
+    <a href="dashboard.html" class="btn">Kembali</a>
   </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
