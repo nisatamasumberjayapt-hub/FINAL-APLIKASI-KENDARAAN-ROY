@@ -1,0 +1,15 @@
+# Matikan Jekyll supaya semua file (termasuk app.js) ikut dipublish
+plugins: []
+exclude: []
+include:
+  - app.js
+  - styles.css
+  - dashboard.html
+  - login.html
+  - register.html
+  - kendaraan.html
+  - index.html
+  - bg-kendaraan.jpg
+  - logo Anything2 tanpa pinggiran .png
+  - README.md
+  - .rebuild-trigger
