@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v1.2 — STABIL + PERINGATAN OTOMATIS
+ * main.js v1.4 — Peringatan Servis + Legenda Warna
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec";
-console.log("✅ main.js aktif — versi dengan peringatan tanggal");
+console.log("✅ main.js aktif — versi 1.4 dengan legenda warna");
 
 // ====== Helper umum ======
 async function api(action, payload = {}) {
@@ -27,28 +27,7 @@ function getSession() { return JSON.parse(localStorage.getItem("aj_user") || "nu
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
 
-// ===== LOGIN =====
-async function login() {
-  const username = document.getElementById("username")?.value.trim();
-  const password = document.getElementById("password")?.value.trim();
-  if (!username || !password) return toast("⚠️ Isi semua field!");
-  const data = await api("login", { username, password });
-  if (data.success) { setSession(data.user); location.href = "dashboard.html"; }
-  else toast(data.message || "❌ Login gagal.");
-}
-
-// ===== REGISTER =====
-async function register() {
-  const nama = document.getElementById("nama")?.value.trim();
-  const username = document.getElementById("username")?.value.trim();
-  const password = document.getElementById("password")?.value.trim();
-  if (!nama || !username || !password) return toast("⚠️ Semua field wajib diisi!");
-  const data = await api("register", { nama, username, password });
-  if (data.success) { toast("✅ Registrasi berhasil!"); location.href = "login.html"; }
-  else toast(data.message || "❌ Gagal mendaftar.");
-}
-
-// ===== FORMAT TANGGAL & PERINGATAN =====
+// ===== FORMAT TANGGAL =====
 function formatTanggal(isoDate) {
   if (!isoDate) return "-";
   const d = new Date(isoDate);
@@ -56,65 +35,116 @@ function formatTanggal(isoDate) {
   return d.toISOString().split("T")[0];
 }
 
+// ===== PERHITUNGAN =====
+
+// --- Hitung sisa hari (untuk STNK & KIR) ---
 function hitungSisaHari(isoDate) {
   if (!isoDate) return "";
   const sekarang = new Date();
   const target = new Date(isoDate);
   const selisihMs = target - sekarang;
   const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
-  const bulan = Math.floor(selisihHari / 30);
-  const hari = selisihHari % 30;
-
   if (selisihHari < 0) return `⚠️ Telah lewat ${Math.abs(selisihHari)} hari`;
-  if (bulan > 0) return `${bulan} bulan ${hari} hari lagi`;
-  return `${hari} hari lagi`;
+  return `${selisihHari} hari lagi`;
 }
 
+// --- Hitung waktu sejak servis terakhir ---
+function hitungSejakServis(isoDate) {
+  if (!isoDate) return "";
+  const sekarang = new Date();
+  const lastServis = new Date(isoDate);
+  const selisihMs = sekarang - lastServis;
+  const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
+  const bulan = Math.floor(selisihHari / 30);
+  const hari = selisihHari % 30;
+  return `Sudah ${bulan} bulan ${hari} hari`;
+}
+
+// ===== WARNA PERINGATAN =====
+
+// Untuk STNK / KIR (10 hari)
 function warnaPeringatan(isoDate) {
   if (!isoDate) return "";
   const sisa = new Date(isoDate) - new Date();
   const hari = sisa / (1000 * 60 * 60 * 24);
-  if (hari < 0) return "expired";      // sudah lewat
-  if (hari <= 30) return "warning";    // kurang dari 30 hari
-  return "";                           // aman
+  if (hari < 0) return "expired";
+  if (hari <= 10) return "warning";
+  return "";
 }
 
-// ====== RENDER KENDARAAN ======
+// Untuk Servis (berdasarkan lama sejak servis)
+function warnaServis(isoDate) {
+  if (!isoDate) return "";
+  const sekarang = new Date();
+  const lastServis = new Date(isoDate);
+  const selisihHari = Math.floor((sekarang - lastServis) / (1000 * 60 * 60 * 24));
+  const bulan = selisihHari / 30;
+  if (bulan >= 4) return "expired";
+  if (bulan >= 3) return "warning";
+  return "safe";
+}
+
+// ===== RENDER KENDARAAN =====
 function renderKendaraan(rows) {
   const tbody = document.querySelector("#tblKendaraan tbody");
   if (!tbody) return;
   if (!rows?.length) {
     tbody.innerHTML = `<tr><td colspan="6" align="center">🚫 Tidak ada data kendaraan</td></tr>`;
+    document.getElementById("legend")?.remove();
     return;
   }
 
   tbody.innerHTML = rows.map(k => {
     const stnkWarn = warnaPeringatan(k.STNK);
     const kirWarn = warnaPeringatan(k.KIR);
-    const servisWarn = warnaPeringatan(k.ServisTerakhir);
+    const servisWarn = warnaServis(k.ServisTerakhir);
 
     return `
       <tr>
         <td>${k.PlatNomor}</td>
         <td>${k.Letak}</td>
+
         <td class="${stnkWarn}">
           ${formatTanggal(k.STNK)}<br>
           <small>${hitungSisaHari(k.STNK)}</small>
         </td>
+
         <td class="${kirWarn}">
           ${formatTanggal(k.KIR)}<br>
           <small>${hitungSisaHari(k.KIR)}</small>
         </td>
+
         <td class="${servisWarn}">
           ${formatTanggal(k.ServisTerakhir)}<br>
-          <small>${hitungSisaHari(k.ServisTerakhir)}</small>
+          <small>${hitungSejakServis(k.ServisTerakhir)}</small>
         </td>
+
         <td>-</td>
       </tr>`;
   }).join("");
+
+  tampilkanLegenda();
 }
 
-// ====== PENCARIAN ======
+// ===== LEGENDA WARNA =====
+function tampilkanLegenda() {
+  // Hapus dulu kalau sudah ada
+  const existing = document.getElementById("legend");
+  if (existing) existing.remove();
+
+  const legend = document.createElement("div");
+  legend.id = "legend";
+  legend.className = "legend-container";
+  legend.innerHTML = `
+    <div class="legend-item"><span class="legend-box safe"></span> Aman (Servis < 3 bulan)</div>
+    <div class="legend-item"><span class="legend-box warning"></span> Peringatan (STNK/KIR ≤ 10 hari, Servis ≥ 3 bulan)</div>
+    <div class="legend-item"><span class="legend-box expired"></span> Lewat (STNK/KIR habis, Servis ≥ 4 bulan)</div>
+  `;
+  const table = document.getElementById("tblKendaraan");
+  table.parentNode.appendChild(legend);
+}
+
+// ===== PENCARIAN =====
 let searchTimer = null;
 let searchSeq = 0;
 
@@ -159,7 +189,7 @@ function handleSearchInput(termRaw) {
   }, 250);
 }
 
-// ====== LOAD SEMUA DATA ======
+// ===== LOAD SEMUA =====
 async function loadAllKendaraan() {
   const tbody = document.querySelector("#tblKendaraan tbody");
   if (!tbody) return;
@@ -169,13 +199,11 @@ async function loadAllKendaraan() {
   else tbody.innerHTML = `<tr><td colspan="6" align="center">⚠️ Gagal memuat data</td></tr>`;
 }
 
-// ====== EVENT ======
+// ===== EVENT =====
 document.addEventListener("DOMContentLoaded", () => {
   const q = document.getElementById("q");
   if (q) {
     loadAllKendaraan();
     q.addEventListener("input", () => handleSearchInput(q.value));
   }
-  document.getElementById("btnLogin")?.addEventListener("click", e => { e.preventDefault(); login(); });
-  document.getElementById("btnRegister")?.addEventListener("click", e => { e.preventDefault(); register(); });
 });
