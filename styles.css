@@ -93,3 +93,12 @@ table th, table td {
 @media (max-width: 720px) {
   .container { width: 90%; }
 }
+/* === Dashboard Lebar === */
+.container.wide {
+  max-width: 900px;
+}
+
+table th, table td {
+  text-align: center;
+  font-size: 15px;
+}
