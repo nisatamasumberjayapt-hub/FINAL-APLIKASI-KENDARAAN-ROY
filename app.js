@@ -1,5 +1,5 @@
 // === KONFIGURASI URL GOOGLE APPS SCRIPT ===
-const API_URL = "https://script.google.com/macros/s/AKfycbw2_zpa1FibkZU1raNl4rek-VGK48vfAnymPkbZNxjmqwmBL2gVbxVhM9nfF_nXM29e/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxBsk09-lGyWtE_Y6AWVu4eA2iDPfErR4ayUaZe4pZ_iQn0WWe9gy55RmUxaJvzaABg/exec";
 
 // === LOGIN ===
 async function login() {
