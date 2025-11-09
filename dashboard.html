@@ -5,17 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    header {
+      background-color: #1b5e20;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+    nav {
+      background-color: #144d16;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 15px;
+      background-color: #1b5e20;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2e7d32;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #1b5e20;
+      color: white;
+    }
+    #userList {
+      margin-top: 30px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
+
 <body onload="initDashboard()">
   <header>
     <h1>PT ANISA JAYA UTAMA — BY ROY</h1>
-    <nav>
-      <span id="welcome"></span>
-      <a href="kendaraan.html" id="linkTambahKendaraan">+ Kendaraan</a>
-      <a href="#" id="linkUser" onclick="showUsers()">User</a>
-      <a href="#" onclick="logout()">Logout</a>
-    </nav>
   </header>
+
+  <nav>
+    <a href="kendaraan.html">🚗 + Kendaraan</a>
+    <a href="user.html">👥 User</a>
+    <a href="#" onclick="logout()">🚪 Logout</a>
+  </nav>
 
   <div class="container">
     <div class="search-box">
@@ -35,9 +108,12 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <tr><td colspan="6" align="center">Memuat data...</td></tr>
+      </tbody>
     </table>
 
+    <!-- (Opsional) daftar user kecil di bawah dashboard -->
     <div id="userList" class="hidden">
       <h3>Daftar User</h3>
       <table>
@@ -47,6 +123,6 @@
     </div>
   </div>
 
- <script src="main.js?v=1"></script>
+  <script src="main.js?v=2"></script>
 </body>
 </html>
