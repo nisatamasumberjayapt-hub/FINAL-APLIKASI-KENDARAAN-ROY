@@ -9,8 +9,6 @@
     body {
       font-family: Arial, sans-serif;
       background: #f8f9fa;
-      margin: 0;
-      padding: 0;
     }
 
     .card {
@@ -25,7 +23,6 @@
 
     h2 {
       margin-bottom: 20px;
-      color: #114e24;
     }
 
     .input-row {
@@ -95,10 +92,9 @@
     }
   </style>
 </head>
-
 <body>
   <div class="card">
-    <h2>Login Pengguna</h2>
+    <h2>Login</h2>
 
     <input id="username" type="text" placeholder="Username" required />
 
@@ -112,22 +108,23 @@
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
 
-  <!-- Panggil main.js dengan versi cache buster -->
-  <script src="main.js?v=2.0"></script>
-
+   <!-- muat app.js dengan anti-cache -->
+<script src="main.js?v=1"></script>
   <script>
-    // Pastikan main.js termuat
+    // Pastikan app.js benar-benar termuat
     window.addEventListener("load", () => {
       console.log("🔍 Memeriksa apakah login() tersedia...");
+
+      // Jika fungsi login() belum ditemukan, beri peringatan dan debug info
       if (typeof login !== "function") {
-        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat dan ada di folder yang sama.");
+        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat.");
         console.error("Kemungkinan: cache lama atau file main.js gagal dimuat dari GitHub Pages.");
       } else {
         console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
       }
     });
 
-    // Tombol LOGIN
+    // Tombol LOGIN — selalu aktif, walau app.js delay
     document.getElementById("btnLogin").addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof login === "function") {
@@ -137,7 +134,7 @@
       }
     });
 
-    // Toggle password
+    // Tombol mata toggle password
     document.getElementById("togglePass").addEventListener("click", (e) => {
       e.preventDefault();
       const p = document.getElementById("password");
@@ -150,5 +147,8 @@
       }
     });
   </script>
+</body>
+</html>
+
 </body>
 </html>
