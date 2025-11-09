@@ -4,7 +4,7 @@
  * Tambahan: Pajak 5 Tahunan + Status Warna Otomatis
  ****************************************************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwwp-A4sP0LKwnuseOobJNilG1z8mszHAeZXJCeqmsleUwFS0cJiSTdzl6Jzp6sZ7472A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxh57p_PBLvAAESYD5KLQMf9wcKvjvWt55hM9ytsJCTuxgAU-foe9pFSTTYcPq_Ad89Fw/exec";
 console.log("✅ main.js aktif & terhubung ke server utama");
 
 // ===== UTILITAS =====
@@ -111,3 +111,4 @@ function initDashboard() {
   }
   console.log("📊 Dashboard aktif — Data kendaraan dimuat");
 }
+
