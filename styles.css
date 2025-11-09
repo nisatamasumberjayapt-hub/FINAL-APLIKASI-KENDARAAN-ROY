@@ -40,6 +40,29 @@ input, button {
   padding: 10px;
   margin: 5px 0;
 }
+/* ====== Pencarian Dashboard ====== */
+.search-box {
+  margin: 15px auto;
+  width: 80%;
+  max-width: 600px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid var(--hijau-tua);
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  color: #043a17;
+}
+
+.search-box input:focus {
+  border-color: var(--hijau-terang);
+  box-shadow: 0 0 6px rgba(0, 128, 0, 0.5);
+}
+
 
 button, .btn {
   background: var(--hijau-terang);
