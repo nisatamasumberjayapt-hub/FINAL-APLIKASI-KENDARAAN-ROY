@@ -1,7 +1,7 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * Frontend Logic (main.js) — FINAL STABIL v1.0
- * Sudah terhubung ke database utama
+ * Frontend Logic (main.js) — FINAL STABIL v1.1
+ * Terhubung penuh ke database utama (Google Apps Script)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec";
@@ -106,8 +106,17 @@ async function loadUsers() {
   }
 }
 
-// === AMBIL DATA KENDARAAN UNTUK DASHBOARD ===
-// ===== AMBIL DATA KENDARAAN (REAL DARI SERVER) =====
+// === FORMAT TANGGAL ===
+function fmt(d) {
+  if (!d) return "-";
+  try {
+    const iso = String(d);
+    if (iso.includes("T")) return iso.split("T")[0];
+    return iso;
+  } catch { return d; }
+}
+
+// === AMBIL DATA KENDARAAN (REAL DARI SERVER) ===
 async function doSearch() {
   const qPlat = document.getElementById("qPlat")?.value.trim() || "";
   const qLetak = document.getElementById("qLetak")?.value.trim() || "";
@@ -117,15 +126,18 @@ async function doSearch() {
   tbody.innerHTML = `<tr><td colspan="6" align="center">🔄 Memuat data...</td></tr>`;
 
   try {
-    const data = await api("getKendaraan", { qPlat, qLetak });
-    if (data.success && data.data?.length > 0) {
-      tbody.innerHTML = data.data.map(k => `
+    const resp = await api("getKendaraan", { qPlat, qLetak });
+    console.log("getKendaraan =>", resp);
+
+    const rows = Array.isArray(resp?.data) ? resp.data : [];
+    if (resp.success && rows.length > 0) {
+      tbody.innerHTML = rows.map(k => `
         <tr>
-          <td>${k.PlatNomor}</td>
-          <td>${k.Letak}</td>
-          <td>${k.STNK}</td>
-          <td>${k.KIR}</td>
-          <td>${k.ServisTerakhir}</td>
+          <td>${k.PlatNomor || "-"}</td>
+          <td>${k.Letak || "-"}</td>
+          <td>${fmt(k.STNK)}</td>
+          <td>${fmt(k.KIR)}</td>
+          <td>${fmt(k.ServisTerakhir)}</td>
           <td>-</td>
         </tr>
       `).join("");
@@ -154,10 +166,16 @@ function togglePassword() {
 
 // === EVENT BIND ===
 document.addEventListener("DOMContentLoaded", () => {
+  // Login / Register / Simpan
   document.getElementById("btnLogin")?.addEventListener("click", e => { e.preventDefault(); login(); });
   document.getElementById("btnRegister")?.addEventListener("click", e => { e.preventDefault(); register(); });
   document.getElementById("btnSimpan")?.addEventListener("click", e => { e.preventDefault(); simpanKendaraan(); });
   document.getElementById("togglePass")?.addEventListener("click", e => { e.preventDefault(); togglePassword(); });
+
+  // Auto-load data kendaraan jika halaman dashboard
+  if (location.pathname.includes("dashboard.html")) {
+    doSearch();
+  }
+
   console.log("🔧 Semua fungsi frontend aktif — PT ANISA JAYA UTAMA");
 });
-
