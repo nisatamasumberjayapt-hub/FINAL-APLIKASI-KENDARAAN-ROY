@@ -108,27 +108,47 @@
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
 
-  <script src="app.js"></script>
+   <!-- muat app.js dengan anti-cache -->
+  <script src="app.js?v=4"></script>
   <script>
-    // Tombol login — pastikan selalu aktif walau event listener di app.js gagal attach
-    document.getElementById("btnLogin").addEventListener("click", function (e) {
-      e.preventDefault();
-      if (typeof login === "function") login();
-      else alert("Fungsi login() tidak ditemukan!");
+    // Pastikan app.js benar-benar termuat
+    window.addEventListener("load", () => {
+      console.log("🔍 Memeriksa apakah login() tersedia...");
+
+      // Jika fungsi login() belum ditemukan, beri peringatan dan debug info
+      if (typeof login !== "function") {
+        alert("❌ Fungsi login() tidak ditemukan! Pastikan file app.js sudah termuat.");
+        console.error("Kemungkinan: cache lama atau file app.js gagal dimuat dari GitHub Pages.");
+      } else {
+        console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
+      }
     });
 
-    // Tombol mata di luar input
-    document.getElementById("togglePass").addEventListener("click", function (e) {
+    // Tombol LOGIN — selalu aktif, walau app.js delay
+    document.getElementById("btnLogin").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (typeof login === "function") {
+        login();
+      } else {
+        alert("⚠️ File app.js belum termuat. Coba reload halaman (Ctrl + F5).");
+      }
+    });
+
+    // Tombol mata toggle password
+    document.getElementById("togglePass").addEventListener("click", (e) => {
       e.preventDefault();
       const p = document.getElementById("password");
       if (p.type === "password") {
         p.type = "text";
-        this.textContent = "🙈";
+        e.target.textContent = "🙈";
       } else {
         p.type = "password";
-        this.textContent = "👁️";
+        e.target.textContent = "👁️";
       }
     });
   </script>
+</body>
+</html>
+
 </body>
 </html>
