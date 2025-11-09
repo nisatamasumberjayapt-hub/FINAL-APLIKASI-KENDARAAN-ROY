@@ -1,147 +1,51 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - PT ANISA JAYA UTAMA</title>
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Panggil main.js dengan anti-cache & load aman -->
+  <script>
+    // Versi cache unik tiap load
+    const mainJsUrl = "main.js?v=" + new Date().getTime();
+    const script = document.createElement("script");
+    script.src = mainJsUrl;
+    script.defer = true;
 
-  <style>
-    body {
-      background: #f5f5f5;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #114e24;
-      color: white;
-      padding: 12px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    .card {
-      background: white;
-      margin: 80px auto;
-      padding: 30px 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      max-width: 380px;
-      text-align: center;
-    }
-    .card h2 {
-      color: #114e24;
-      margin-bottom: 25px;
-    }
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      margin: 8px 0;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    input:focus {
-      border-color: #1f7a35;
-      outline: none;
-    }
-    button {
-      width: 100%;
-      background: #1f7a35;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 15px;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #27a744;
-    }
-    .toggle {
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      font-size: 18px;
-    }
-    .password-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    p {
-      margin-top: 20px;
-      font-size: 14px;
-    }
-    a {
-      color: #1f7a35;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
+    // Saat main.js sudah termuat sepenuhnya
+    script.onload = () => {
+      console.log("✅ main.js termuat sepenuhnya dari:", mainJsUrl);
+    };
 
-<body>
-  <header>PT ANISA JAYA UTAMA — BY ROY</header>
+    script.onerror = () => {
+      alert("❌ Gagal memuat file main.js. Pastikan file ini ada di folder yang sama.");
+    };
 
-  <div class="card">
-    <h2>Login Pengguna</h2>
-    <div>
-      <input type="text" id="username" placeholder="Username" autocomplete="username" />
-      <div class="password-wrapper">
-        <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-        <span id="togglePass" class="toggle">👁️</span>
-      </div>
-      <button id="btnLogin">Masuk</button>
-      <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
-    </div>
-  </div>
-
-  <!-- Muat main.js dengan versi paksa dan defer agar pasti termuat -->
-  <script src="main.js?v=<?=Date.now()?> " defer></script>
+    document.body.appendChild(script);
+  </script>
 
   <script>
     /****************************************************
-     * ✅ CEK OTOMATIS apakah main.js sudah termuat
+     * Cek login() & tombol
      ****************************************************/
-    window.addEventListener("load", () => {
-      console.log("🔍 Memeriksa apakah fungsi login() tersedia...");
-
-      if (typeof login !== "function") {
-        alert("⚠️ File main.js belum termuat atau fungsi login() tidak ditemukan.\nPastikan file main.js ada di folder yang sama & reload (Ctrl+F5).");
-        console.error("❌ login() tidak ditemukan — kemungkinan file main.js tidak terbaca.");
+    function checkLoginReady() {
+      if (typeof login === "function") {
+        console.log("✅ Fungsi login() tersedia, tombol siap dipakai.");
+        document.getElementById("btnLogin").disabled = false;
       } else {
-        console.log("✅ Fungsi login() berhasil ditemukan dan siap dipakai.");
+        console.warn("⏳ Fungsi login() belum tersedia, coba lagi dalam 500ms...");
+        setTimeout(checkLoginReady, 500);
       }
-    });
+    }
+    checkLoginReady();
 
-    /****************************************************
-     * ✅ TOMBOL LOGIN & TOGGLE PASSWORD
-     ****************************************************/
     document.getElementById("btnLogin").addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof login === "function") {
         login();
       } else {
-        alert("⚠️ Fungsi login() belum siap. Coba reload halaman (Ctrl + F5).");
+        alert("⚠️ Fungsi login() belum siap. Tunggu sebentar atau reload (Ctrl + F5).");
       }
     });
 
     document.getElementById("togglePass").addEventListener("click", (e) => {
       const p = document.getElementById("password");
-      if (p.type === "password") {
-        p.type = "text";
-        e.target.textContent = "🙈";
-      } else {
-        p.type = "password";
-        e.target.textContent = "👁️";
-      }
+      p.type = p.type === "password" ? "text" : "password";
+      e.target.textContent = p.type === "password" ? "👁️" : "🙈";
     });
   </script>
 </body>
