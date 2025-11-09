@@ -1,47 +1,37 @@
-  <!-- Panggil main.js dengan anti-cache & load aman -->
+  <!-- Muat main.js tanpa PHP dan dengan anti-cache aman -->
   <script>
-    // Versi cache unik tiap load
-    const mainJsUrl = "main.js?v=" + new Date().getTime();
     const script = document.createElement("script");
-    script.src = mainJsUrl;
+    script.src = "main.js?v=" + new Date().getTime(); // anti-cache tanpa PHP
     script.defer = true;
-
-    // Saat main.js sudah termuat sepenuhnya
-    script.onload = () => {
-      console.log("✅ main.js termuat sepenuhnya dari:", mainJsUrl);
-    };
-
-    script.onerror = () => {
-      alert("❌ Gagal memuat file main.js. Pastikan file ini ada di folder yang sama.");
-    };
-
+    script.onload = () => console.log("✅ main.js berhasil dimuat.");
+    script.onerror = () => alert("❌ main.js tidak ditemukan! Pastikan file ada di folder yang sama.");
     document.body.appendChild(script);
   </script>
 
   <script>
-    /****************************************************
-     * Cek login() & tombol
-     ****************************************************/
-    function checkLoginReady() {
+    // Tunggu sampai fungsi login() siap
+    function waitForLogin() {
       if (typeof login === "function") {
-        console.log("✅ Fungsi login() tersedia, tombol siap dipakai.");
+        console.log("✅ Fungsi login() siap digunakan");
         document.getElementById("btnLogin").disabled = false;
       } else {
-        console.warn("⏳ Fungsi login() belum tersedia, coba lagi dalam 500ms...");
-        setTimeout(checkLoginReady, 500);
+        console.warn("⏳ login() belum siap, menunggu 0.5 detik lagi...");
+        setTimeout(waitForLogin, 500);
       }
     }
-    checkLoginReady();
+    waitForLogin();
 
+    // Tombol login
     document.getElementById("btnLogin").addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof login === "function") {
         login();
       } else {
-        alert("⚠️ Fungsi login() belum siap. Tunggu sebentar atau reload (Ctrl + F5).");
+        alert("⚠️ File main.js belum siap, coba reload (Ctrl+F5).");
       }
     });
 
+    // Toggle password
     document.getElementById("togglePass").addEventListener("click", (e) => {
       const p = document.getElementById("password");
       p.type = p.type === "password" ? "text" : "password";
