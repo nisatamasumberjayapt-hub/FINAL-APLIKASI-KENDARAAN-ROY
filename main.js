@@ -4,7 +4,7 @@
  ****************************************************/
 
 // =================== KONFIGURASI ===================
-const API_URL = "https://script.google.com/macros/s/AKfycbzMo11o1RsivZiGaEKW3agHIZUK8o3L1r7EulTx5e2Xne3U6fOMbl03Vkw4ku-ZGITW/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz9qVxbF0pjpumdDenYk8Ij-CES-IwlLQg3dEXYVxJgSyEFnfkszl3juCm_LKdVRiJS/exec";
 // GANTI jika perlu
 
 console.log("✅ main.js dimuat — PT ANISA JAYA UTAMA");
@@ -334,4 +334,5 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnLogin) btnLogin.addEventListener("click", (e) => { e.preventDefault(); login(); });
   if (btnRegister) btnRegister.addEventListener("click", (e) => { e.preventDefault(); register(); });
 });
+
 
