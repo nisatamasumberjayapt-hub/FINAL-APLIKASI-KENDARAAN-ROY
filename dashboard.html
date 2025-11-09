@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body onload="loadKendaraan()">
+  <div class="dashboard">
+    <h2>Dashboard Kendaraan</h2>
+    <nav>
+      <button onclick="window.location.href='kendaraan.html'">Tambah Kendaraan</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+    <table>
+      <thead>
+        <tr>
+          <th>Plat Nomor</th>
+          <th>Letak</th>
+          <th>STNK</th>
+          <th>Status STNK</th>
+          <th>KIR</th>
+          <th>Status KIR</th>
+          <th>Servis Terakhir</th>
+          <th>Keterangan Servis</th>
+        </tr>
+      </thead>
+      <tbody id="kendaraanBody"></tbody>
+    </table>
+  </div>
+</body>
+</html>
