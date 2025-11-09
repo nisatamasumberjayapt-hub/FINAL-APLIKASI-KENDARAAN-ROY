@@ -4,7 +4,7 @@
  ****************************************************/
 
 // =================== KONFIGURASI ===================
-const API_URL = "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec");
+const API_URL = "https://script.google.com/macros/s/AKfycbyUUR6CxPVJsExI51dmuELVCswp9pIHoO_6aUc5GxqMQm_32AmDCh5IOKNbmu3z2hiS/exec");
 // GANTI jika perlu
 
 // =================== UTILITAS ===================
