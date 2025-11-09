@@ -6,6 +6,7 @@
 // =================== KONFIGURASI ===================
 const API_URL = "https://script.google.com/macros/s/AKfycbyUUR6CxPVJsExI51dmuELVCswp9pIHoO_6aUc5GxqMQm_32AmDCh5IOKNbmu3z2hiS/exec");
 // GANTI jika perlu
+
 console.log("✅ app.js berhasil dimuat (versi 4) — PT ANISA JAYA UTAMA");
 
 // =================== UTILITAS ===================
