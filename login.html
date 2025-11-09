@@ -1,154 +1,119 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css" />
+
   <style>
     body {
+      background: #f5f5f5;
       font-family: Arial, sans-serif;
-      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
     }
-
+    header {
+      background: #114e24;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
     .card {
-      max-width: 340px;
-      margin: 100px auto;
-      padding: 25px 20px;
-      background: #fff;
+      background: white;
+      margin: 80px auto;
+      padding: 30px 25px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 380px;
       text-align: center;
     }
-
-    h2 {
-      margin-bottom: 20px;
+    .card h2 {
+      color: #114e24;
+      margin-bottom: 25px;
     }
-
-    .input-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
     input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    #togglePass {
-      margin-left: 8px;
-      background: none;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    #togglePass:hover {
-      background: #eee;
-    }
-
-    #btnLogin {
       width: 100%;
-      padding: 10px;
-      background-color: #1b6e2a;
-      color: #fff;
+      padding: 10px 12px;
+      margin: 8px 0;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    input:focus {
+      border-color: #1f7a35;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      background: #1f7a35;
+      color: white;
       border: none;
-      border-radius: 5px;
+      padding: 10px;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: bold;
       font-size: 15px;
       margin-top: 10px;
-      transition: 0.2s;
     }
-
-    #btnLogin:hover {
-      background-color: #13521d;
+    button:hover {
+      background: #27a744;
     }
-
+    .toggle {
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 18px;
+    }
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
     p {
-      margin-top: 10px;
-      font-size: 13px;
+      margin-top: 20px;
+      font-size: 14px;
     }
-
     a {
-      color: #007bff;
+      color: #1f7a35;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
+  <header>PT ANISA JAYA UTAMA — BY ROY</header>
+
   <div class="card">
-    <h2>Login</h2>
-
-    <input id="username" type="text" placeholder="Username" required />
-
-    <div class="input-row">
-      <input id="password" type="password" placeholder="Password" required />
-      <button id="togglePass" type="button" title="Lihat password">👁️</button>
+    <h2>Login Pengguna</h2>
+    <div>
+      <input type="text" id="username" placeholder="Username" autocomplete="username" />
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+        <span id="togglePass" class="toggle">👁️</span>
+      </div>
+      <button id="btnLogin">Masuk</button>
+      <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
     </div>
-
-    <button id="btnLogin" type="button">Masuk</button>
-
-    <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
   </div>
 
-   <!-- muat app.js dengan anti-cache -->
-<script src="main.js?v=1"></script>
+  <!-- Panggil main.js dengan versi paksa untuk menghindari cache -->
+  <script src="main.js?v=1.6"></script>
+
   <script>
-    // Pastikan app.js benar-benar termuat
-    window.addEventListener("load", () => {
-      console.log("🔍 Memeriksa apakah login() tersedia...");
-
-      // Jika fungsi login() belum ditemukan, beri peringatan dan debug info
-      if (typeof login !== "function") {
-        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat.");
-        console.error("Kemungkinan: cache lama atau file main.js gagal dimuat dari GitHub Pages.");
-      } else {
-        console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
-      }
-    });
-
-    // Tombol LOGIN — selalu aktif, walau app.js delay
-    document.getElementById("btnLogin").addEventListener("click", (e) => {
-      e.preventDefault();
-      if (typeof login === "function") {
-        login();
-      } else {
-        alert("⚠️ File main.js belum termuat. Coba reload halaman (Ctrl + F5).");
-      }
-    });
-
-    // Tombol mata toggle password
-    document.getElementById("togglePass").addEventListener("click", (e) => {
-      e.preventDefault();
-      const p = document.getElementById("password");
-      if (p.type === "password") {
-        p.type = "text";
-        e.target.textContent = "🙈";
-      } else {
-        p.type = "password";
-        e.target.textContent = "👁️";
-      }
+    // ==== Validasi untuk memastikan file main.js sudah termuat ====
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        if (typeof login !== "function") {
+          alert("⚠️ File main.js belum termuat atau fungsi login() tidak ditemukan.\nCoba reload halaman (Ctrl + F5) atau pastikan file main.js ada di folder yang sama.");
+        }
+      }, 500);
     });
   </script>
-</body>
-</html>
-
 </body>
 </html>
