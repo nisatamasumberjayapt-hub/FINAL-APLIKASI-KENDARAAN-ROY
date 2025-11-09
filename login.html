@@ -109,7 +109,7 @@
   </div>
 
    <!-- muat app.js dengan anti-cache -->
-<script src="./app.js?v=8"></script>
+<script src="main.js?v=1"></script>
   <script>
     // Pastikan app.js benar-benar termuat
     window.addEventListener("load", () => {
@@ -117,8 +117,8 @@
 
       // Jika fungsi login() belum ditemukan, beri peringatan dan debug info
       if (typeof login !== "function") {
-        alert("❌ Fungsi login() tidak ditemukan! Pastikan file app.js sudah termuat.");
-        console.error("Kemungkinan: cache lama atau file app.js gagal dimuat dari GitHub Pages.");
+        alert("❌ Fungsi login() tidak ditemukan! Pastikan file main.js sudah termuat.");
+        console.error("Kemungkinan: cache lama atau file main.js gagal dimuat dari GitHub Pages.");
       } else {
         console.log("✅ Fungsi login() berhasil ditemukan. Siap digunakan.");
       }
@@ -130,7 +130,7 @@
       if (typeof login === "function") {
         login();
       } else {
-        alert("⚠️ File app.js belum termuat. Coba reload halaman (Ctrl + F5).");
+        alert("⚠️ File main.js belum termuat. Coba reload halaman (Ctrl + F5).");
       }
     });
 
