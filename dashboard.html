@@ -3,32 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Dashboard - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
 </head>
-<body onload="loadKendaraan()">
-  <div class="dashboard">
-    <h2>Dashboard Kendaraan</h2>
+<body onload="initDashboard()">
+  <header>
+    <h1>PT ANISA JAYA UTAMA — BY ROY</h1>
     <nav>
-      <button onclick="window.location.href='kendaraan.html'">Tambah Kendaraan</button>
-      <button onclick="logout()">Logout</button>
+      <span id="welcome"></span>
+      <a href="kendaraan.html" id="linkTambahKendaraan">+ Kendaraan</a>
+      <a href="#" id="linkUser" onclick="showUsers()">User</a>
+      <a href="#" onclick="logout()">Logout</a>
     </nav>
-    <table>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input id="qPlat" type="text" placeholder="Cari Plat Nomor">
+      <input id="qLetak" type="text" placeholder="Cari Letak">
+      <button onclick="doSearch()">Cari</button>
+    </div>
+
+    <table id="tblKendaraan">
       <thead>
         <tr>
           <th>Plat Nomor</th>
           <th>Letak</th>
           <th>STNK</th>
-          <th>Status STNK</th>
           <th>KIR</th>
-          <th>Status KIR</th>
           <th>Servis Terakhir</th>
-          <th>Keterangan Servis</th>
+          <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="kendaraanBody"></tbody>
+      <tbody></tbody>
     </table>
+
+    <div id="userList" class="hidden">
+      <h3>Daftar User</h3>
+      <table>
+        <thead><tr><th>Username</th><th>Nama</th><th>Role</th></tr></thead>
+        <tbody id="tblUsers"></tbody>
+      </table>
+    </div>
   </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
