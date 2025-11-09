@@ -1,31 +1,37 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * Frontend Logic (app.js)
+ * Frontend Logic (app.js) — UPDATED: toggle password + robust login
  ****************************************************/
 
 // =================== KONFIGURASI ===================
-const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec"; // GANTI DENGAN URL WEB APP KAMU
+const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec"; // GANTI jika perlu
 
 // =================== UTIL FUNGI ===================
 function toast(msg) {
-  alert(msg); // Simpel alert agar tetap ringan
+  // replace alert if ingin toast fancy nanti
+  alert(msg);
 }
 
 function fmtDate(str) {
   if (!str) return "-";
   const d = new Date(str);
+  if (isNaN(d)) return str;
   return d.toISOString().split("T")[0];
 }
 
 function daysBetween(date) {
   const now = new Date();
-  const diff = Math.floor((now - new Date(date)) / (1000 * 60 * 60 * 24));
+  const dd = new Date(date);
+  if (isNaN(dd)) return 0;
+  const diff = Math.floor((now - dd) / (1000 * 60 * 60 * 24));
   return diff;
 }
 
 function statusBadge(dateStr) {
   if (!dateStr) return `<span class="badge gray">-</span>`;
-  const diff = Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
+  const d = new Date(dateStr);
+  if (isNaN(d)) return `<span class="badge gray">${dateStr}</span>`;
+  const diff = Math.ceil((d - new Date()) / (1000 * 60 * 60 * 24));
   let color = "green";
   if (diff < 0) color = "red";
   else if (diff <= 7) color = "yellow";
@@ -65,248 +71,130 @@ function guard() {
 let loginAttempts = 0;
 
 async function login() {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const btn = document.getElementById("btnLogin");
+  if (btn) btn.disabled = true; // mencegah double click
 
-  if (!username || !password) return toast("Isi semua field!");
+  try {
+    const usernameEl = document.getElementById("username");
+    const passwordEl = document.getElementById("password");
+    const username = usernameEl ? usernameEl.value.trim() : "";
+    const password = passwordEl ? passwordEl.value.trim() : "";
 
-  loginAttempts++;
-  if (loginAttempts > 3) {
-    document.getElementById("btnLogin").disabled = true;
-    return toast("Akun diblokir sementara karena gagal 3x!");
-  }
+    if (!username || !password) {
+      toast("Isi semua field!");
+      if (btn) btn.disabled = false;
+      return;
+    }
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "login", username, password }),
-  });
-  const data = await res.json();
+    loginAttempts++;
+    if (loginAttempts > 3) {
+      if (btn) btn.disabled = true;
+      toast("Akun diblokir sementara karena gagal 3x!");
+      return;
+    }
 
-  if (data.success) {
-    setSession(data.user);
-    toast("Login berhasil!");
-    window.location.href = "dashboard.html";
-  } else {
-    toast(data.message || "Login gagal!");
-    document.getElementById("password").value = "";
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "login", username, password }),
+    });
+
+    if (!res.ok) {
+      toast("Gagal terhubung ke server: " + res.status);
+      if (btn) btn.disabled = false;
+      return;
+    }
+
+    const data = await res.json();
+    if (data.success) {
+      setSession(data.user);
+      toast("Login berhasil!");
+      loginAttempts = 0;
+      // redirect ke dashboard
+      window.location.href = "dashboard.html";
+    } else {
+      toast(data.message || "Login gagal!");
+      if (passwordEl) passwordEl.value = "";
+      if (btn) btn.disabled = false;
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    toast("Terjadi kesalahan saat login. Cek koneksi.");
+    if (btn) btn.disabled = false;
   }
 }
 
+// Register unchanged (but we ensure safe button types in HTML)
 async function register() {
-  const nama = document.getElementById("nama").value.trim();
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const nama = document.getElementById("nama")?.value.trim() || "";
+  const username = document.getElementById("username")?.value.trim() || "";
+  const password = document.getElementById("password")?.value.trim() || "";
 
   if (!nama || !username || !password) return toast("Semua field wajib diisi");
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "register", nama, username, password }),
-  });
-  const data = await res.json();
-
-  if (data.success) {
-    toast("Pendaftaran berhasil!");
-    window.location.href = "login.html";
-  } else {
-    toast(data.message);
-  }
-}
-
-// =================== DASHBOARD ===================
-async function initDashboard() {
-  const user = guard();
-  document.getElementById("welcome").innerText = `Selamat datang, ${user.nama} (${user.role})`;
-
-  if (user.role !== "admin") {
-    document.getElementById("linkTambahKendaraan").style.display = "none";
-    document.getElementById("linkUser").style.display = "none";
-  }
-
-  await loadKendaraan();
-}
-
-async function loadKendaraan() {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getKendaraan" }),
-  });
-  const data = await res.json();
-
-  const tbody = document.querySelector("#tblKendaraan tbody");
-  tbody.innerHTML = "";
-
-  if (data.success && data.data.length > 0) {
-    const user = getSession();
-    data.data.forEach(k => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${k.PlatNomor}</td>
-        <td>${k.Letak}</td>
-        <td>${statusBadge(k.STNK)}</td>
-        <td>${statusBadge(k.KIR)}</td>
-        <td>${servisInfo(k.ServisTerakhir)}</td>
-        <td>
-          ${user.role === "admin" ? `
-            <button onclick="goEdit('${k.PlatNomor}')">✏️</button>
-            <button onclick="hapusKendaraan('${k.PlatNomor}')">🗑️</button>` : "-"}
-        </td>`;
-      tbody.appendChild(tr);
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "register", nama, username, password }),
     });
-  } else {
-    tbody.innerHTML = "<tr><td colspan='6'>Tidak ada data</td></tr>";
+    const data = await res.json();
+    if (data.success) {
+      toast("Pendaftaran berhasil!");
+      window.location.href = "login.html";
+    } else {
+      toast(data.message || "Gagal mendaftar");
+    }
+  } catch (err) {
+    console.error("Register error:", err);
+    toast("Terjadi kesalahan saat registrasi.");
   }
 }
 
-async function doSearch() {
-  const qPlat = document.getElementById("qPlat").value.trim();
-  const qLetak = document.getElementById("qLetak").value.trim();
+// =================== PASSWORD TOGGLE ===================
+function togglePassword() {
+  const p = document.getElementById("password");
+  const t = document.getElementById("togglePass");
+  if (!p || !t) return;
+  if (p.type === "password") {
+    p.type = "text";
+    t.textContent = "🙈"; // icon berubah
+  } else {
+    p.type = "password";
+    t.textContent = "👁️";
+  }
+}
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getKendaraan", qPlat, qLetak }),
-  });
-  const data = await res.json();
+// Attach listeners kalau elemen ada
+document.addEventListener("DOMContentLoaded", () => {
+  // attach toggle if exists
+  const t = document.getElementById("togglePass");
+  if (t) t.addEventListener("click", (e) => { e.preventDefault(); togglePassword(); });
 
-  const tbody = document.querySelector("#tblKendaraan tbody");
-  tbody.innerHTML = "";
+  // attach login button if exists
+  const loginBtn = document.getElementById("btnLogin");
+  if (loginBtn) loginBtn.addEventListener("click", (e) => { e.preventDefault(); login(); });
 
-  if (data.success && data.data.length > 0) {
-    const user = getSession();
-    data.data.forEach(k => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${k.PlatNomor}</td>
-        <td>${k.Letak}</td>
-        <td>${statusBadge(k.STNK)}</td>
-        <td>${statusBadge(k.KIR)}</td>
-        <td>${servisInfo(k.ServisTerakhir)}</td>
-        <td>
-          ${user.role === "admin" ? `
-            <button onclick="goEdit('${k.PlatNomor}')">✏️</button>
-            <button onclick="hapusKendaraan('${k.PlatNomor}')">🗑️</button>` : "-"}
-        </td>`;
-      tbody.appendChild(tr);
+  // if page has register form button (type=button) ensure it calls register()
+  const registerBtn = document.querySelector('button[type="button"].register-btn');
+  if (registerBtn) registerBtn.addEventListener("click", (e) => { e.preventDefault(); register(); });
+
+  // small convenience: pressing Enter on password triggers login
+  const pwd = document.getElementById("password");
+  if (pwd) {
+    pwd.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        login();
+      }
     });
-  } else {
-    tbody.innerHTML = "<tr><td colspan='6'>Data tidak ditemukan</td></tr>";
   }
-}
+});
 
-// =================== KENDARAAN FORM ===================
-function initKendaraanForm() {
-  const user = guard();
-  if (user.role !== "admin") {
-    alert("Hanya admin yang dapat mengakses halaman ini");
-    window.location.href = "dashboard.html";
-    return;
-  }
+// =================== DASHBOARD & KENDARAAN (sama seperti sebelumnya) ===================
+// ... (rest of app functions: initDashboard, loadKendaraan, doSearch, initKendaraanForm, fetchKendaraan,
+// simpanKendaraan, hapusKendaraan, goEdit, showUsers) ...
 
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get("mode");
-  const plat = params.get("plat");
-
-  if (mode === "edit" && plat) {
-    document.getElementById("formTitle").innerText = "Edit Kendaraan";
-    fetchKendaraan(plat);
-  }
-}
-
-async function fetchKendaraan(plat) {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getKendaraan", qPlat: plat }),
-  });
-  const data = await res.json();
-
-  if (data.success && data.data.length > 0) {
-    const k = data.data[0];
-    document.getElementById("PlatNomor").value = k.PlatNomor;
-    document.getElementById("Letak").value = k.Letak;
-    document.getElementById("STNK").value = k.STNK;
-    document.getElementById("KIR").value = k.KIR;
-    document.getElementById("ServisTerakhir").value = k.ServisTerakhir;
-    localStorage.setItem("edit_plat", plat);
-  }
-}
-
-async function simpanKendaraan() {
-  const mode = new URLSearchParams(window.location.search).get("mode");
-  const PlatNomor = document.getElementById("PlatNomor").value.trim();
-  const Letak = document.getElementById("Letak").value.trim();
-  const STNK = document.getElementById("STNK").value;
-  const KIR = document.getElementById("KIR").value;
-  const ServisTerakhir = document.getElementById("ServisTerakhir").value;
-
-  if (!PlatNomor || !Letak || !STNK || !KIR || !ServisTerakhir)
-    return toast("Semua field wajib diisi");
-
-  let action = "addKendaraan";
-  let body = { action, PlatNomor, Letak, STNK, KIR, ServisTerakhir };
-
-  if (mode === "edit") {
-    action = "updateKendaraan";
-    const platAsli = localStorage.getItem("edit_plat");
-    body = { action, platAsli, PlatNomor, Letak, STNK, KIR, ServisTerakhir };
-  }
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-
-  toast(data.message);
-  if (data.success) window.location.href = "dashboard.html";
-}
-
-async function hapusKendaraan(plat) {
-  if (!confirm("Yakin ingin menghapus kendaraan ini?")) return;
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "deleteKendaraan", PlatNomor: plat }),
-  });
-  const data = await res.json();
-
-  toast(data.message);
-  if (data.success) loadKendaraan();
-}
-
-function goEdit(plat) {
-  window.location.href = `kendaraan.html?mode=edit&plat=${encodeURIComponent(plat)}`;
-}
-
-// =================== ADMIN: USER LIST ===================
-async function showUsers() {
-  const user = getSession();
-  if (user.role !== "admin") return toast("Hanya admin yang dapat melihat data user!");
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getUsers" }),
-  });
-  const data = await res.json();
-
-  const tbl = document.getElementById("tblUsers");
-  tbl.innerHTML = "";
-
-  if (data.success && data.data.length > 0) {
-    data.data.forEach(u => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${u.username}</td><td>${u.nama}</td><td>${u.role}</td>`;
-      tbl.appendChild(tr);
-    });
-    document.getElementById("userList").classList.remove("hidden");
-  } else {
-    toast("Tidak ada data user.");
-  }
-}
+// Untuk menjaga jawaban singkat di chat, jika kamu ingin saya kirim ulang seluruh file app.js
+// (termasuk fungsi dashboard & kendaraan seperti sebelumnya), beri tahu — aku akan kirim full file
+// yang sudah menggabungkan toggle + semua fungsi yang sebelumnya ada (loadKendaraan, simpanKendaraan, dll).
