@@ -86,6 +86,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>PT ANISA JAYA UTAMA — BY ROY</header>
 
@@ -102,17 +103,45 @@
     </div>
   </div>
 
-  <!-- Panggil main.js dengan versi paksa untuk menghindari cache -->
-  <script src="main.js?v=1.6"></script>
+  <!-- Muat main.js dengan versi paksa dan defer agar pasti termuat -->
+  <script src="main.js?v=<?=Date.now()?> " defer></script>
 
   <script>
-    // ==== Validasi untuk memastikan file main.js sudah termuat ====
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        if (typeof login !== "function") {
-          alert("⚠️ File main.js belum termuat atau fungsi login() tidak ditemukan.\nCoba reload halaman (Ctrl + F5) atau pastikan file main.js ada di folder yang sama.");
-        }
-      }, 500);
+    /****************************************************
+     * ✅ CEK OTOMATIS apakah main.js sudah termuat
+     ****************************************************/
+    window.addEventListener("load", () => {
+      console.log("🔍 Memeriksa apakah fungsi login() tersedia...");
+
+      if (typeof login !== "function") {
+        alert("⚠️ File main.js belum termuat atau fungsi login() tidak ditemukan.\nPastikan file main.js ada di folder yang sama & reload (Ctrl+F5).");
+        console.error("❌ login() tidak ditemukan — kemungkinan file main.js tidak terbaca.");
+      } else {
+        console.log("✅ Fungsi login() berhasil ditemukan dan siap dipakai.");
+      }
+    });
+
+    /****************************************************
+     * ✅ TOMBOL LOGIN & TOGGLE PASSWORD
+     ****************************************************/
+    document.getElementById("btnLogin").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (typeof login === "function") {
+        login();
+      } else {
+        alert("⚠️ Fungsi login() belum siap. Coba reload halaman (Ctrl + F5).");
+      }
+    });
+
+    document.getElementById("togglePass").addEventListener("click", (e) => {
+      const p = document.getElementById("password");
+      if (p.type === "password") {
+        p.type = "text";
+        e.target.textContent = "🙈";
+      } else {
+        p.type = "password";
+        e.target.textContent = "👁️";
+      }
     });
   </script>
 </body>
