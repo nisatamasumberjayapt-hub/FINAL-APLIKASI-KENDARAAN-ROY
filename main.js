@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v5.1 FINAL — Fix Warna + Debug Mode Aktif
+ * main.js v6.0 — Indikator Kotak per Kolom (Stabil)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v5.1 FINAL (Debug Mode ON)");
+console.log("✅ main.js aktif — v6.0 per-kolom indikator");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -32,7 +32,6 @@ function toast(msg) { alert(msg); }
 function getSession() { try { return JSON.parse(localStorage.getItem("aj_user")) || null; } catch { return null; } }
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
-
 function fmtDate(d) {
   if (!d) return "-";
   const t = new Date(d);
@@ -40,7 +39,7 @@ function fmtDate(d) {
   return t.toISOString().split("T")[0];
 }
 
-/* ================= LOGIN ================= */
+/* ================= LOGIN / REGISTER ================= */
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -52,12 +51,12 @@ async function login() {
   } else toast(res.message || "Username atau password salah");
 }
 
-/* ================= REGISTER ================= */
 async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !nama || !password) return toast("Semua kolom wajib diisi!");
+  if (!username || !nama || !password)
+    return toast("Semua kolom wajib diisi!");
   const res = await api("register", { username, nama, password });
   toast(res.message);
   if (res.success) location.href = "login.html";
@@ -78,93 +77,71 @@ async function initDashboard() {
   }
 
   renderTabelKendaraan(res.data);
-  debugDates(res.data.slice(0, 10)); // 🔍 tampilkan log debug di console
 }
 
-/* ================= FIX WARNA ================= */
-function getStatusKendaraan(k) {
+/* ================= STATUS PER TANGGAL ================= */
+function getStatusTanggal(tgl, tipe = "stnk") {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
-  function parseDateSafe(tgl) {
-    if (!tgl) return null;
-    const parts = String(tgl).split("-");
-    if (parts.length === 3) {
-      const [y, m, d] = parts.map(Number);
-      return new Date(y, m - 1, d);
-    }
-    return new Date(tgl);
-  }
+  const d = new Date(tgl);
+  if (isNaN(d)) return { icon: "⬜", text: "Tanggal tidak valid" };
 
-  function selisihHari(tgl) {
-    const t = parseDateSafe(tgl);
-    if (!t || isNaN(t)) return 9999;
-    t.setHours(0, 0, 0, 0);
-    return Math.floor((t - now) / (1000 * 60 * 60 * 24));
-  }
-
-  const stnk = selisihHari(k.STNK);
-  const kir = selisihHari(k.KIR);
-  const pajak5 = selisihHari(k.pajak5tahun);
-  const servis = (() => {
-    const s = parseDateSafe(k.ServisTerakhir);
-    if (!s || isNaN(s)) return 0;
-    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
-  })();
-
-  let color = "#e9f9e9"; // Hijau default
-  let label = "Aman";
-
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servis >= 120) {
-    color = "#ffd8d8"; label = "Lewat";
-  } else if (
-    stnk <= 30 || kir <= 30 || pajak5 <= 30 || (servis >= 90 && servis < 120)
-  ) {
-    color = "#fff3c6"; label = "Peringatan";
-  }
-
-  return { color, label };
-}
-
-/* ================= FORMAT SELISIH ================= */
-function formatSelisih(tgl) {
-  if (!tgl) return "-";
-  const now = new Date(); now.setHours(0, 0, 0, 0);
-  const d = new Date(tgl); d.setHours(0, 0, 0, 0);
   const diff = Math.floor((d - now) / (1000 * 60 * 60 * 24));
   const abs = Math.abs(diff);
   const bulan = Math.floor(abs / 30);
   const hari = abs % 30;
-  if (diff < 0) return `Telah lewat ${bulan} bulan ${hari} hari`;
-  if (diff > 0) return `${bulan} bulan ${hari} hari lagi`;
-  return "Hari ini";
+
+  let icon = "🟩"; // aman
+  let ket = diff < 0
+    ? `Telah lewat ${bulan} bulan ${hari} hari`
+    : diff > 0
+    ? `${bulan} bulan ${hari} hari lagi`
+    : "Hari ini";
+
+  // ubah ikon berdasarkan kondisi
+  if (diff <= 0) icon = "🟥";
+  else if (diff <= 30) icon = "🟨";
+
+  return { icon, text: ket };
 }
 
-function formatServis(tgl) {
-  if (!tgl) return "-";
-  const now = new Date(); now.setHours(0, 0, 0, 0);
-  const d = new Date(tgl); d.setHours(0, 0, 0, 0);
+/* ================= SERVIS ================= */
+function getStatusServis(tgl) {
+  const now = new Date();
+  const d = new Date(tgl);
+  if (isNaN(d)) return { icon: "⬜", text: "-" };
+
   const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
   const bulan = Math.floor(diff / 30);
   const hari = diff % 30;
-  return `Sudah ${bulan} bulan ${hari} hari`;
+
+  let icon = "🟩";
+  if (bulan >= 4) icon = "🟥";
+  else if (bulan >= 3) icon = "🟨";
+
+  return { icon, text: `Sudah ${bulan} bulan ${hari} hari` };
 }
 
-/* ================= RENDER TABEL ================= */
+/* ================= RENDER ================= */
 function renderTabelKendaraan(data) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
   data.forEach((k) => {
-    const s = getStatusKendaraan(k);
+    const stnk = getStatusTanggal(k.STNK, "stnk");
+    const kir = getStatusTanggal(k.KIR, "kir");
+    const pajak = getStatusTanggal(k.pajak5tahun, "pajak");
+    const servis = getStatusServis(k.ServisTerakhir);
+
     html += `
-      <tr style="background:${s.color}">
+      <tr>
         <td>${k.Platnomor || "-"}</td>
         <td>${k.Letak || "-"}</td>
-        <td>${fmtDate(k.STNK)}<br><small>${formatSelisih(k.STNK)}</small></td>
-        <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
-        <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatServis(k.ServisTerakhir)}</small></td>
-        <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
-        <td></td> <!-- kolom aksi dikosongkan -->
+        <td>${stnk.icon} ${fmtDate(k.STNK)}<br><small>${stnk.text}</small></td>
+        <td>${kir.icon} ${fmtDate(k.KIR)}<br><small>${kir.text}</small></td>
+        <td>${servis.icon} ${fmtDate(k.ServisTerakhir)}<br><small>${servis.text}</small></td>
+        <td>${pajak.icon} ${fmtDate(k.pajak5tahun)}<br><small>${pajak.text}</small></td>
+        <td></td>
       </tr>`;
   });
   tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
@@ -203,43 +180,4 @@ async function simpanKendaraan() {
   });
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
-}
-
-/* ================= DEBUG LOGGER ================= */
-function debugDates(rows) {
-  const now = new Date(); now.setHours(0,0,0,0);
-  console.log("🕒 NOW:", now.toString(), "ISO:", now.toISOString());
-
-  function parseDateSafe(tgl) {
-    if (!tgl) return null;
-    const parts = String(tgl).split("-");
-    if (parts.length === 3) {
-      const [y, m, d] = parts.map(Number);
-      return new Date(y, m - 1, d);
-    }
-    return new Date(tgl);
-  }
-
-  const out = rows.map((k, i) => {
-    const dSTNK  = parseDateSafe(k.STNK);
-    const dKIR   = parseDateSafe(k.KIR);
-    const dSrv   = parseDateSafe(k.ServisTerakhir);
-    const dPaj5  = parseDateSafe(k.pajak5tahun);
-
-    const diff = (d) => {
-      if (!d || isNaN(d)) return null;
-      const copy = new Date(d); copy.setHours(0,0,0,0);
-      return Math.floor((copy - now) / 86400000);
-    };
-
-    return {
-      idx: i+1, Plat: k.Platnomor,
-      STNK: k.STNK,   dSTNK: dSTNK ? dSTNK.toISOString().split("T")[0] : null,   sisaSTNK: diff(dSTNK),
-      KIR: k.KIR,     dKIR:  dKIR  ? dKIR.toISOString().split("T")[0]  : null,   sisaKIR:  diff(dKIR),
-      Servis: k.ServisTerakhir, dSrv: dSrv ? dSrv.toISOString().split("T")[0] : null,  hariSejakServis: (dSrv ? Math.floor((now - dSrv)/86400000) : null),
-      Pajak5: k.pajak5tahun, dPaj5: dPaj5 ? dPaj5.toISOString().split("T")[0] : null, sisaPajak5: diff(dPaj5),
-    };
-  });
-
-  console.table(out);
 }
