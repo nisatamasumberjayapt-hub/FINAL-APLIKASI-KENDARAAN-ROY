@@ -1,11 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.3 — FINAL STABIL (warna fix + format bulan/hari)
- * Berdasarkan versi 1.4, kompatibel dengan kolom pajak5tahun
+ * main.js v4.4 — FINAL STABIL (warna fix + format bulan/hari)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — versi 4.3 stabil & warna fix");
+console.log("✅ main.js aktif — versi 4.4 warna fix total");
 
 // ===== Helper umum =====
 async function api(action, payload = {}) {
@@ -45,27 +44,33 @@ function fmtDate(isoDate) {
   return d.toISOString().split("T")[0];
 }
 
-// ===== Hitung selisih hari jadi format bulan + hari =====
-function formatSelisih(tanggal) {
-  if (!tanggal) return "-";
+// ===== Hitung selisih hari (pakai UTC agar akurat zona waktu) =====
+function daysDiff(tgl) {
+  if (!tgl) return null;
+  const t = new Date(tgl + "T00:00:00Z"); // tambahkan UTC agar tidak geser zona waktu
   const now = new Date();
-  const tgl = new Date(tanggal);
-  const diff = Math.floor((tgl - now) / (1000 * 60 * 60 * 24)); // dalam hari
-  const absDiff = Math.abs(diff);
-  const bulan = Math.floor(absDiff / 30);
-  const hari = absDiff % 30;
-  const teks = `${bulan > 0 ? bulan + " bulan " : ""}${hari} hari`;
-  if (diff > 0) return `${teks} lagi`;
-  if (diff < 0) return `Telah lewat ${teks}`;
+  const diff = Math.floor((t - now) / (1000 * 60 * 60 * 24));
+  return diff;
+}
+
+// ===== Format selisih jadi bulan + hari =====
+function formatSelisih(tgl) {
+  const diff = daysDiff(tgl);
+  if (diff === null) return "-";
+  const abs = Math.abs(diff);
+  const bulan = Math.floor(abs / 30);
+  const hari = abs % 30;
+  if (diff > 0) return `${bulan > 0 ? bulan + " bulan " : ""}${hari} hari lagi`;
+  if (diff < 0) return `Telah lewat ${bulan > 0 ? bulan + " bulan " : ""}${hari} hari`;
   return "Hari ini";
 }
 
-// ===== Hitung selisih servis terakhir =====
-function formatSejakServis(tanggal) {
-  if (!tanggal) return "-";
+// ===== Format servis =====
+function formatServis(tgl) {
+  if (!tgl) return "-";
   const now = new Date();
-  const tgl = new Date(tanggal);
-  const diff = Math.floor((now - tgl) / (1000 * 60 * 60 * 24));
+  const s = new Date(tgl + "T00:00:00Z");
+  const diff = Math.floor((now - s) / (1000 * 60 * 60 * 24));
   const bulan = Math.floor(diff / 30);
   const hari = diff % 30;
   return `Sudah ${bulan} bulan ${hari} hari`;
@@ -116,34 +121,41 @@ async function initDashboard() {
   renderTabelKendaraan(res.data);
 }
 
-// ===== Logika Warna Status =====
+// ===== Status kendaraan (fix warna) =====
 function getStatusKendaraan(k) {
-  function selisihHari(tgl) {
-    if (!tgl) return 9999;
-    const diff = Math.floor((new Date(tgl) - new Date()) / (1000 * 60 * 60 * 24));
-    return diff;
-  }
+  const stnk = daysDiff(k.STNK);
+  const kir = daysDiff(k.KIR);
+  const pajak = daysDiff(k.pajak5tahun);
 
-  const stnk = selisihHari(k.STNK);
-  const kir = selisihHari(k.KIR);
-  const pajak = selisihHari(k.pajak5tahun);
-  const servis = Math.floor((new Date() - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
+  const servis = (() => {
+    const s = new Date(k.ServisTerakhir + "T00:00:00Z");
+    const now = new Date();
+    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
+  })();
 
   let color = "#e9f9e9";
   let label = "Aman";
 
+  // merah (lewat)
   if (stnk <= 0 || kir <= 0 || pajak <= 0 || servis >= 120) {
     color = "#ffd8d8";
     label = "Lewat";
-  } else if (stnk <= 10 || kir <= 10 || pajak <= 10 || servis >= 90) {
+  }
+  // kuning (peringatan)
+  else if (stnk <= 10 || kir <= 10 || pajak <= 10 || servis >= 90) {
     color = "#fff3c6";
     label = "Peringatan";
+  }
+  // hijau (aman)
+  else {
+    color = "#e9f9e9";
+    label = "Aman";
   }
 
   return { color, label };
 }
 
-// ===== Render Tabel Kendaraan =====
+// ===== RENDER TABEL =====
 function renderTabelKendaraan(rows) {
   const tbody = document.querySelector("#tblKendaraan tbody");
   if (!rows?.length) {
@@ -160,7 +172,7 @@ function renderTabelKendaraan(rows) {
           <td>${k.Letak || "-"}</td>
           <td>${fmtDate(k.STNK)}<br><small>${formatSelisih(k.STNK)}</small></td>
           <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
-          <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatSejakServis(k.ServisTerakhir)}</small></td>
+          <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatServis(k.ServisTerakhir)}</small></td>
           <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
           <td>${status.label}</td>
         </tr>`;
