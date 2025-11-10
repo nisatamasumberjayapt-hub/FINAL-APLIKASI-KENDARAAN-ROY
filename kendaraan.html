@@ -6,7 +6,6 @@
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ======== LAYOUT 2 KOLOM (FORM + TABEL) ======== */
     .kendaraan-wrapper {
       display: flex;
       justify-content: center;
@@ -16,31 +15,27 @@
       width: 95%;
       max-width: 1400px;
     }
-
-    /* ======== FORM KIRI ======== */
     .form-container {
-      flex: 0 0 27%;
+      flex: 0 0 29%;
       background: #fff;
       padding: 25px 25px 30px 25px;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
       align-self: flex-start;
     }
-
     .form-container h2 {
-      text-align: center;
+      text-align: left;
       color: #0b4d1b;
       margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
     }
-
     .form-container label {
       display: block;
-      margin-top: 10px;
+      margin-top: 12px;
       font-weight: bold;
       color: #0b4d1b;
       text-align: left;
     }
-
     .form-container input {
       width: 100%;
       padding: 9px 10px;
@@ -49,61 +44,36 @@
       margin-top: 5px;
       font-size: 14px;
     }
+    .form-actions { margin-top: 18px; display: flex; gap: 10px; }
+    #btnPrimary { flex: 1; }
+    #btnCancel  { flex: 1; background:#444; }
+    #btnCancel[disabled] { opacity: .6; cursor: not-allowed; }
 
-    .form-actions {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    #btnSimpan, .btn-dark {
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    /* ======== TABEL KANAN ======== */
     .tabel-container {
-      flex: 0 0 70%;
+      flex: 0 0 68%;
       background: #fff;
       padding: 25px 30px;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
-
     .tabel-container h2 {
       color: #0b4d1b;
       text-align: left;
       margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
     }
+    .search-box { margin: 10px 0 20px 0; width: 100%; }
+    .legend { margin-top: 14px; text-align: left; font-size: 14px; }
 
-    .search-box {
-      margin: 10px 0 20px 0;
-      width: 100%;
+    .btn-sm {
+      padding: 6px 10px; border: 0; border-radius: 6px;
+      background:#0b5e20; color:#fff; cursor:pointer; font-size: 13px;
     }
+    .btn-sm:hover { filter: brightness(1.1); }
 
-    .legend {
-      margin-top: 15px;
-      text-align: center;
-    }
-
-    /* ======== RESPONSIVE MODE ======== */
-    @media (max-width: 900px) {
-      .kendaraan-wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .form-container, .tabel-container {
-        flex: 0 0 100%;
-        width: 95%;
-      }
-
-      .form-container {
-        order: 1;
-      }
-
-      .tabel-container {
-        order: 2;
-      }
+    @media (max-width: 1024px) {
+      .kendaraan-wrapper { flex-direction: column; gap: 16px; }
+      .form-container, .tabel-container { flex: 0 0 100%; width: 100%; }
     }
   </style>
 </head>
@@ -120,35 +90,36 @@
 
   <main>
     <div class="kendaraan-wrapper">
-
-      <!-- ======== FORM KIRI ======== -->
+      <!-- === FORM KIRI === -->
       <div class="form-container">
-        <h2>🚘 Tambah Kendaraan</h2>
+        <h2>🚙 Tambah Kendaraan</h2>
+
         <label for="plat">Plat Nomor</label>
-        <input type="text" id="plat" placeholder="Contoh: B1234XYZ">
+        <input type="text" id="plat" placeholder="Contoh: B1234XYZ" disabled>
 
         <label for="lokasi">Letak / Garasi</label>
-        <input type="text" id="lokasi" placeholder="Contoh: Jakarta">
+        <input type="text" id="lokasi" placeholder="Contoh: Jakarta" disabled>
 
         <label for="stnk">STNK</label>
-        <input type="date" id="stnk">
+        <input type="date" id="stnk" disabled>
 
         <label for="kir">KIR</label>
-        <input type="date" id="kir">
+        <input type="date" id="kir" disabled>
 
         <label for="servis">Servis Terakhir</label>
-        <input type="date" id="servis">
+        <input type="date" id="servis" disabled>
 
         <label for="pajak">Pajak 5 Tahunan</label>
-        <input type="date" id="pajak">
+        <input type="date" id="pajak" disabled>
 
         <div class="form-actions">
-          <button id="btnSimpan">💾 Simpan</button>
-          <button class="btn-dark" onclick="window.location='dashboard.html'">⬅ Kembali</button>
+          <!-- Satu tombol dinamis: Tambah ➜ Simpan ➜ Update -->
+          <button id="btnPrimary" class="btn">➕ Tambah</button>
+          <button id="btnCancel" class="btn" disabled>✖ Batal</button>
         </div>
       </div>
 
-      <!-- ======== TABEL KANAN ======== -->
+      <!-- === TABEL KANAN === -->
       <div class="tabel-container">
         <h2>📋 Daftar Kendaraan</h2>
         <div class="search-box">
@@ -175,22 +146,21 @@
         </div>
 
         <div class="legend">
-          <span><span class="dot green"></span> Aman</span> |
-          <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span> |
-          <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
+          <span>🟩 Aman</span> &nbsp;|&nbsp;
+          <span>🟨 Peringatan (≤10 hari / Servis ≥3 bulan)</span> &nbsp;|&nbsp;
+          <span>🟥 Lewat (STNK/KIR/Pajak habis)</span>
         </div>
       </div>
     </div>
   </main>
 
   <script src="main.js?v=20251109-final3"></script>
-
   <script>
-    // Tambahan agar tabel di kendaraan ikut render
+    // Halaman kendaraan akan hidupkan mode & render via main.js
     function initKendaraan() {
-      if (typeof initDashboard === "function") {
-        initDashboard(); // panggil fungsi yang sama dengan dashboard
-      }
+      if (typeof initKendaraanPage === "function") initKendaraanPage();
+      // fallback: kalau belum ada, pakai initDashboard agar tabel tetap kebaca
+      else if (typeof initDashboard === "function") initDashboard();
     }
   </script>
 </body>
