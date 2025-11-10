@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.7 — FINAL TERUJI (Tulisan benar + Warna akurat + Pajak 5 th aktif)
+ * main.js v4.8 — FINAL (Warna fix + Aksi kosong)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v4.7 FINAL TERUJI");
+console.log("✅ main.js aktif — v4.8 FINAL");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -91,26 +91,25 @@ function getStatusKendaraan(k) {
     if (!tgl) return 9999;
     const d = new Date(tgl);
     if (isNaN(d)) return 9999;
-    const ms = d - now;
-    return Math.floor(ms / (1000 * 60 * 60 * 24));
+    return Math.floor((d - now) / (1000 * 60 * 60 * 24));
   }
 
   const stnk = diffDays(k.STNK);
   const kir = diffDays(k.KIR);
   const pajak5 = diffDays(k.pajak5tahun);
-  const servisHari = (() => {
-    const s = new Date(k.ServisTerakhir);
-    if (isNaN(s)) return 0;
-    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
-  })();
+  const servis = Math.floor((now - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
 
-  let color = "#e9f9e9"; // hijau
+  // Tentukan status
+  let color = "#e9f9e9"; // hijau (aman)
   let label = "Aman";
 
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisHari >= 120) {
+  // Merah = sudah lewat
+  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servis >= 120) {
     color = "#ffd8d8"; // merah
     label = "Lewat";
-  } else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisHari >= 90) {
+  }
+  // Kuning = mendekati
+  else if (stnk <= 30 || kir <= 30 || pajak5 <= 30 || servis >= 90) {
     color = "#fff3c6"; // kuning
     label = "Peringatan";
   }
@@ -124,14 +123,12 @@ function formatSelisih(tgl) {
   const now = new Date();
   const d = new Date(tgl);
   if (isNaN(d)) return "-";
-
-  const selisih = Math.floor((d - now) / (1000 * 60 * 60 * 24));
-  const abs = Math.abs(selisih);
+  const diff = Math.floor((d - now) / (1000 * 60 * 60 * 24));
+  const abs = Math.abs(diff);
   const bulan = Math.floor(abs / 30);
   const hari = abs % 30;
-
-  if (selisih < 0) return `Telah lewat ${bulan} bulan ${hari} hari`;
-  if (selisih > 0) return `${bulan} bulan ${hari} hari lagi`;
+  if (diff < 0) return `Telah lewat ${bulan} bulan ${hari} hari`;
+  if (diff > 0) return `${bulan} bulan ${hari} hari lagi`;
   return "Hari ini";
 }
 
@@ -140,10 +137,9 @@ function formatServis(tgl) {
   const now = new Date();
   const d = new Date(tgl);
   if (isNaN(d)) return "-";
-
-  const selisih = Math.floor((now - d) / (1000 * 60 * 60 * 24));
-  const bulan = Math.floor(selisih / 30);
-  const hari = selisih % 30;
+  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+  const bulan = Math.floor(diff / 30);
+  const hari = diff % 30;
   return `Sudah ${bulan} bulan ${hari} hari`;
 }
 
@@ -162,7 +158,7 @@ function renderTabelKendaraan(data) {
         <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
         <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatServis(k.ServisTerakhir)}</small></td>
         <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
-        <td>${status.label}</td>
+        <td></td>
       </tr>`;
   });
 
