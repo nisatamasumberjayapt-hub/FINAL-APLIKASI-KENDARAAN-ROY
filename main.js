@@ -1,11 +1,12 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.5 — FINAL STABIL (Tulisan Benar + Warna Akurat)
- * Kompatibel dengan kolom pajak5tahun & ServisTerakhir
+ * main.js v4.6 — FINAL STABIL (Tulisan benar + Warna akurat)
+ * Kompatibel pajak5tahun & servis
  ****************************************************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v4.5 FINAL STABIL");
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
+console.log("✅ main.js aktif — v4.6 FINAL");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -28,9 +29,10 @@ async function api(action, payload = {}) {
   }
 }
 
-/* ================= UTILITAS UMUM ================= */
-function toast(msg) { alert(msg); }
-
+/* ================= UTILITAS ================= */
+function toast(msg) {
+  alert(msg);
+}
 function getSession() {
   try {
     return JSON.parse(localStorage.getItem("aj_user")) || null;
@@ -38,32 +40,63 @@ function getSession() {
     return null;
   }
 }
-
 function setSession(user) {
   localStorage.setItem("aj_user", JSON.stringify(user));
 }
-
 function logout() {
   localStorage.removeItem("aj_user");
   location.href = "login.html";
 }
 
-function fmtDate(d) {
-  if (!d) return "-";
-  const t = new Date(d);
-  if (isNaN(t)) return d;
-  return t.toISOString().split("T")[0];
+/* ===== Parse tanggal Y-M-D secara aman (tanpa geser zona waktu) ===== */
+function parseYMD(d) {
+  if (!d) return null;
+  if (d instanceof Date) return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  if (typeof d === "number") {
+    const tmp = new Date(d);
+    return new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
+  }
+  if (typeof d === "string") {
+    const s = d.trim();
+    const parts = s.split(/[-/]/).map((x) => Number(x));
+    if (parts.length === 3) {
+      // asumsikan format Google Sheet: YYYY-MM-DD
+      const [y, m, day] = parts[0] > 31 ? parts : [parts[2], parts[1], parts[0]]; // fallback bila dd-mm-yyyy
+      return new Date(Date.UTC(y, m - 1, day));
+    }
+    // fallback
+    const tmp = new Date(s);
+    if (isNaN(tmp)) return null;
+    return new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
+  }
+  return null;
 }
 
-/* ================= LOGIN ================= */
+/* Hitung selisih hari UTC (tanpa jam) */
+function diffDaysUTC(a, b) {
+  if (!a || !b) return NaN;
+  const Au = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate());
+  const Bu = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate());
+  return Math.floor((Au - Bu) / 86400000);
+}
+
+/* Format YYYY-MM-DD untuk tampilan kolom tanggal */
+function fmtDate(d) {
+  const t = parseYMD(d);
+  if (!t) return "-";
+  const y = t.getUTCFullYear();
+  const m = String(t.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(t.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/* ================= LOGIN / REGISTER ================= */
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-
   if (!username || !password) return toast("Isi username dan password!");
 
   const res = await api("login", { username, password });
-
   if (res.success) {
     setSession(res.user);
     toast("Selamat datang, " + res.user.nama);
@@ -73,14 +106,12 @@ async function login() {
   }
 }
 
-/* ================= REGISTER ================= */
 async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!username || !nama || !password)
-    return toast("Semua kolom wajib diisi!");
+  if (!username || !nama || !password) return toast("Semua kolom wajib diisi!");
 
   const res = await api("register", { username, nama, password });
   toast(res.message);
@@ -92,7 +123,6 @@ async function initDashboard() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
 
-  document.title = "Dashboard — PT ANISA JAYA UTAMA";
   const tbl = document.querySelector("#tblKendaraan tbody");
   tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
 
@@ -101,87 +131,65 @@ async function initDashboard() {
     tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
     return;
   }
-
   renderTabelKendaraan(res.data, user.role);
 }
 
-/* ================= STATUS KENDARAAN (WARNA FIX) ================= */
+/* ================= STATUS WARNA ================= */
 function getStatusKendaraan(k) {
-  const now = new Date();
+  const now = parseYMD(new Date());
 
-  // Parser tanggal aman
-  function parseDate(d) {
-    if (!d) return null;
-    const parts = d.split("-");
-    if (parts.length === 3) {
-      const [y, m, day] = parts.map(Number);
-      return new Date(y, m - 1, day);
-    }
-    return new Date(d);
-  }
+  const dSTNK = parseYMD(k.STNK);
+  const dKIR = parseYMD(k.KIR);
+  const dPajak = parseYMD(k.pajak5tahun);
+  const dServ = parseYMD(k.ServisTerakhir);
 
-  function daysDiff(tgl) {
-    const t = parseDate(tgl);
-    if (!t || isNaN(t)) return 9999;
-    const diff = Math.floor((t - now) / (1000 * 60 * 60 * 24));
-    return diff;
-  }
+  const stnk = Number.isNaN(diffDaysUTC(dSTNK, now)) ? 9999 : diffDaysUTC(dSTNK, now);
+  const kir = Number.isNaN(diffDaysUTC(dKIR, now)) ? 9999 : diffDaysUTC(dKIR, now);
+  const pajak5 = Number.isNaN(diffDaysUTC(dPajak, now)) ? 9999 : diffDaysUTC(dPajak, now);
+  const servisHari = Number.isNaN(diffDaysUTC(now, dServ)) ? 0 : diffDaysUTC(now, dServ); // hari sejak servis
 
-  const stnk = daysDiff(k.STNK);
-  const kir = daysDiff(k.KIR);
-  const pajak5 = daysDiff(k.pajak5tahun);
-  const servisDiff = (() => {
-    const s = parseDate(k.ServisTerakhir);
-    if (!s || isNaN(s)) return 0;
-    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
-  })();
-
-  let color = "#e9f9e9"; // hijau aman
+  let color = "#e9f9e9"; // aman (hijau)
   let label = "Aman";
-
-  // 🔴 Lewat
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisDiff >= 120) {
-    color = "#ffd8d8";
+  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisHari >= 120) {
+    color = "#ffd8d8"; // merah
     label = "Lewat";
-  }
-  // 🟡 Peringatan
-  else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisDiff >= 90) {
-    color = "#fff3c6";
+  } else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisHari >= 90) {
+    color = "#fff3c6"; // kuning
     label = "Peringatan";
   }
-
-  // 🟩 Aman
   return { color, label };
 }
 
-/* ================= FORMAT SELISIH TANGGAL ================= */
+/* ================= FORMAT SELISIH UNTUK TULISAN ================= */
 function formatSelisih(isoDate) {
-  if (!isoDate) return "-";
-  const now = new Date();
-  const target = new Date(isoDate);
-  const selisihMs = target - now;
-  const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
-  const absHari = Math.abs(selisihHari);
-  const bulan = Math.floor(absHari / 30);
-  const hari = absHari % 30;
-  if (selisihHari < 0) return `Telah lewat ${bulan} bulan ${hari} hari`;
-  if (selisihHari > 0) return `${bulan} bulan ${hari} hari lagi`;
+  const now = parseYMD(new Date());
+  const t = parseYMD(isoDate);
+  if (!t || !now) return "-";
+
+  const selisih = diffDaysUTC(t, now); // t - now
+  const abs = Math.abs(selisih);
+  const bulan = Math.floor(abs / 30);
+  const hari = abs % 30;
+
+  if (selisih < 0) return `Telah lewat ${bulan} bulan ${hari} hari`;
+  if (selisih > 0) return `${bulan} bulan ${hari} hari lagi`;
   return "Hari ini";
 }
 
-/* ================= FORMAT SERVIS ================= */
 function formatServis(isoDate) {
-  if (!isoDate) return "-";
-  const sekarang = new Date();
-  const lastServis = new Date(isoDate);
-  const selisihMs = sekarang - lastServis;
-  const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
-  const bulan = Math.floor(selisihHari / 30);
-  const hari = selisihHari % 30;
+  const now = parseYMD(new Date());
+  const last = parseYMD(isoDate);
+  if (!last || !now) return "-";
+
+  const sejak = diffDaysUTC(now, last); // now - last
+  const abs = Math.max(0, sejak);
+  const bulan = Math.floor(abs / 30);
+  const hari = abs % 30;
+
   return `Sudah ${bulan} bulan ${hari} hari`;
 }
 
-/* ================= RENDER TABEL KENDARAAN ================= */
+/* ================= RENDER TABEL ================= */
 function renderTabelKendaraan(data, role) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
@@ -239,8 +247,7 @@ async function simpanKendaraan() {
   const servis = document.getElementById("servis").value;
   const pajak5 = document.getElementById("pajak5").value;
 
-  if (!plat || !letak)
-    return toast("Plat nomor dan lokasi harus diisi!");
+  if (!plat || !letak) return toast("Plat nomor dan lokasi harus diisi!");
 
   const res = await api("addKendaraan", {
     Platnomor: plat,
