@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v7.0 — Kendaraan (Admin) + Edit + Search + Warna Aman
+ * main.js v7.1 — Kendaraan (Admin + CRUD + Search + Hapus Aman)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-console.log("✅ main.js aktif — v7.0 Kendaraan");
+console.log("✅ main.js aktif — v7.1 Kendaraan");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -62,7 +62,7 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
-/* ================= STATUS PER TANGGAL ================= */
+/* ================= STATUS TANGGAL ================= */
 function getStatusTanggal(tgl) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
@@ -87,7 +87,6 @@ function getStatusTanggal(tgl) {
   return { color, text: ket };
 }
 
-/* ================= SERVIS ================= */
 function getStatusServis(tgl) {
   const now = new Date();
   const d = new Date(tgl);
@@ -118,7 +117,7 @@ async function initDashboard() {
     return;
   }
 
-  renderTabelKendaraan(res.data, false); // mode user
+  renderTabelKendaraan(res.data, false);
   initSearch();
 }
 
@@ -140,36 +139,30 @@ async function initKendaraan() {
     return;
   }
 
-  renderTabelKendaraan(res.data, true); // mode admin
+  renderTabelKendaraan(res.data, true);
   initSearch();
 }
 
-/* ================= RENDER ================= */
+/* ================= RENDER TABEL ================= */
 function renderTabelKendaraan(data, isAdmin = false) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
-  data.forEach((k, i) => {
-    const stnk = getStatusTanggal(k.STNK);
-    const kir = getStatusTanggal(k.KIR);
-    const pajak = getStatusTanggal(k.pajak5tahun);
-    const servis = getStatusServis(k.ServisTerakhir);
-
+  data.forEach((k) => {
     html += `
       <tr>
         <td>${k.Platnomor || "-"}</td>
         <td>${k.Letak || "-"}</td>
-        <td><span style="display:inline-block;width:12px;height:12px;background:${stnk.color};border-radius:2px;margin-right:5px;"></span>
-            ${fmtDate(k.STNK)}<br><small>${stnk.text}</small></td>
-        <td><span style="display:inline-block;width:12px;height:12px;background:${kir.color};border-radius:2px;margin-right:5px;"></span>
-            ${fmtDate(k.KIR)}<br><small>${kir.text}</small></td>
-        <td><span style="display:inline-block;width:12px;height:12px;background:${servis.color};border-radius:2px;margin-right:5px;"></span>
-            ${fmtDate(k.ServisTerakhir)}<br><small>${servis.text}</small></td>
-        <td><span style="display:inline-block;width:12px;height:12px;background:${pajak.color};border-radius:2px;margin-right:5px;"></span>
-            ${fmtDate(k.pajak5tahun)}<br><small>${pajak.text}</small></td>
+        <td>${fmtDate(k.STNK)}</td>
+        <td>${fmtDate(k.KIR)}</td>
+        <td>${fmtDate(k.ServisTerakhir)}</td>
+        <td>${fmtDate(k.pajak5tahun)}</td>
         ${
           isAdmin
             ? `<td>
-                <button class="btn-edit" onclick="editKendaraan('${encodeURIComponent(JSON.stringify(k))}')">✏️ Edit</button>
+                <button class="btn-edit" style="background:#f1c40f;color:#000;margin-right:5px"
+                  onclick="editKendaraan('${encodeURIComponent(JSON.stringify(k))}')">✏️ Edit</button>
+                <button class="btn-delete" style="background:#c0392b;color:#fff;"
+                  onclick="hapusKendaraan('${k.Platnomor}')">🗑 Hapus</button>
               </td>`
             : `<td></td>`
         }
@@ -178,14 +171,25 @@ function renderTabelKendaraan(data, isAdmin = false) {
   tbl.innerHTML = html || `<tr><td colspan="8" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-/* ================= EDIT (MODE ADMIN) ================= */
+/* ================= HAPUS KENDARAAN ================= */
+async function hapusKendaraan(plat) {
+  if (!confirm(`Apakah Anda yakin ingin menghapus kendaraan dengan plat "${plat}"?`)) return;
+  const res = await api("deleteKendaraan", { Platnomor: plat });
+  toast(res.message);
+  if (res.success) {
+    const reload = await api("getKendaraan");
+    renderTabelKendaraan(reload.data, true);
+  }
+}
+
+/* ================= EDIT (ADMIN) ================= */
 function editKendaraan(dataStr) {
   const data = JSON.parse(decodeURIComponent(dataStr));
   localStorage.setItem("edit_kendaraan", JSON.stringify(data));
   location.href = "edit-kendaraan.html";
 }
 
-/* ================= SIMPAN TAMBAH ================= */
+/* ================= TAMBAH KENDARAAN ================= */
 async function simpanKendaraan() {
   const plat = document.getElementById("plat").value.trim();
   const letak = document.getElementById("letak").value.trim();
@@ -211,42 +215,31 @@ async function simpanKendaraan() {
 
 /* ================= PENCARIAN + CLEAR ================= */
 function initSearch() {
-  const input =
-    document.getElementById("searchInput") ||
-    document.querySelector('input[placeholder*="Cari kendaraan"]');
-
+  const input = document.getElementById("searchInput");
   if (!input) return;
-
-  let clearBtn = document.getElementById("clearSearch");
-  if (!clearBtn) {
-    clearBtn = document.createElement("button");
-    clearBtn.id = "clearSearch";
-    clearBtn.textContent = "❌";
-    clearBtn.title = "Reset pencarian";
-    Object.assign(clearBtn.style, {
-      marginLeft: "8px",
-      padding: "2px 8px",
-      border: "none",
-      background: "#c0392b",
-      color: "white",
-      borderRadius: "4px",
-      cursor: "pointer",
-      display: "none",
-    });
-    input.parentNode.insertBefore(clearBtn, input.nextSibling);
-  }
-
   const rows = document.querySelectorAll("#tblKendaraan tbody tr");
+
+  let clearBtn = document.createElement("button");
+  clearBtn.textContent = "❌";
+  clearBtn.title = "Reset pencarian";
+  Object.assign(clearBtn.style, {
+    marginLeft: "8px",
+    padding: "2px 8px",
+    border: "none",
+    background: "#c0392b",
+    color: "white",
+    borderRadius: "4px",
+    cursor: "pointer",
+    display: "none",
+  });
+  input.parentNode.insertBefore(clearBtn, input.nextSibling);
 
   function filterRows() {
     const val = input.value.toLowerCase();
-    let found = 0;
     rows.forEach((row) => {
       const plat = row.cells[0]?.innerText.toLowerCase() || "";
       const letak = row.cells[1]?.innerText.toLowerCase() || "";
-      const visible = plat.includes(val) || letak.includes(val);
-      row.style.display = visible ? "" : "none";
-      if (visible) found++;
+      row.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
     });
     clearBtn.style.display = val ? "inline-block" : "none";
   }
@@ -257,264 +250,4 @@ function initSearch() {
     rows.forEach((r) => (r.style.display = ""));
     clearBtn.style.display = "none";
   });
-}/* ==========================================================
-   KENDARAAN PAGE CONTROLLER (Form State, Edit/Save/Update)
-   ========================================================== */
-
-let KEND_DATA = [];            // cache data kendaraan (array of obj)
-let KEND_MODE = "view";        // "view" | "add" | "edit"
-let KEND_EDIT_PLAT_LAMA = "";  // untuk update (key baris lama)
-
-// util: ambil elemen by id
-const $ = (id) => document.getElementById(id);
-
-// aktif/nonaktifkan semua input form
-function setFormEnabled(enabled) {
-  ["plat", "lokasi", "stnk", "kir", "servis", "pajak"].forEach(id => {
-    const el = $(id);
-    if (!el) return;
-    if (enabled) el.removeAttribute("disabled");
-    else el.setAttribute("disabled", "disabled");
-  });
 }
-
-// kosongkan form
-function resetForm() {
-  ["plat", "lokasi", "stnk", "kir", "servis", "pajak"].forEach(id => {
-    const el = $(id);
-    if (el) el.value = "";
-  });
-}
-
-// set tombol sesuai mode
-function syncButtons() {
-  const btnPrimary = $("btnPrimary");
-  const btnCancel  = $("btnCancel");
-
-  if (!btnPrimary || !btnCancel) return;
-
-  if (KEND_MODE === "view") {
-    btnPrimary.textContent = "➕ Tambah";
-    btnCancel.setAttribute("disabled", "disabled");
-  } else if (KEND_MODE === "add") {
-    btnPrimary.textContent = "💾 Simpan";
-    btnCancel.removeAttribute("disabled");
-  } else if (KEND_MODE === "edit") {
-    btnPrimary.textContent = "✅ Update";
-    btnCancel.removeAttribute("disabled");
-  }
-}
-
-// masuk ke mode view
-function enterViewMode() {
-  KEND_MODE = "view";
-  setFormEnabled(false);
-  resetForm();
-  syncButtons();
-}
-
-// masuk ke mode add
-function enterAddMode() {
-  KEND_MODE = "add";
-  setFormEnabled(true);
-  resetForm();
-  syncButtons();
-  $("plat")?.focus();
-}
-
-// isi form untuk edit
-function enterEditMode(row) {
-  KEND_MODE = "edit";
-  setFormEnabled(true);
-  if (!row) return;
-
-  KEND_EDIT_PLAT_LAMA = row.Platnomor || row.PlatNomor || row.plat || row.Plat;
-
-  $("plat").value   = row.Platnomor || "";
-  $("lokasi").value = row.Letak || "";
-  $("stnk").value   = normalizeDateForInput(row.STNK);
-  $("kir").value    = normalizeDateForInput(row.KIR);
-  $("servis").value = normalizeDateForInput(row.ServisTerakhir);
-  $("pajak").value  = normalizeDateForInput(row.pajak5tahun);
-
-  syncButtons();
-  $("lokasi")?.focus();
-}
-
-// normalisasi input date (YYYY-MM-DD)
-function normalizeDateForInput(d) {
-  if (!d) return "";
-  const t = new Date(d);
-  if (isNaN(t)) {
-    // mungkin sudah YYYY-MM-DD
-    const parts = String(d).split("-");
-    if (parts.length === 3) return d;
-    return "";
-  }
-  return t.toISOString().slice(0,10);
-}
-
-// validasi form (required + plat unik saat add)
-function validateForm() {
-  const plat   = $("plat").value.trim();
-  const lokasi = $("lokasi").value.trim();
-  const stnk   = $("stnk").value;
-  const kir    = $("kir").value;
-  const servis = $("servis").value;
-  const pajak  = $("pajak").value;
-
-  if (!plat)   return { ok:false, msg:"Plat nomor wajib diisi." };
-  if (!lokasi) return { ok:false, msg:"Letak/Garasi wajib diisi." };
-  if (!stnk)   return { ok:false, msg:"Tanggal STNK wajib diisi." };
-  if (!kir)    return { ok:false, msg:"Tanggal KIR wajib diisi." };
-  if (!servis) return { ok:false, msg:"Tanggal Servis Terakhir wajib diisi." };
-  if (!pajak)  return { ok:false, msg:"Tanggal Pajak 5 Tahunan wajib diisi." };
-
-  if (KEND_MODE === "add") {
-    const dup = (KEND_DATA || []).some(x =>
-      String(x.Platnomor || x.PlatNomor || x.plat || "")
-        .toLowerCase() === plat.toLowerCase()
-    );
-    if (dup) return { ok:false, msg:"Plat nomor sudah ada. Gunakan plat lain." };
-  }
-
-  return { ok:true };
-}
-
-// render tabel khusus halaman kendaraan (dengan tombol Edit)
-function renderKendaraanManage(rows) {
-  const tbody = $("tblKendaraan")?.querySelector("tbody");
-  if (!tbody) return;
-  if (!rows || !rows.length) {
-    tbody.innerHTML = `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
-    return;
-  }
-
-  const fmt = (d) => (d ? d : "-");
-
-  tbody.innerHTML = rows.map(k => {
-    const plat   = fmt(k.Platnomor);
-    const letak  = fmt(k.Letak);
-    const stnk   = fmt(k.STNK);
-    const kir    = fmt(k.KIR);
-    const serv   = fmt(k.ServisTerakhir);
-    const pajak5 = fmt(k.pajak5tahun);
-
-    return `
-      <tr>
-        <td>${plat}</td>
-        <td>${letak}</td>
-        <td>${stnk}</td>
-        <td>${kir}</td>
-        <td>${serv}</td>
-        <td>${pajak5}</td>
-        <td>
-          <button class="btn-sm" onclick='handleEditClick(${JSON.stringify(k)})'>✎ Edit</button>
-        </td>
-      </tr>
-    `;
-  }).join("");
-}
-
-// global untuk onclick baris (karena pakai inline handler)
-window.handleEditClick = function(rowObj) {
-  enterEditMode(rowObj);
-};
-
-// ambil data & render
-async function reloadKendaraanList() {
-  const res = await api("getKendaraan");
-  if (res && res.success) {
-    KEND_DATA = res.data || [];
-    renderKendaraanManage(KEND_DATA);
-  } else {
-    const tbody = $("tblKendaraan")?.querySelector("tbody");
-    if (tbody) tbody.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data</td></tr>`;
-  }
-}
-
-// handler klik tombol utama (Tambah/Simpan/Update)
-async function handlePrimaryClick() {
-  if (KEND_MODE === "view") {
-    // tombol: Tambah
-    enterAddMode();
-    return;
-  }
-
-  // ambil & validasi
-  const plat   = $("plat").value.trim();
-  const lokasi = $("lokasi").value.trim();
-  const stnk   = $("stnk").value;
-  const kir    = $("kir").value;
-  const servis = $("servis").value;
-  const pajak  = $("pajak").value;
-
-  const v = validateForm();
-  if (!v.ok) return alert(v.msg);
-
-  // payload sesuai backend yang sudah ada
-  const payload = {
-    Platnomor: plat,
-    Letak: lokasi,
-    STNK: stnk,
-    KIR: kir,
-    ServisTerakhir: servis,
-    pajak5tahun: pajak
-  };
-
-  if (KEND_MODE === "add") {
-    const r = await api("addKendaraan", payload);
-    alert(r.message || (r.success ? "Tersimpan" : "Gagal menyimpan"));
-    if (r.success) {
-      await reloadKendaraanList();
-      enterViewMode();
-    }
-  } else if (KEND_MODE === "edit") {
-    // diasumsikan Apps Script kamu punya action "updateKendaraan"
-    // Jika belum ada, silakan tambahkan di backend:
-    // cari baris via Platnomor lama dan update.
-    const r = await api("updateKendaraan", { PlatnomorLama: KEND_EDIT_PLAT_LAMA, ...payload });
-    alert(r.message || (r.success ? "Terupdate" : "Gagal update"));
-    if (r.success) {
-      await reloadKendaraanList();
-      enterViewMode();
-    }
-  }
-}
-
-// handler batal
-function handleCancel() {
-  enterViewMode();
-}
-
-// init halaman kendaraan
-function initKendaraanPage() {
-  // tombol
-  $("btnPrimary")?.addEventListener("click", handlePrimaryClick);
-  $("btnCancel") ?.addEventListener("click", handleCancel);
-
-  // pencarian
-  const search = $("searchInput");
-  if (search) {
-    search.addEventListener("input", async () => {
-      const term = (search.value || "").trim().toLowerCase();
-      if (!term) return renderKendaraanManage(KEND_DATA);
-      const filtered = (KEND_DATA || []).filter(x => {
-        const p = String(x.Platnomor || "").toLowerCase();
-        const l = String(x.Letak || "").toLowerCase();
-        return p.includes(term) || l.includes(term);
-      });
-      renderKendaraanManage(filtered);
-    });
-  }
-
-  // awal: view mode & load data
-  enterViewMode();
-  reloadKendaraanList();
-}
-
-
-
-
-
-
