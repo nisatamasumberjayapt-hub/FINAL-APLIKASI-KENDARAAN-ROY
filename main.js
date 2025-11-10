@@ -1,6 +1,6 @@
 /* ==========================================================
    PT ANISA JAYA UTAMA — BY ROY
-   main.js FINAL v4.0 — Stable Version (Login, Register, Dashboard, Kendaraan)
+   main.js FINAL v4.1 — Stable Version (Login, Register, Dashboard, Kendaraan)
    Terhubung dengan Google Apps Script backend
    ========================================================== */
 
@@ -88,65 +88,7 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
-/* ================= STATUS KENDARAAN ================= */
-/* ================= PERBAIKAN FINAL getStatusKendaraan() ================= */
-function getStatusKendaraan(k) {
-  const now = new Date();
-
-  // parser aman semua format tanggal
-  const parseDate = (d) => {
-    if (!d) return null;
-    if (typeof d === "object" && d instanceof Date) return d;
-    if (typeof d === "number") return new Date(d);
-
-    // ubah ke format yang bisa dibaca Date
-    let parts = d.toString().trim().split(/[-/]/);
-    if (parts.length === 3) {
-      // deteksi urutan (kadang DD-MM-YYYY atau YYYY-MM-DD)
-      if (parts[0].length === 4) {
-        return new Date(parts[0], parts[1] - 1, parts[2]); // YYYY-MM-DD
-      } else {
-        return new Date(parts[2], parts[1] - 1, parts[0]); // DD-MM-YYYY
-      }
-    }
-    return new Date(d);
-  };
-
-  const daysDiff = (tgl) => {
-    const t = parseDate(tgl);
-    if (!t || isNaN(t)) return 9999;
-    return Math.floor((t - now) / (1000 * 60 * 60 * 24));
-  };
-
-  let color = "#b2f2bb"; // hijau aman
-  let label = "Aman";
-
-  const stnk = daysDiff(k.STNK);
-  const kir = daysDiff(k.KIR);
-  const pajak5 = daysDiff(k.pajak5tahun);
-
-  const servisDiff = (() => {
-    const s = parseDate(k.ServisTerakhir);
-    if (!s || isNaN(s)) return 0;
-    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
-  })();
-
-  // STNK, KIR, Pajak habis atau servis lewat 4 bulan
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisDiff >= 120) {
-    color = "#ffa8a8"; // merah
-    label = "Lewat";
-  }
-  // Peringatan 10 hari sebelum habis atau servis lebih dari 3 bulan
-  else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisDiff >= 90) {
-    color = "#fff3bf"; // kuning
-    label = "Peringatan";
-  }
-
-  return { color, label };
-}
-
-
-/* ================= DASHBOARD (USER) ================= */
+/* ================= DASHBOARD ================= */
 async function initDashboard() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -164,8 +106,61 @@ async function initDashboard() {
   renderTabelKendaraan(res.data, user.role);
 }
 
+/* ================= FIX FINAL getStatusKendaraan (Zona Waktu + Format) ================= */
+function getStatusKendaraan(k) {
+  const now = new Date();
+
+  // Parser aman untuk format YYYY-MM-DD dari Google Sheet
+  function parseDate(d) {
+    if (!d) return null;
+    if (d instanceof Date) return d;
+    if (typeof d === "number") return new Date(d);
+    if (typeof d === "string") {
+      const parts = d.split("-");
+      if (parts.length === 3) {
+        const [y, m, day] = parts.map(Number);
+        // Gunakan UTC agar tidak bergeser karena zona waktu
+        return new Date(Date.UTC(y, m - 1, day));
+      }
+    }
+    return new Date(d);
+  }
+
+  // Hitung selisih hari dari sekarang
+  function daysDiff(tgl) {
+    const t = parseDate(tgl);
+    if (!t || isNaN(t)) return 9999;
+    const diffMs = t.getTime() - now.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  }
+
+  let color = "#b2f2bb"; // hijau aman
+  let label = "Aman";
+
+  const stnk = daysDiff(k.STNK);
+  const kir = daysDiff(k.KIR);
+  const pajak5 = daysDiff(k.pajak5tahun);
+  const servisDiff = (() => {
+    const s = parseDate(k.ServisTerakhir);
+    if (!s || isNaN(s)) return 0;
+    const diffMs = now.getTime() - s.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  })();
+
+  // ===== Aturan warna =====
+  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisDiff >= 120) {
+    color = "#ffa8a8"; // merah
+    label = "Lewat";
+  } else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisDiff >= 90) {
+    color = "#fff3bf"; // kuning
+    label = "Peringatan";
+  }
+
+  return { color, label };
+}
+
 /* ================= RENDER TABEL KENDARAAN ================= */
-function renderTabelKendaraan(data, role = "user") {
+function renderTabelKendaraan(data, role) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
 
@@ -186,7 +181,7 @@ function renderTabelKendaraan(data, role = "user") {
   tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-/* ================= USER PAGE ================= */
+/* ================= HALAMAN USER ================= */
 async function initUser() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -237,4 +232,3 @@ async function simpanKendaraan() {
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
 }
-
