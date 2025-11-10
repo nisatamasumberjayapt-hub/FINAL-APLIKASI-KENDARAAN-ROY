@@ -251,5 +251,49 @@ td small {
 .legend-box.safe { background-color: #e9f9e9; border-color: #006600; }
 .legend-box.warning { background-color: #fff3c6; border-color: #a86e00; }
 .legend-box.expired { background-color: #ffd8d8; border-color: #a80000; }
+/* Tabel kendaraan dan user */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #0b5e20;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+tr:hover {
+  background: #e9f5ec;
+}
+
+.container {
+  width: 90%;
+  max-width: 950px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
 
 
