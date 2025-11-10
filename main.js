@@ -1,10 +1,11 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v7.3 — Fix Warna + URL Baru + CRUD Stabil
+ * main.js v7.4 — Fix Warna + Search + CRUD + URL Baru
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-console.log("✅ main.js aktif — v7.3 (Warna + CRUD + URL Baru)");
+console.log("✅ main.js aktif — v7.4 (Stable Full)");
+
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -27,11 +28,13 @@ async function api(action, payload = {}) {
   }
 }
 
+
 /* ================= UTILITAS ================= */
 function toast(msg) { alert(msg); }
 function getSession() { try { return JSON.parse(localStorage.getItem("aj_user")) || null; } catch { return null; } }
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
+
 function fmtDate(d) {
   if (!d) return "-";
   const t = new Date(d);
@@ -39,6 +42,7 @@ function fmtDate(d) {
   const local = new Date(t.getTime() - t.getTimezoneOffset() * 60000);
   return local.toISOString().split("T")[0];
 }
+
 
 /* ================= STATUS TANGGAL ================= */
 function getStatusTanggal(tgl) {
@@ -81,6 +85,7 @@ function getStatusServis(tgl) {
   return { color, text: `Sudah ${bulan} bln ${hari} hr` };
 }
 
+
 /* ================= LOGIN / REGISTER ================= */
 async function login() {
   const username = document.getElementById("username").value.trim();
@@ -104,6 +109,7 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
+
 /* ================= DASHBOARD ================= */
 async function initDashboard() {
   const user = getSession();
@@ -121,6 +127,7 @@ async function initDashboard() {
   renderTabelKendaraan(res.data, false);
   initSearch();
 }
+
 
 /* ================= KENDARAAN (ADMIN) ================= */
 async function initKendaraan() {
@@ -144,7 +151,8 @@ async function initKendaraan() {
   initSearch();
 }
 
-/* ================= RENDER TABEL DENGAN WARNA ================= */
+
+/* ================= RENDER TABEL (WARNA AMAN) ================= */
 function renderTabelKendaraan(data, isAdmin = false) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
@@ -189,6 +197,7 @@ function renderTabelKendaraan(data, isAdmin = false) {
     html || `<tr><td colspan="8" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
+
 /* ================= HAPUS KENDARAAN ================= */
 async function hapusKendaraan(plat) {
   if (!confirm(`Apakah Anda yakin ingin menghapus kendaraan dengan plat "${plat}"?`)) return;
@@ -200,12 +209,14 @@ async function hapusKendaraan(plat) {
   }
 }
 
+
 /* ================= EDIT (ADMIN) ================= */
 function editKendaraan(dataStr) {
   const data = JSON.parse(decodeURIComponent(dataStr));
   localStorage.setItem("edit_kendaraan", JSON.stringify(data));
   location.href = "edit-kendaraan.html";
 }
+
 
 /* ================= TAMBAH KENDARAAN ================= */
 async function simpanKendaraan() {
@@ -231,41 +242,50 @@ async function simpanKendaraan() {
   if (res.success) location.href = "kendaraan.html";
 }
 
-/* ================= PENCARIAN + CLEAR ================= */
+
+/* ================= PENCARIAN (AUTO UPDATE) ================= */
+let _searchInit = false;
+
 function initSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
-  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
 
-  let clearBtn = document.createElement("button");
-  clearBtn.textContent = "❌";
-  clearBtn.title = "Reset pencarian";
-  Object.assign(clearBtn.style, {
-    marginLeft: "8px",
-    padding: "2px 8px",
-    border: "none",
-    background: "#c0392b",
-    color: "white",
-    borderRadius: "4px",
-    cursor: "pointer",
-    display: "none",
-  });
-  input.parentNode.insertBefore(clearBtn, input.nextSibling);
+  let clearBtn = document.getElementById("clearSearch");
+  if (!clearBtn) {
+    clearBtn = document.createElement("button");
+    clearBtn.id = "clearSearch";
+    clearBtn.textContent = "❌";
+    clearBtn.title = "Reset pencarian";
+    Object.assign(clearBtn.style, {
+      marginLeft: "8px",
+      padding: "2px 8px",
+      border: "none",
+      background: "#c0392b",
+      color: "white",
+      borderRadius: "4px",
+      cursor: "pointer",
+      display: "none",
+    });
+    input.parentNode.insertBefore(clearBtn, input.nextSibling);
+  }
 
-  function filterRows() {
-    const val = input.value.toLowerCase();
-    rows.forEach((row) => {
-      const plat = row.cells[0]?.innerText.toLowerCase() || "";
+  if (_searchInit) return;
+
+  function applyFilter() {
+    const val = (input.value || "").toLowerCase();
+    document.querySelectorAll("#tblKendaraan tbody tr").forEach((row) => {
+      const plat  = row.cells[0]?.innerText.toLowerCase() || "";
       const letak = row.cells[1]?.innerText.toLowerCase() || "";
       row.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
     });
     clearBtn.style.display = val ? "inline-block" : "none";
   }
 
-  input.addEventListener("input", filterRows);
+  input.addEventListener("input", applyFilter);
   clearBtn.addEventListener("click", () => {
     input.value = "";
-    rows.forEach((r) => (r.style.display = ""));
-    clearBtn.style.display = "none";
+    applyFilter();
   });
+
+  _searchInit = true;
 }
