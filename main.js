@@ -257,4 +257,260 @@ function initSearch() {
     rows.forEach((r) => (r.style.display = ""));
     clearBtn.style.display = "none";
   });
+}/* ==========================================================
+   KENDARAAN PAGE CONTROLLER (Form State, Edit/Save/Update)
+   ========================================================== */
+
+let KEND_DATA = [];            // cache data kendaraan (array of obj)
+let KEND_MODE = "view";        // "view" | "add" | "edit"
+let KEND_EDIT_PLAT_LAMA = "";  // untuk update (key baris lama)
+
+// util: ambil elemen by id
+const $ = (id) => document.getElementById(id);
+
+// aktif/nonaktifkan semua input form
+function setFormEnabled(enabled) {
+  ["plat", "lokasi", "stnk", "kir", "servis", "pajak"].forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    if (enabled) el.removeAttribute("disabled");
+    else el.setAttribute("disabled", "disabled");
+  });
 }
+
+// kosongkan form
+function resetForm() {
+  ["plat", "lokasi", "stnk", "kir", "servis", "pajak"].forEach(id => {
+    const el = $(id);
+    if (el) el.value = "";
+  });
+}
+
+// set tombol sesuai mode
+function syncButtons() {
+  const btnPrimary = $("btnPrimary");
+  const btnCancel  = $("btnCancel");
+
+  if (!btnPrimary || !btnCancel) return;
+
+  if (KEND_MODE === "view") {
+    btnPrimary.textContent = "➕ Tambah";
+    btnCancel.setAttribute("disabled", "disabled");
+  } else if (KEND_MODE === "add") {
+    btnPrimary.textContent = "💾 Simpan";
+    btnCancel.removeAttribute("disabled");
+  } else if (KEND_MODE === "edit") {
+    btnPrimary.textContent = "✅ Update";
+    btnCancel.removeAttribute("disabled");
+  }
+}
+
+// masuk ke mode view
+function enterViewMode() {
+  KEND_MODE = "view";
+  setFormEnabled(false);
+  resetForm();
+  syncButtons();
+}
+
+// masuk ke mode add
+function enterAddMode() {
+  KEND_MODE = "add";
+  setFormEnabled(true);
+  resetForm();
+  syncButtons();
+  $("plat")?.focus();
+}
+
+// isi form untuk edit
+function enterEditMode(row) {
+  KEND_MODE = "edit";
+  setFormEnabled(true);
+  if (!row) return;
+
+  KEND_EDIT_PLAT_LAMA = row.Platnomor || row.PlatNomor || row.plat || row.Plat;
+
+  $("plat").value   = row.Platnomor || "";
+  $("lokasi").value = row.Letak || "";
+  $("stnk").value   = normalizeDateForInput(row.STNK);
+  $("kir").value    = normalizeDateForInput(row.KIR);
+  $("servis").value = normalizeDateForInput(row.ServisTerakhir);
+  $("pajak").value  = normalizeDateForInput(row.pajak5tahun);
+
+  syncButtons();
+  $("lokasi")?.focus();
+}
+
+// normalisasi input date (YYYY-MM-DD)
+function normalizeDateForInput(d) {
+  if (!d) return "";
+  const t = new Date(d);
+  if (isNaN(t)) {
+    // mungkin sudah YYYY-MM-DD
+    const parts = String(d).split("-");
+    if (parts.length === 3) return d;
+    return "";
+  }
+  return t.toISOString().slice(0,10);
+}
+
+// validasi form (required + plat unik saat add)
+function validateForm() {
+  const plat   = $("plat").value.trim();
+  const lokasi = $("lokasi").value.trim();
+  const stnk   = $("stnk").value;
+  const kir    = $("kir").value;
+  const servis = $("servis").value;
+  const pajak  = $("pajak").value;
+
+  if (!plat)   return { ok:false, msg:"Plat nomor wajib diisi." };
+  if (!lokasi) return { ok:false, msg:"Letak/Garasi wajib diisi." };
+  if (!stnk)   return { ok:false, msg:"Tanggal STNK wajib diisi." };
+  if (!kir)    return { ok:false, msg:"Tanggal KIR wajib diisi." };
+  if (!servis) return { ok:false, msg:"Tanggal Servis Terakhir wajib diisi." };
+  if (!pajak)  return { ok:false, msg:"Tanggal Pajak 5 Tahunan wajib diisi." };
+
+  if (KEND_MODE === "add") {
+    const dup = (KEND_DATA || []).some(x =>
+      String(x.Platnomor || x.PlatNomor || x.plat || "")
+        .toLowerCase() === plat.toLowerCase()
+    );
+    if (dup) return { ok:false, msg:"Plat nomor sudah ada. Gunakan plat lain." };
+  }
+
+  return { ok:true };
+}
+
+// render tabel khusus halaman kendaraan (dengan tombol Edit)
+function renderKendaraanManage(rows) {
+  const tbody = $("tblKendaraan")?.querySelector("tbody");
+  if (!tbody) return;
+  if (!rows || !rows.length) {
+    tbody.innerHTML = `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
+    return;
+  }
+
+  const fmt = (d) => (d ? d : "-");
+
+  tbody.innerHTML = rows.map(k => {
+    const plat   = fmt(k.Platnomor);
+    const letak  = fmt(k.Letak);
+    const stnk   = fmt(k.STNK);
+    const kir    = fmt(k.KIR);
+    const serv   = fmt(k.ServisTerakhir);
+    const pajak5 = fmt(k.pajak5tahun);
+
+    return `
+      <tr>
+        <td>${plat}</td>
+        <td>${letak}</td>
+        <td>${stnk}</td>
+        <td>${kir}</td>
+        <td>${serv}</td>
+        <td>${pajak5}</td>
+        <td>
+          <button class="btn-sm" onclick='handleEditClick(${JSON.stringify(k)})'>✎ Edit</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+// global untuk onclick baris (karena pakai inline handler)
+window.handleEditClick = function(rowObj) {
+  enterEditMode(rowObj);
+};
+
+// ambil data & render
+async function reloadKendaraanList() {
+  const res = await api("getKendaraan");
+  if (res && res.success) {
+    KEND_DATA = res.data || [];
+    renderKendaraanManage(KEND_DATA);
+  } else {
+    const tbody = $("tblKendaraan")?.querySelector("tbody");
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data</td></tr>`;
+  }
+}
+
+// handler klik tombol utama (Tambah/Simpan/Update)
+async function handlePrimaryClick() {
+  if (KEND_MODE === "view") {
+    // tombol: Tambah
+    enterAddMode();
+    return;
+  }
+
+  // ambil & validasi
+  const plat   = $("plat").value.trim();
+  const lokasi = $("lokasi").value.trim();
+  const stnk   = $("stnk").value;
+  const kir    = $("kir").value;
+  const servis = $("servis").value;
+  const pajak  = $("pajak").value;
+
+  const v = validateForm();
+  if (!v.ok) return alert(v.msg);
+
+  // payload sesuai backend yang sudah ada
+  const payload = {
+    Platnomor: plat,
+    Letak: lokasi,
+    STNK: stnk,
+    KIR: kir,
+    ServisTerakhir: servis,
+    pajak5tahun: pajak
+  };
+
+  if (KEND_MODE === "add") {
+    const r = await api("addKendaraan", payload);
+    alert(r.message || (r.success ? "Tersimpan" : "Gagal menyimpan"));
+    if (r.success) {
+      await reloadKendaraanList();
+      enterViewMode();
+    }
+  } else if (KEND_MODE === "edit") {
+    // diasumsikan Apps Script kamu punya action "updateKendaraan"
+    // Jika belum ada, silakan tambahkan di backend:
+    // cari baris via Platnomor lama dan update.
+    const r = await api("updateKendaraan", { PlatnomorLama: KEND_EDIT_PLAT_LAMA, ...payload });
+    alert(r.message || (r.success ? "Terupdate" : "Gagal update"));
+    if (r.success) {
+      await reloadKendaraanList();
+      enterViewMode();
+    }
+  }
+}
+
+// handler batal
+function handleCancel() {
+  enterViewMode();
+}
+
+// init halaman kendaraan
+function initKendaraanPage() {
+  // tombol
+  $("btnPrimary")?.addEventListener("click", handlePrimaryClick);
+  $("btnCancel") ?.addEventListener("click", handleCancel);
+
+  // pencarian
+  const search = $("searchInput");
+  if (search) {
+    search.addEventListener("input", async () => {
+      const term = (search.value || "").trim().toLowerCase();
+      if (!term) return renderKendaraanManage(KEND_DATA);
+      const filtered = (KEND_DATA || []).filter(x => {
+        const p = String(x.Platnomor || "").toLowerCase();
+        const l = String(x.Letak || "").toLowerCase();
+        return p.includes(term) || l.includes(term);
+      });
+      renderKendaraanManage(filtered);
+    });
+  }
+
+  // awal: view mode & load data
+  enterViewMode();
+  reloadKendaraanList();
+}
+
+
