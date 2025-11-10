@@ -89,23 +89,32 @@ async function register() {
 }
 
 /* ================= STATUS KENDARAAN ================= */
+/* ================= PERBAIKAN FINAL getStatusKendaraan() ================= */
 function getStatusKendaraan(k) {
   const now = new Date();
 
+  // parser aman semua format tanggal
   const parseDate = (d) => {
     if (!d) return null;
-    const t = new Date(d);
-    if (isNaN(t)) {
-      const parts = d.split("-");
-      if (parts.length === 3) return new Date(parts[0], parts[1] - 1, parts[2]);
-      return null;
+    if (typeof d === "object" && d instanceof Date) return d;
+    if (typeof d === "number") return new Date(d);
+
+    // ubah ke format yang bisa dibaca Date
+    let parts = d.toString().trim().split(/[-/]/);
+    if (parts.length === 3) {
+      // deteksi urutan (kadang DD-MM-YYYY atau YYYY-MM-DD)
+      if (parts[0].length === 4) {
+        return new Date(parts[0], parts[1] - 1, parts[2]); // YYYY-MM-DD
+      } else {
+        return new Date(parts[2], parts[1] - 1, parts[0]); // DD-MM-YYYY
+      }
     }
-    return t;
+    return new Date(d);
   };
 
   const daysDiff = (tgl) => {
     const t = parseDate(tgl);
-    if (!t) return 9999;
+    if (!t || isNaN(t)) return 9999;
     return Math.floor((t - now) / (1000 * 60 * 60 * 24));
   };
 
@@ -115,26 +124,27 @@ function getStatusKendaraan(k) {
   const stnk = daysDiff(k.STNK);
   const kir = daysDiff(k.KIR);
   const pajak5 = daysDiff(k.pajak5tahun);
-  const servisDiff = Math.floor((now - parseDate(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
 
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0) {
+  const servisDiff = (() => {
+    const s = parseDate(k.ServisTerakhir);
+    if (!s || isNaN(s)) return 0;
+    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
+  })();
+
+  // STNK, KIR, Pajak habis atau servis lewat 4 bulan
+  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisDiff >= 120) {
     color = "#ffa8a8"; // merah
     label = "Lewat";
-  } else if (stnk <= 10 || kir <= 10 || pajak5 <= 10) {
+  }
+  // Peringatan 10 hari sebelum habis atau servis lebih dari 3 bulan
+  else if (stnk <= 10 || kir <= 10 || pajak5 <= 10 || servisDiff >= 90) {
     color = "#fff3bf"; // kuning
     label = "Peringatan";
   }
 
-  if (servisDiff >= 120) {
-    color = "#ffa8a8";
-    label = "Servis lewat 4 bulan";
-  } else if (servisDiff >= 90) {
-    color = "#fff3bf";
-    label = "Servis >3 bulan";
-  }
-
   return { color, label };
 }
+
 
 /* ================= DASHBOARD (USER) ================= */
 async function initDashboard() {
@@ -227,3 +237,4 @@ async function simpanKendaraan() {
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
 }
+
