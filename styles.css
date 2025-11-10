@@ -284,3 +284,32 @@ td small {
     margin-top: 60px;
   }
 }
+/* SCROLL KHUSUS TABEL */
+.table-container {
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 10px;
+  scrollbar-width: thin;
+}
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: #2e7d32;
+  border-radius: 4px;
+}
+
+/* TOMBOL TAMBAHAN */
+.btn-delete {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-edit {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
