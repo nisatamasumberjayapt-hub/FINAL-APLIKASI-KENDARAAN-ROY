@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v6.2 — Indikator per kolom + Pencarian & Clear yang robust
+ * main.js v7.0 — Kendaraan (Admin) + Edit + Search + Warna Aman
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v6.2");
+console.log("✅ main.js aktif — v7.0 Kendaraan");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -62,29 +62,10 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
-/* ================= DASHBOARD ================= */
-async function initDashboard() {
-  const user = getSession();
-  if (!user) return (location.href = "login.html");
-
-  const tbl = document.querySelector("#tblKendaraan tbody");
-  tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
-
-  const res = await api("getKendaraan");
-  if (!res.success || !Array.isArray(res.data)) {
-    tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
-    return;
-  }
-
-  renderTabelKendaraan(res.data);
-  initSearch(); // aktifkan pencarian + tombol clear
-}
-
 /* ================= STATUS PER TANGGAL ================= */
 function getStatusTanggal(tgl) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
-
   const d = new Date(tgl);
   if (isNaN(d)) return { color: "gray", text: "Tanggal tidak valid" };
 
@@ -123,11 +104,51 @@ function getStatusServis(tgl) {
   return { color, text: `Sudah ${bulan} bulan ${hari} hari` };
 }
 
+/* ================= DASHBOARD ================= */
+async function initDashboard() {
+  const user = getSession();
+  if (!user) return (location.href = "login.html");
+
+  const tbl = document.querySelector("#tblKendaraan tbody");
+  tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
+
+  const res = await api("getKendaraan");
+  if (!res.success || !Array.isArray(res.data)) {
+    tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
+    return;
+  }
+
+  renderTabelKendaraan(res.data, false); // mode user
+  initSearch();
+}
+
+/* ================= KENDARAAN (ADMIN) ================= */
+async function initKendaraan() {
+  const user = getSession();
+  if (!user) return (location.href = "login.html");
+  if (user.role !== "admin") {
+    toast("Hanya admin yang bisa mengakses halaman ini!");
+    return (location.href = "dashboard.html");
+  }
+
+  const tbl = document.querySelector("#tblKendaraan tbody");
+  tbl.innerHTML = `<tr><td colspan="8" align="center">Memuat data kendaraan...</td></tr>`;
+
+  const res = await api("getKendaraan");
+  if (!res.success || !Array.isArray(res.data)) {
+    tbl.innerHTML = `<tr><td colspan="8" align="center">Gagal memuat data kendaraan</td></tr>`;
+    return;
+  }
+
+  renderTabelKendaraan(res.data, true); // mode admin
+  initSearch();
+}
+
 /* ================= RENDER ================= */
-function renderTabelKendaraan(data) {
+function renderTabelKendaraan(data, isAdmin = false) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
-  data.forEach((k) => {
+  data.forEach((k, i) => {
     const stnk = getStatusTanggal(k.STNK);
     const kir = getStatusTanggal(k.KIR);
     const pajak = getStatusTanggal(k.pajak5tahun);
@@ -145,31 +166,26 @@ function renderTabelKendaraan(data) {
             ${fmtDate(k.ServisTerakhir)}<br><small>${servis.text}</small></td>
         <td><span style="display:inline-block;width:12px;height:12px;background:${pajak.color};border-radius:2px;margin-right:5px;"></span>
             ${fmtDate(k.pajak5tahun)}<br><small>${pajak.text}</small></td>
-        <td></td>
+        ${
+          isAdmin
+            ? `<td>
+                <button class="btn-edit" onclick="editKendaraan('${encodeURIComponent(JSON.stringify(k))}')">✏️ Edit</button>
+              </td>`
+            : `<td></td>`
+        }
       </tr>`;
   });
-  tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
+  tbl.innerHTML = html || `<tr><td colspan="8" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-/* ================= USER ================= */
-async function initUser() {
-  const user = getSession();
-  if (!user) return (location.href = "login.html");
-  const tbl = document.querySelector("#tblUser tbody");
-  tbl.innerHTML = `<tr><td colspan="3" align="center">Memuat data...</td></tr>`;
-  const res = await api("getUsers");
-  if (!res.success || !Array.isArray(res.data)) {
-    tbl.innerHTML = `<tr><td colspan="3" align="center">Gagal memuat data user</td></tr>`;
-    return;
-  }
-  let html = "";
-  res.data.forEach(u => {
-    html += `<tr><td>${u.nama || "-"}</td><td>${u.username || "-"}</td><td>${u.role || "-"}</td></tr>`;
-  });
-  tbl.innerHTML = html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
+/* ================= EDIT (MODE ADMIN) ================= */
+function editKendaraan(dataStr) {
+  const data = JSON.parse(decodeURIComponent(dataStr));
+  localStorage.setItem("edit_kendaraan", JSON.stringify(data));
+  location.href = "edit-kendaraan.html";
 }
 
-/* ================= SIMPAN ================= */
+/* ================= SIMPAN TAMBAH ================= */
 async function simpanKendaraan() {
   const plat = document.getElementById("plat").value.trim();
   const letak = document.getElementById("letak").value.trim();
@@ -177,109 +193,68 @@ async function simpanKendaraan() {
   const kir = document.getElementById("kir").value;
   const servis = document.getElementById("servis").value;
   const pajak5 = document.getElementById("pajak5").value;
+
   if (!plat || !letak) return toast("Plat nomor dan lokasi harus diisi!");
+
   const res = await api("addKendaraan", {
-    Platnomor: plat, Letak: letak,
-    STNK: stnk, KIR: kir, ServisTerakhir: servis, pajak5tahun: pajak5
+    Platnomor: plat,
+    Letak: letak,
+    STNK: stnk,
+    KIR: kir,
+    ServisTerakhir: servis,
+    pajak5tahun: pajak5,
   });
+
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
 }
 
-/* =====================================================
-   PENCARIAN + TOMBOL CLEAR — ROBUST (nggak perlu id khusus)
-   ===================================================== */
-let _searchReady = false;
-
+/* ================= PENCARIAN + CLEAR ================= */
 function initSearch() {
-  if (_searchReady) return; // cegah double-init
-
-  // Cari input pencarian secara fleksibel:
   const input =
     document.getElementById("searchInput") ||
-    document.querySelector(".search-box input") ||
-    document.querySelector('input[placeholder*="Cari kendaraan"]') ||
-    document.querySelector('input[placeholder*="Plat Nomor"]');
+    document.querySelector('input[placeholder*="Cari kendaraan"]');
 
-  if (!input) {
-    console.warn("🔎 Input pencarian tidak ditemukan. Pastikan ada input di area pencarian.");
-    return;
-  }
+  if (!input) return;
 
-  // Tambahkan tombol clear (❌) bila belum ada
-  let clearBtn =
-    document.getElementById("clearSearch") ||
-    input.parentElement.querySelector(".clear-search-btn");
-
+  let clearBtn = document.getElementById("clearSearch");
   if (!clearBtn) {
     clearBtn = document.createElement("button");
-    clearBtn.type = "button";
     clearBtn.id = "clearSearch";
-    clearBtn.className = "clear-search-btn";
     clearBtn.textContent = "❌";
     clearBtn.title = "Reset pencarian";
-    // styling ringan
-    clearBtn.style.marginLeft = "8px";
-    clearBtn.style.padding = "2px 8px";
-    clearBtn.style.border = "none";
-    clearBtn.style.background = "#c0392b";
-    clearBtn.style.color = "white";
-    clearBtn.style.borderRadius = "4px";
-    clearBtn.style.cursor = "pointer";
-    clearBtn.style.fontSize = "14px";
-    clearBtn.style.display = "none"; // awalnya disembunyikan
-
-    // sisipkan setelah input
+    Object.assign(clearBtn.style, {
+      marginLeft: "8px",
+      padding: "2px 8px",
+      border: "none",
+      background: "#c0392b",
+      color: "white",
+      borderRadius: "4px",
+      cursor: "pointer",
+      display: "none",
+    });
     input.parentNode.insertBefore(clearBtn, input.nextSibling);
   }
 
-  const rows = Array.from(document.querySelectorAll("#tblKendaraan tbody tr"));
+  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
 
-  const filterRows = () => {
-    const q = (input.value || "").trim().toLowerCase();
-    let shown = 0;
-    rows.forEach((r) => {
-      const plat = r.cells[0]?.innerText.toLowerCase() || "";
-      const letak = r.cells[1]?.innerText.toLowerCase() || "";
-      const match = plat.includes(q) || letak.includes(q);
-      r.style.display = match ? "" : "none";
-      if (match) shown++;
+  function filterRows() {
+    const val = input.value.toLowerCase();
+    let found = 0;
+    rows.forEach((row) => {
+      const plat = row.cells[0]?.innerText.toLowerCase() || "";
+      const letak = row.cells[1]?.innerText.toLowerCase() || "";
+      const visible = plat.includes(val) || letak.includes(val);
+      row.style.display = visible ? "" : "none";
+      if (visible) found++;
     });
-    // tampilkan tombol clear hanya jika ada input
-    clearBtn.style.display = q ? "inline-block" : "none";
+    clearBtn.style.display = val ? "inline-block" : "none";
+  }
 
-    // kalau tidak ada hasil & ada query, tetap biarkan kosong (tanpa mengotak-atik data asli)
-    if (shown === 0 && q) {
-      // optionally: bisa tambahkan baris informasi "Tidak ada hasil"
-      // tapi kita biarkan kosong agar bersih
-    }
-  };
-
-  // input ketik langsung filter
   input.addEventListener("input", filterRows);
-
-  // tombol clear reset
   clearBtn.addEventListener("click", () => {
     input.value = "";
-    filterRows();      // show all
-    input.focus();
+    rows.forEach((r) => (r.style.display = ""));
+    clearBtn.style.display = "none";
   });
-
-  // inisialisasi state awal
-  filterRows();
-  _searchReady = true;
 }
-
-// (opsional) supaya bisa dipanggil dari HTML oninput="handleSearchInput(this.value)"
-window.handleSearchInput = function (val) {
-  initSearch(); // pastikan sudah siap
-  const input =
-    document.getElementById("searchInput") ||
-    document.querySelector(".search-box input") ||
-    document.querySelector('input[placeholder*="Cari kendaraan"]') ||
-    document.querySelector('input[placeholder*="Plat Nomor"]');
-  if (!input) return;
-  input.value = val;
-  // trigger manual
-  input.dispatchEvent(new Event("input", { bubbles: true }));
-};
