@@ -108,7 +108,7 @@
   </style>
 </head>
 
-<body>
+<body onload="initKendaraan()">
   <header>
     <h1>🚗 PT ANISA JAYA UTAMA — BY ROY</h1>
     <nav>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="table-wrapper">
-          <table id="kendaraanTable">
+          <table id="tblKendaraan">
             <thead>
               <tr>
                 <th>Plat Nomor</th>
@@ -168,8 +168,8 @@
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody id="kendaraanBody">
-              <tr><td colspan="7">Memuat data kendaraan...</td></tr>
+            <tbody>
+              <tr><td colspan="7" align="center">Memuat data kendaraan...</td></tr>
             </tbody>
           </table>
         </div>
@@ -183,7 +183,15 @@
     </div>
   </main>
 
-  <!-- Pastikan JS di paling bawah -->
-  <script src="main.js"></script>
+  <script src="main.js?v=20251109-final3"></script>
+
+  <script>
+    // Tambahan agar tabel di kendaraan ikut render
+    function initKendaraan() {
+      if (typeof initDashboard === "function") {
+        initDashboard(); // panggil fungsi yang sama dengan dashboard
+      }
+    }
+  </script>
 </body>
 </html>
