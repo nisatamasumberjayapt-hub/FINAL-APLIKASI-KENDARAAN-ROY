@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v6.1 — Indikator per kolom + Pencarian Refresh
+ * main.js v6.2 — Indikator per kolom + Pencarian & Clear yang robust
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v6.1 per-kolom + pencarian");
+console.log("✅ main.js aktif — v6.2");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -77,7 +77,7 @@ async function initDashboard() {
   }
 
   renderTabelKendaraan(res.data);
-  initSearch(); // aktifkan fitur pencarian realtime + tombol refresh
+  initSearch(); // aktifkan pencarian + tombol clear
 }
 
 /* ================= STATUS PER TANGGAL ================= */
@@ -186,44 +186,100 @@ async function simpanKendaraan() {
   if (res.success) location.href = "kendaraan.html";
 }
 
-/* ================= PENCARIAN + REFRESH ================= */
+/* =====================================================
+   PENCARIAN + TOMBOL CLEAR — ROBUST (nggak perlu id khusus)
+   ===================================================== */
+let _searchReady = false;
+
 function initSearch() {
-  const searchBox = document.querySelector("#searchInput");
-  if (!searchBox) return;
+  if (_searchReady) return; // cegah double-init
 
-  // buat tombol X
-  const clearBtn = document.createElement("button");
-  clearBtn.textContent = "❌";
-  clearBtn.title = "Reset pencarian";
-  clearBtn.style.marginLeft = "8px";
-  clearBtn.style.padding = "2px 6px";
-  clearBtn.style.border = "none";
-  clearBtn.style.background = "#c0392b";
-  clearBtn.style.color = "white";
-  clearBtn.style.borderRadius = "4px";
-  clearBtn.style.cursor = "pointer";
-  clearBtn.style.fontSize = "14px";
+  // Cari input pencarian secara fleksibel:
+  const input =
+    document.getElementById("searchInput") ||
+    document.querySelector(".search-box input") ||
+    document.querySelector('input[placeholder*="Cari kendaraan"]') ||
+    document.querySelector('input[placeholder*="Plat Nomor"]');
 
-  searchBox.parentNode.insertBefore(clearBtn, searchBox.nextSibling);
-
-  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
-
-  // fungsi filter
-  function doFilter() {
-    const filter = searchBox.value.toLowerCase();
-    rows.forEach((row) => {
-      const plat = row.cells[0]?.textContent.toLowerCase() || "";
-      const letak = row.cells[1]?.textContent.toLowerCase() || "";
-      row.style.display = (plat.includes(filter) || letak.includes(filter)) ? "" : "none";
-    });
+  if (!input) {
+    console.warn("🔎 Input pencarian tidak ditemukan. Pastikan ada input di area pencarian.");
+    return;
   }
 
-  // event ketika ketik
-  searchBox.addEventListener("keyup", doFilter);
+  // Tambahkan tombol clear (❌) bila belum ada
+  let clearBtn =
+    document.getElementById("clearSearch") ||
+    input.parentElement.querySelector(".clear-search-btn");
 
-  // tombol X = reset
+  if (!clearBtn) {
+    clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.id = "clearSearch";
+    clearBtn.className = "clear-search-btn";
+    clearBtn.textContent = "❌";
+    clearBtn.title = "Reset pencarian";
+    // styling ringan
+    clearBtn.style.marginLeft = "8px";
+    clearBtn.style.padding = "2px 8px";
+    clearBtn.style.border = "none";
+    clearBtn.style.background = "#c0392b";
+    clearBtn.style.color = "white";
+    clearBtn.style.borderRadius = "4px";
+    clearBtn.style.cursor = "pointer";
+    clearBtn.style.fontSize = "14px";
+    clearBtn.style.display = "none"; // awalnya disembunyikan
+
+    // sisipkan setelah input
+    input.parentNode.insertBefore(clearBtn, input.nextSibling);
+  }
+
+  const rows = Array.from(document.querySelectorAll("#tblKendaraan tbody tr"));
+
+  const filterRows = () => {
+    const q = (input.value || "").trim().toLowerCase();
+    let shown = 0;
+    rows.forEach((r) => {
+      const plat = r.cells[0]?.innerText.toLowerCase() || "";
+      const letak = r.cells[1]?.innerText.toLowerCase() || "";
+      const match = plat.includes(q) || letak.includes(q);
+      r.style.display = match ? "" : "none";
+      if (match) shown++;
+    });
+    // tampilkan tombol clear hanya jika ada input
+    clearBtn.style.display = q ? "inline-block" : "none";
+
+    // kalau tidak ada hasil & ada query, tetap biarkan kosong (tanpa mengotak-atik data asli)
+    if (shown === 0 && q) {
+      // optionally: bisa tambahkan baris informasi "Tidak ada hasil"
+      // tapi kita biarkan kosong agar bersih
+    }
+  };
+
+  // input ketik langsung filter
+  input.addEventListener("input", filterRows);
+
+  // tombol clear reset
   clearBtn.addEventListener("click", () => {
-    searchBox.value = "";
-    rows.forEach(r => r.style.display = "");
+    input.value = "";
+    filterRows();      // show all
+    input.focus();
   });
+
+  // inisialisasi state awal
+  filterRows();
+  _searchReady = true;
 }
+
+// (opsional) supaya bisa dipanggil dari HTML oninput="handleSearchInput(this.value)"
+window.handleSearchInput = function (val) {
+  initSearch(); // pastikan sudah siap
+  const input =
+    document.getElementById("searchInput") ||
+    document.querySelector(".search-box input") ||
+    document.querySelector('input[placeholder*="Cari kendaraan"]') ||
+    document.querySelector('input[placeholder*="Plat Nomor"]');
+  if (!input) return;
+  input.value = val;
+  // trigger manual
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+};
