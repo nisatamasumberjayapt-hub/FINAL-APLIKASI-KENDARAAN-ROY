@@ -1,12 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.6 — FINAL STABIL (Tulisan benar + Warna akurat)
- * Kompatibel pajak5tahun & servis
+ * main.js v4.7 — FINAL TERUJI (Tulisan benar + Warna akurat + Pajak 5 th aktif)
  ****************************************************/
 
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v4.6 FINAL");
+const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
+console.log("✅ main.js aktif — v4.7 FINAL TERUJI");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -17,12 +15,7 @@ async function api(action, payload = {}) {
       body: JSON.stringify({ action, ...payload }),
     });
     const text = await res.text();
-    try {
-      return JSON.parse(text);
-    } catch {
-      console.error("⚠️ Respon bukan JSON:", text);
-      return { success: false, message: "Respon tidak valid dari server" };
-    }
+    return JSON.parse(text);
   } catch (err) {
     console.error("❌ Fetch error:", err);
     return { success: false, message: "Gagal menghubungi server" };
@@ -30,89 +23,44 @@ async function api(action, payload = {}) {
 }
 
 /* ================= UTILITAS ================= */
-function toast(msg) {
-  alert(msg);
-}
+function toast(msg) { alert(msg); }
 function getSession() {
-  try {
-    return JSON.parse(localStorage.getItem("aj_user")) || null;
-  } catch {
-    return null;
-  }
+  try { return JSON.parse(localStorage.getItem("aj_user")) || null; }
+  catch { return null; }
 }
-function setSession(user) {
-  localStorage.setItem("aj_user", JSON.stringify(user));
-}
-function logout() {
-  localStorage.removeItem("aj_user");
-  location.href = "login.html";
-}
+function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
+function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
 
-/* ===== Parse tanggal Y-M-D secara aman (tanpa geser zona waktu) ===== */
-function parseYMD(d) {
-  if (!d) return null;
-  if (d instanceof Date) return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-  if (typeof d === "number") {
-    const tmp = new Date(d);
-    return new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
-  }
-  if (typeof d === "string") {
-    const s = d.trim();
-    const parts = s.split(/[-/]/).map((x) => Number(x));
-    if (parts.length === 3) {
-      // asumsikan format Google Sheet: YYYY-MM-DD
-      const [y, m, day] = parts[0] > 31 ? parts : [parts[2], parts[1], parts[0]]; // fallback bila dd-mm-yyyy
-      return new Date(Date.UTC(y, m - 1, day));
-    }
-    // fallback
-    const tmp = new Date(s);
-    if (isNaN(tmp)) return null;
-    return new Date(Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate()));
-  }
-  return null;
-}
-
-/* Hitung selisih hari UTC (tanpa jam) */
-function diffDaysUTC(a, b) {
-  if (!a || !b) return NaN;
-  const Au = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate());
-  const Bu = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate());
-  return Math.floor((Au - Bu) / 86400000);
-}
-
-/* Format YYYY-MM-DD untuk tampilan kolom tanggal */
 function fmtDate(d) {
-  const t = parseYMD(d);
-  if (!t) return "-";
-  const y = t.getUTCFullYear();
-  const m = String(t.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(t.getUTCDate()).padStart(2, "0");
+  if (!d) return "-";
+  const t = new Date(d);
+  if (isNaN(t)) return d;
+  const y = t.getFullYear();
+  const m = String(t.getMonth() + 1).padStart(2, "0");
+  const day = String(t.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
-/* ================= LOGIN / REGISTER ================= */
+/* ================= LOGIN ================= */
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   if (!username || !password) return toast("Isi username dan password!");
-
   const res = await api("login", { username, password });
   if (res.success) {
     setSession(res.user);
     toast("Selamat datang, " + res.user.nama);
     location.href = "dashboard.html";
-  } else {
-    toast(res.message || "Username atau password salah");
-  }
+  } else toast(res.message || "Username atau password salah");
 }
 
+/* ================= REGISTER ================= */
 async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
-
-  if (!username || !nama || !password) return toast("Semua kolom wajib diisi!");
-
+  if (!username || !nama || !password)
+    return toast("Semua kolom wajib diisi!");
   const res = await api("register", { username, nama, password });
   toast(res.message);
   if (res.success) location.href = "login.html";
@@ -131,25 +79,34 @@ async function initDashboard() {
     tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
     return;
   }
-  renderTabelKendaraan(res.data, user.role);
+
+  renderTabelKendaraan(res.data);
 }
 
-/* ================= STATUS WARNA ================= */
+/* ================= STATUS KENDARAAN ================= */
 function getStatusKendaraan(k) {
-  const now = parseYMD(new Date());
+  const now = new Date();
 
-  const dSTNK = parseYMD(k.STNK);
-  const dKIR = parseYMD(k.KIR);
-  const dPajak = parseYMD(k.pajak5tahun);
-  const dServ = parseYMD(k.ServisTerakhir);
+  function diffDays(tgl) {
+    if (!tgl) return 9999;
+    const d = new Date(tgl);
+    if (isNaN(d)) return 9999;
+    const ms = d - now;
+    return Math.floor(ms / (1000 * 60 * 60 * 24));
+  }
 
-  const stnk = Number.isNaN(diffDaysUTC(dSTNK, now)) ? 9999 : diffDaysUTC(dSTNK, now);
-  const kir = Number.isNaN(diffDaysUTC(dKIR, now)) ? 9999 : diffDaysUTC(dKIR, now);
-  const pajak5 = Number.isNaN(diffDaysUTC(dPajak, now)) ? 9999 : diffDaysUTC(dPajak, now);
-  const servisHari = Number.isNaN(diffDaysUTC(now, dServ)) ? 0 : diffDaysUTC(now, dServ); // hari sejak servis
+  const stnk = diffDays(k.STNK);
+  const kir = diffDays(k.KIR);
+  const pajak5 = diffDays(k.pajak5tahun);
+  const servisHari = (() => {
+    const s = new Date(k.ServisTerakhir);
+    if (isNaN(s)) return 0;
+    return Math.floor((now - s) / (1000 * 60 * 60 * 24));
+  })();
 
-  let color = "#e9f9e9"; // aman (hijau)
+  let color = "#e9f9e9"; // hijau
   let label = "Aman";
+
   if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servisHari >= 120) {
     color = "#ffd8d8"; // merah
     label = "Lewat";
@@ -157,16 +114,18 @@ function getStatusKendaraan(k) {
     color = "#fff3c6"; // kuning
     label = "Peringatan";
   }
+
   return { color, label };
 }
 
-/* ================= FORMAT SELISIH UNTUK TULISAN ================= */
-function formatSelisih(isoDate) {
-  const now = parseYMD(new Date());
-  const t = parseYMD(isoDate);
-  if (!t || !now) return "-";
+/* ================= FORMAT SELISIH ================= */
+function formatSelisih(tgl) {
+  if (!tgl) return "-";
+  const now = new Date();
+  const d = new Date(tgl);
+  if (isNaN(d)) return "-";
 
-  const selisih = diffDaysUTC(t, now); // t - now
+  const selisih = Math.floor((d - now) / (1000 * 60 * 60 * 24));
   const abs = Math.abs(selisih);
   const bulan = Math.floor(abs / 30);
   const hari = abs % 30;
@@ -176,21 +135,20 @@ function formatSelisih(isoDate) {
   return "Hari ini";
 }
 
-function formatServis(isoDate) {
-  const now = parseYMD(new Date());
-  const last = parseYMD(isoDate);
-  if (!last || !now) return "-";
+function formatServis(tgl) {
+  if (!tgl) return "-";
+  const now = new Date();
+  const d = new Date(tgl);
+  if (isNaN(d)) return "-";
 
-  const sejak = diffDaysUTC(now, last); // now - last
-  const abs = Math.max(0, sejak);
-  const bulan = Math.floor(abs / 30);
-  const hari = abs % 30;
-
+  const selisih = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+  const bulan = Math.floor(selisih / 30);
+  const hari = selisih % 30;
   return `Sudah ${bulan} bulan ${hari} hari`;
 }
 
 /* ================= RENDER TABEL ================= */
-function renderTabelKendaraan(data, role) {
+function renderTabelKendaraan(data) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
 
@@ -208,10 +166,11 @@ function renderTabelKendaraan(data, role) {
       </tr>`;
   });
 
-  tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
+  tbl.innerHTML =
+    html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-/* ================= HALAMAN USER ================= */
+/* ================= USER ================= */
 async function initUser() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -235,7 +194,8 @@ async function initUser() {
       </tr>`;
   });
 
-  tbl.innerHTML = html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
+  tbl.innerHTML =
+    html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
 }
 
 /* ================= SIMPAN KENDARAAN ================= */
@@ -247,7 +207,8 @@ async function simpanKendaraan() {
   const servis = document.getElementById("servis").value;
   const pajak5 = document.getElementById("pajak5").value;
 
-  if (!plat || !letak) return toast("Plat nomor dan lokasi harus diisi!");
+  if (!plat || !letak)
+    return toast("Plat nomor dan lokasi harus diisi!");
 
   const res = await api("addKendaraan", {
     Platnomor: plat,
