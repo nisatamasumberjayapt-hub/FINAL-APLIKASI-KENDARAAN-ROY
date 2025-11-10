@@ -1,14 +1,13 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.2 — STABIL + Pajak 5 Tahunan
- * Kombinasi logika versi 1.4 dan struktur data v3.9
+ * main.js v4.3 — FINAL STABIL (warna fix + format bulan/hari)
+ * Berdasarkan versi 1.4, kompatibel dengan kolom pajak5tahun
  ****************************************************/
 
-// === GANTI DENGAN URL GOOGLE APPS SCRIPT TERBARU ANDA ===
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — versi 4.2 stabil dengan pajak 5 tahun");
+console.log("✅ main.js aktif — versi 4.3 stabil & warna fix");
 
-// ===== Helper Umum =====
+// ===== Helper umum =====
 async function api(action, payload = {}) {
   try {
     const res = await fetch(API_URL, {
@@ -19,7 +18,7 @@ async function api(action, payload = {}) {
     const text = await res.text();
     return JSON.parse(text);
   } catch (e) {
-    console.error("❌ Fetch error:", e);
+    console.error("Fetch error:", e);
     return { success: false, message: "Server tidak dapat dihubungi." };
   }
 }
@@ -38,7 +37,7 @@ function logout() {
   location.href = "login.html";
 }
 
-// ===== Format Tanggal =====
+// ===== Format tanggal =====
 function fmtDate(isoDate) {
   if (!isoDate) return "-";
   const d = new Date(isoDate);
@@ -46,22 +45,30 @@ function fmtDate(isoDate) {
   return d.toISOString().split("T")[0];
 }
 
-// ===== Hitung Selisih Hari =====
-function hitungSelisihHari(isoDate) {
-  if (!isoDate) return null;
+// ===== Hitung selisih hari jadi format bulan + hari =====
+function formatSelisih(tanggal) {
+  if (!tanggal) return "-";
   const now = new Date();
-  const tgl = new Date(isoDate);
-  return Math.floor((tgl - now) / (1000 * 60 * 60 * 24));
+  const tgl = new Date(tanggal);
+  const diff = Math.floor((tgl - now) / (1000 * 60 * 60 * 24)); // dalam hari
+  const absDiff = Math.abs(diff);
+  const bulan = Math.floor(absDiff / 30);
+  const hari = absDiff % 30;
+  const teks = `${bulan > 0 ? bulan + " bulan " : ""}${hari} hari`;
+  if (diff > 0) return `${teks} lagi`;
+  if (diff < 0) return `Telah lewat ${teks}`;
+  return "Hari ini";
 }
 
-function hitungSejakServis(isoDate) {
-  if (!isoDate) return null;
+// ===== Hitung selisih servis terakhir =====
+function formatSejakServis(tanggal) {
+  if (!tanggal) return "-";
   const now = new Date();
-  const last = new Date(isoDate);
-  const diff = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+  const tgl = new Date(tanggal);
+  const diff = Math.floor((now - tgl) / (1000 * 60 * 60 * 24));
   const bulan = Math.floor(diff / 30);
   const hari = diff % 30;
-  return { bulan, hari, total: diff };
+  return `Sudah ${bulan} bulan ${hari} hari`;
 }
 
 // ===== LOGIN =====
@@ -85,16 +92,14 @@ async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
-
-  if (!username || !nama || !password)
-    return toast("Semua kolom wajib diisi!");
+  if (!username || !nama || !password) return toast("Semua kolom wajib diisi!");
 
   const res = await api("register", { username, nama, password });
   toast(res.message);
   if (res.success) location.href = "login.html";
 }
 
-// ===== RENDER DASHBOARD =====
+// ===== DASHBOARD =====
 async function initDashboard() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -111,43 +116,34 @@ async function initDashboard() {
   renderTabelKendaraan(res.data);
 }
 
-// ===== LOGIKA STATUS =====
+// ===== Logika Warna Status =====
 function getStatusKendaraan(k) {
-  const now = new Date();
+  function selisihHari(tgl) {
+    if (!tgl) return 9999;
+    const diff = Math.floor((new Date(tgl) - new Date()) / (1000 * 60 * 60 * 24));
+    return diff;
+  }
 
-  const sisaSTNK = hitungSelisihHari(k.STNK);
-  const sisaKIR = hitungSelisihHari(k.KIR);
-  const sisaPajak = hitungSelisihHari(k.pajak5tahun);
-
-  const servis = hitungSejakServis(k.ServisTerakhir);
-  const hariServis = servis ? servis.total : 0;
+  const stnk = selisihHari(k.STNK);
+  const kir = selisihHari(k.KIR);
+  const pajak = selisihHari(k.pajak5tahun);
+  const servis = Math.floor((new Date() - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
 
   let color = "#e9f9e9";
   let label = "Aman";
 
-  // Prioritas warna: Merah > Kuning > Hijau
-  if (
-    sisaSTNK <= 0 ||
-    sisaKIR <= 0 ||
-    sisaPajak <= 0 ||
-    hariServis >= 120
-  ) {
-    color = "#ffd8d8"; // merah
+  if (stnk <= 0 || kir <= 0 || pajak <= 0 || servis >= 120) {
+    color = "#ffd8d8";
     label = "Lewat";
-  } else if (
-    sisaSTNK <= 10 ||
-    sisaKIR <= 10 ||
-    sisaPajak <= 10 ||
-    hariServis >= 90
-  ) {
-    color = "#fff3c6"; // kuning
+  } else if (stnk <= 10 || kir <= 10 || pajak <= 10 || servis >= 90) {
+    color = "#fff3c6";
     label = "Peringatan";
   }
 
   return { color, label };
 }
 
-// ===== RENDER TABEL =====
+// ===== Render Tabel Kendaraan =====
 function renderTabelKendaraan(rows) {
   const tbody = document.querySelector("#tblKendaraan tbody");
   if (!rows?.length) {
@@ -158,26 +154,21 @@ function renderTabelKendaraan(rows) {
   tbody.innerHTML = rows
     .map((k) => {
       const status = getStatusKendaraan(k);
-      const servis = hitungSejakServis(k.ServisTerakhir);
-      const sisaSTNK = hitungSelisihHari(k.STNK);
-      const sisaKIR = hitungSelisihHari(k.KIR);
-      const sisaPajak = hitungSelisihHari(k.pajak5tahun);
-
       return `
         <tr style="background:${status.color}">
           <td>${k.Platnomor || "-"}</td>
           <td>${k.Letak || "-"}</td>
-          <td>${fmtDate(k.STNK)}<br><small>${sisaSTNK > 0 ? sisaSTNK + " hari lagi" : "Telah lewat " + Math.abs(sisaSTNK) + " hari"}</small></td>
-          <td>${fmtDate(k.KIR)}<br><small>${sisaKIR > 0 ? sisaKIR + " hari lagi" : "Telah lewat " + Math.abs(sisaKIR) + " hari"}</small></td>
-          <td>${fmtDate(k.ServisTerakhir)}<br><small>Sudah ${servis.bulan} bulan ${servis.hari} hari</small></td>
-          <td>${fmtDate(k.pajak5tahun)}<br><small>${sisaPajak > 0 ? sisaPajak + " hari lagi" : "Telah lewat " + Math.abs(sisaPajak) + " hari"}</small></td>
+          <td>${fmtDate(k.STNK)}<br><small>${formatSelisih(k.STNK)}</small></td>
+          <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
+          <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatSejakServis(k.ServisTerakhir)}</small></td>
+          <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
           <td>${status.label}</td>
         </tr>`;
     })
     .join("");
 }
 
-// ===== SIMPAN KENDARAAN (ADMIN) =====
+// ===== SIMPAN KENDARAAN =====
 async function simpanKendaraan() {
   const plat = document.getElementById("plat").value.trim();
   const letak = document.getElementById("letak").value.trim();
@@ -186,8 +177,7 @@ async function simpanKendaraan() {
   const servis = document.getElementById("servis").value;
   const pajak5 = document.getElementById("pajak5").value;
 
-  if (!plat || !letak)
-    return toast("Plat nomor dan lokasi harus diisi!");
+  if (!plat || !letak) return toast("Plat nomor dan lokasi harus diisi!");
 
   const res = await api("addKendaraan", {
     plat,
