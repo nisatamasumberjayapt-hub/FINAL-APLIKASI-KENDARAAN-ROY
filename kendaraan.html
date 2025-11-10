@@ -6,34 +6,46 @@
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ======== KHUSUS LAYOUT HALAMAN KENDARAAN ======== */
+    /* ======== LAYOUT 2 KOLOM (FORM + TABEL) ======== */
+    .kendaraan-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2%;
+      margin: 30px auto;
+      width: 94%;
+      max-width: 1300px;
+    }
+
+    /* ======== FORM KIRI ======== */
     .form-container {
-      max-width: 800px;
-      margin: 20px auto;
+      flex: 0 0 29%;
       background: #fff;
-      padding: 25px 30px;
+      padding: 25px 25px 30px 25px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px 25px;
-      align-items: center;
-    }
-
-    .form-grid label {
-      font-weight: bold;
-      text-align: right;
+    .form-container h2 {
+      text-align: center;
       color: #0b4d1b;
+      margin-bottom: 20px;
     }
 
-    .form-grid input {
+    .form-container label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #0b4d1b;
+      text-align: left;
+    }
+
+    .form-container input {
       width: 100%;
-      padding: 8px 10px;
+      padding: 9px 10px;
       border: 1.5px solid #ccc;
       border-radius: 6px;
+      margin-top: 5px;
       font-size: 14px;
     }
 
@@ -43,43 +55,58 @@
     }
 
     #btnSimpan, .btn-dark {
-      width: 200px;
-      margin: 6px;
+      width: 100%;
+      margin-top: 8px;
     }
 
-    h2 {
+    /* ======== TABEL KANAN ======== */
+    .tabel-container {
+      flex: 0 0 68%;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .tabel-container h2 {
       color: #0b4d1b;
+      text-align: left;
       margin-bottom: 10px;
     }
 
-    .table-wrapper {
-      margin-top: 25px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
     .search-box {
-      margin: 20px auto;
-      width: 70%;
-      max-width: 600px;
+      margin: 10px 0 20px 0;
+      width: 100%;
     }
 
-    @media (max-width: 768px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-        text-align: left;
+    .legend {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    /* ======== RESPONSIVE MODE ======== */
+    @media (max-width: 900px) {
+      .kendaraan-wrapper {
+        flex-direction: column;
+        align-items: center;
       }
-      .form-grid label {
-        text-align: left;
-        margin-top: 10px;
+
+      .form-container, .tabel-container {
+        flex: 0 0 100%;
+        width: 95%;
       }
-      #btnSimpan, .btn-dark {
-        width: 100%;
+
+      .form-container {
+        order: 1;
+      }
+
+      .tabel-container {
+        order: 2;
       }
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>🚗 PT ANISA JAYA UTAMA — BY ROY</h1>
@@ -91,29 +118,28 @@
   </header>
 
   <main>
-    <div class="card-dash">
-      <h2>🚘 Tambah Kendaraan</h2>
+    <div class="kendaraan-wrapper">
 
+      <!-- ======== FORM KIRI ======== -->
       <div class="form-container">
-        <div class="form-grid">
-          <label for="plat">Plat Nomor</label>
-          <input type="text" id="plat" placeholder="Contoh: B1234XYZ">
+        <h2>🚘 Tambah Kendaraan</h2>
+        <label for="plat">Plat Nomor</label>
+        <input type="text" id="plat" placeholder="Contoh: B1234XYZ">
 
-          <label for="lokasi">Letak / Garasi</label>
-          <input type="text" id="lokasi" placeholder="Contoh: Jakarta">
+        <label for="lokasi">Letak / Garasi</label>
+        <input type="text" id="lokasi" placeholder="Contoh: Jakarta">
 
-          <label for="stnk">STNK</label>
-          <input type="date" id="stnk">
+        <label for="stnk">STNK</label>
+        <input type="date" id="stnk">
 
-          <label for="kir">KIR</label>
-          <input type="date" id="kir">
+        <label for="kir">KIR</label>
+        <input type="date" id="kir">
 
-          <label for="servis">Servis Terakhir</label>
-          <input type="date" id="servis">
+        <label for="servis">Servis Terakhir</label>
+        <input type="date" id="servis">
 
-          <label for="pajak">Pajak 5 Tahunan</label>
-          <input type="date" id="pajak">
-        </div>
+        <label for="pajak">Pajak 5 Tahunan</label>
+        <input type="date" id="pajak">
 
         <div class="form-actions">
           <button id="btnSimpan">💾 Simpan</button>
@@ -121,34 +147,37 @@
         </div>
       </div>
 
-      <h2>📋 Daftar Kendaraan</h2>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
-      </div>
+      <!-- ======== TABEL KANAN ======== -->
+      <div class="tabel-container">
+        <h2>📋 Daftar Kendaraan</h2>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
+        </div>
 
-      <div class="table-wrapper">
-        <table id="kendaraanTable">
-          <thead>
-            <tr>
-              <th>Plat Nomor</th>
-              <th>Letak</th>
-              <th>STNK</th>
-              <th>KIR</th>
-              <th>Servis Terakhir</th>
-              <th>Pajak 5 Tahunan</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="kendaraanBody">
-            <tr><td colspan="7">Memuat data kendaraan...</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="table-wrapper">
+          <table id="kendaraanTable">
+            <thead>
+              <tr>
+                <th>Plat Nomor</th>
+                <th>Letak</th>
+                <th>STNK</th>
+                <th>KIR</th>
+                <th>Servis Terakhir</th>
+                <th>Pajak 5 Tahunan</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="kendaraanBody">
+              <tr><td colspan="7">Memuat data kendaraan...</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      <div class="legend">
-        <span><span class="dot green"></span> Aman</span> |
-        <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span> |
-        <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
+        <div class="legend">
+          <span><span class="dot green"></span> Aman</span> |
+          <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span> |
+          <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
+        </div>
       </div>
     </div>
   </main>
