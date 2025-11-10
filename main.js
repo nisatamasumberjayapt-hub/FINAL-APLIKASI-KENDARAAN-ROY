@@ -251,3 +251,4 @@ function initSearch() {
     clearBtn.style.display = "none";
   });
 }
+
