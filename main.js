@@ -1,12 +1,12 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v7.1 — Kendaraan (Admin + CRUD + Search + Hapus Aman)
+ * main.js v7.2 — Fix tampilan tabel, CRUD, Search, Hapus Aman
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-console.log("✅ main.js aktif — v7.1 Kendaraan");
+console.log("✅ main.js aktif — v7.2 (Fix Tabel + CRUD)");
 
-/* ================= HELPER API ================= */
+// ================= HELPER API ================= //
 async function api(action, payload = {}) {
   try {
     const res = await fetch(API_URL, {
@@ -27,19 +27,25 @@ async function api(action, payload = {}) {
   }
 }
 
-/* ================= UTILITAS ================= */
+// ================= UTILITAS ================= //
 function toast(msg) { alert(msg); }
-function getSession() { try { return JSON.parse(localStorage.getItem("aj_user")) || null; } catch { return null; } }
+function getSession() {
+  try { return JSON.parse(localStorage.getItem("aj_user")) || null; }
+  catch { return null; }
+}
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
+
 function fmtDate(d) {
   if (!d) return "-";
   const t = new Date(d);
   if (isNaN(t)) return d;
-  return t.toISOString().split("T")[0];
+  // fix timezone offset (biar gak mundur sehari)
+  const local = new Date(t.getTime() - t.getTimezoneOffset() * 60000);
+  return local.toISOString().split("T")[0];
 }
 
-/* ================= LOGIN / REGISTER ================= */
+// ================= LOGIN / REGISTER ================= //
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -62,48 +68,7 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
-/* ================= STATUS TANGGAL ================= */
-function getStatusTanggal(tgl) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const d = new Date(tgl);
-  if (isNaN(d)) return { color: "gray", text: "Tanggal tidak valid" };
-
-  const diff = Math.floor((d - now) / (1000 * 60 * 60 * 24));
-  const abs = Math.abs(diff);
-  const bulan = Math.floor(abs / 30);
-  const hari = abs % 30;
-
-  let color = "green";
-  let ket = diff < 0
-    ? `Telah lewat ${bulan} bulan ${hari} hari`
-    : diff > 0
-    ? `${bulan} bulan ${hari} hari lagi`
-    : "Hari ini";
-
-  if (diff <= 0) color = "red";
-  else if (diff <= 30) color = "gold";
-
-  return { color, text: ket };
-}
-
-function getStatusServis(tgl) {
-  const now = new Date();
-  const d = new Date(tgl);
-  if (isNaN(d)) return { color: "gray", text: "-" };
-
-  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
-  const bulan = Math.floor(diff / 30);
-  const hari = diff % 30;
-
-  let color = "green";
-  if (bulan >= 4) color = "red";
-  else if (bulan >= 3) color = "gold";
-
-  return { color, text: `Sudah ${bulan} bulan ${hari} hari` };
-}
-
-/* ================= DASHBOARD ================= */
+// ================= DASHBOARD (USER VIEW) ================= //
 async function initDashboard() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -121,7 +86,7 @@ async function initDashboard() {
   initSearch();
 }
 
-/* ================= KENDARAAN (ADMIN) ================= */
+// ================= KENDARAAN (ADMIN) ================= //
 async function initKendaraan() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -143,10 +108,11 @@ async function initKendaraan() {
   initSearch();
 }
 
-/* ================= RENDER TABEL ================= */
+// ================= RENDER TABEL ================= //
 function renderTabelKendaraan(data, isAdmin = false) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
+
   data.forEach((k) => {
     html += `
       <tr>
@@ -168,10 +134,12 @@ function renderTabelKendaraan(data, isAdmin = false) {
         }
       </tr>`;
   });
-  tbl.innerHTML = html || `<tr><td colspan="8" align="center">Tidak ada data kendaraan</td></tr>`;
+
+  tbl.innerHTML =
+    html || `<tr><td colspan="8" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-/* ================= HAPUS KENDARAAN ================= */
+// ================= HAPUS KENDARAAN ================= //
 async function hapusKendaraan(plat) {
   if (!confirm(`Apakah Anda yakin ingin menghapus kendaraan dengan plat "${plat}"?`)) return;
   const res = await api("deleteKendaraan", { Platnomor: plat });
@@ -182,14 +150,14 @@ async function hapusKendaraan(plat) {
   }
 }
 
-/* ================= EDIT (ADMIN) ================= */
+// ================= EDIT (ADMIN) ================= //
 function editKendaraan(dataStr) {
   const data = JSON.parse(decodeURIComponent(dataStr));
   localStorage.setItem("edit_kendaraan", JSON.stringify(data));
   location.href = "edit-kendaraan.html";
 }
 
-/* ================= TAMBAH KENDARAAN ================= */
+// ================= TAMBAH KENDARAAN ================= //
 async function simpanKendaraan() {
   const plat = document.getElementById("plat").value.trim();
   const letak = document.getElementById("letak").value.trim();
@@ -213,12 +181,12 @@ async function simpanKendaraan() {
   if (res.success) location.href = "kendaraan.html";
 }
 
-/* ================= PENCARIAN + CLEAR ================= */
+// ================= PENCARIAN + CLEAR ================= //
 function initSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
-  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
 
+  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
   let clearBtn = document.createElement("button");
   clearBtn.textContent = "❌";
   clearBtn.title = "Reset pencarian";
@@ -232,14 +200,18 @@ function initSearch() {
     cursor: "pointer",
     display: "none",
   });
+
   input.parentNode.insertBefore(clearBtn, input.nextSibling);
 
   function filterRows() {
     const val = input.value.toLowerCase();
+    let found = 0;
     rows.forEach((row) => {
       const plat = row.cells[0]?.innerText.toLowerCase() || "";
       const letak = row.cells[1]?.innerText.toLowerCase() || "";
-      row.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
+      const visible = plat.includes(val) || letak.includes(val);
+      row.style.display = visible ? "" : "none";
+      if (visible) found++;
     });
     clearBtn.style.display = val ? "inline-block" : "none";
   }
@@ -251,4 +223,3 @@ function initSearch() {
     clearBtn.style.display = "none";
   });
 }
-
