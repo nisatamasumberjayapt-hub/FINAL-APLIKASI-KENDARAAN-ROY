@@ -5,6 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ======== KHUSUS LAYOUT HALAMAN KENDARAAN ======== */
+    .form-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 25px;
+      align-items: center;
+    }
+
+    .form-grid label {
+      font-weight: bold;
+      text-align: right;
+      color: #0b4d1b;
+    }
+
+    .form-grid input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #btnSimpan, .btn-dark {
+      width: 200px;
+      margin: 6px;
+    }
+
+    h2 {
+      color: #0b4d1b;
+      margin-bottom: 10px;
+    }
+
+    .table-wrapper {
+      margin-top: 25px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .search-box {
+      margin: 20px auto;
+      width: 70%;
+      max-width: 600px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+      .form-grid label {
+        text-align: left;
+        margin-top: 10px;
+      }
+      #btnSimpan, .btn-dark {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -21,26 +95,35 @@
       <h2>🚘 Tambah Kendaraan</h2>
 
       <div class="form-container">
-        <input type="text" id="plat" placeholder="Plat Nomor" />
-        <input type="text" id="lokasi" placeholder="Letak / Garasi" />
-        <label>STNK</label>
-        <input type="date" id="stnk" />
-        <label>KIR</label>
-        <input type="date" id="kir" />
-        <label>Servis Terakhir</label>
-        <input type="date" id="servis" />
-        <label>Pajak 5 Tahunan</label>
-        <input type="date" id="pajak" />
+        <div class="form-grid">
+          <label for="plat">Plat Nomor</label>
+          <input type="text" id="plat" placeholder="Contoh: B1234XYZ">
 
-        <button id="btnSimpan">💾 Simpan</button>
-        <button class="btn-dark" onclick="window.location='dashboard.html'">⬅ Kembali</button>
+          <label for="lokasi">Letak / Garasi</label>
+          <input type="text" id="lokasi" placeholder="Contoh: Jakarta">
+
+          <label for="stnk">STNK</label>
+          <input type="date" id="stnk">
+
+          <label for="kir">KIR</label>
+          <input type="date" id="kir">
+
+          <label for="servis">Servis Terakhir</label>
+          <input type="date" id="servis">
+
+          <label for="pajak">Pajak 5 Tahunan</label>
+          <input type="date" id="pajak">
+        </div>
+
+        <div class="form-actions">
+          <button id="btnSimpan">💾 Simpan</button>
+          <button class="btn-dark" onclick="window.location='dashboard.html'">⬅ Kembali</button>
+        </div>
       </div>
-
-      <hr style="margin:25px 0;">
 
       <h2>📋 Daftar Kendaraan</h2>
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
+        <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
       </div>
 
       <div class="table-wrapper">
