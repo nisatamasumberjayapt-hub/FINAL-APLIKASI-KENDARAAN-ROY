@@ -1,20 +1,18 @@
 /* ==========================================================
    PT ANISA JAYA UTAMA — BY ROY
-   main.js FINAL v3.9 — (Login, Register, Dashboard, Kendaraan)
+   main.js FINAL v4.0 — Stable Version (Login, Register, Dashboard, Kendaraan)
    Terhubung dengan Google Apps Script backend
    ========================================================== */
 
-/* GANTI URL DI BAWAH DENGAN URL GOOGLE APPS SCRIPT TERBARU ANDA */
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-
 console.log("✅ main.js aktif & terhubung ke:", API_URL);
 
-/* =============== HELPER API TANPA PRE-FLIGHT (ANTI CORS) =============== */
+/* ================= HELPER API TANPA CORS ================= */
 async function api(action, payload = {}) {
   try {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" }, // hindari preflight
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action, ...payload })
     });
 
@@ -26,12 +24,12 @@ async function api(action, payload = {}) {
       return { success: false, message: "Respon tidak valid dari server" };
     }
   } catch (err) {
-    console.error("❌ Gagal fetch:", err);
-    return { success: false, message: "Gagal terhubung ke server Apps Script" };
+    console.error("❌ Fetch error:", err);
+    return { success: false, message: "Gagal menghubungi server" };
   }
 }
 
-/* =============== UTILITAS UMUM =============== */
+/* ================= UTILITAS UMUM ================= */
 function toast(msg) { alert(msg); }
 
 function getSession() {
@@ -58,7 +56,7 @@ function fmtDate(d) {
   return t.toISOString().split("T")[0];
 }
 
-/* =============== LOGIN =============== */
+/* ================= LOGIN ================= */
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -76,7 +74,7 @@ async function login() {
   }
 }
 
-/* =============== REGISTER =============== */
+/* ================= REGISTER ================= */
 async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
@@ -90,46 +88,26 @@ async function register() {
   if (res.success) location.href = "login.html";
 }
 
-/* =============== DASHBOARD =============== */
-async function initDashboard() {
-  const user = getSession();
-  if (!user) return (location.href = "login.html");
-
-  const tbl = document.querySelector("#tblKendaraan tbody");
-  tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
-
-  const res = await api("getKendaraan");
-  if (!res.success || !Array.isArray(res.data)) {
-    tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
-    return;
-  }
-
-  let html = "";
-  res.data.forEach(k => {
-    const status = getStatusKendaraan(k);
-    html += `
-      <tr style="background:${status.color}">
-        <td>${k.Platnomor || "-"}</td>
-        <td>${k.Letak || "-"}</td>
-        <td>${fmtDate(k.STNK)}</td>
-        <td>${fmtDate(k.KIR)}</td>
-        <td>${fmtDate(k.ServisTerakhir)}</td>
-        <td>${fmtDate(k.pajak5tahun)}</td>
-        <td>${status.label}</td>
-      </tr>`;
-  });
-
-  tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
-}
-
-/* =============== HITUNG STATUS KENDARAAN =============== */
+/* ================= STATUS KENDARAAN ================= */
 function getStatusKendaraan(k) {
   const now = new Date();
 
-  function daysDiff(tgl) {
-    const d = new Date(tgl);
-    return Math.floor((d - now) / (1000 * 60 * 60 * 24));
-  }
+  const parseDate = (d) => {
+    if (!d) return null;
+    const t = new Date(d);
+    if (isNaN(t)) {
+      const parts = d.split("-");
+      if (parts.length === 3) return new Date(parts[0], parts[1] - 1, parts[2]);
+      return null;
+    }
+    return t;
+  };
+
+  const daysDiff = (tgl) => {
+    const t = parseDate(tgl);
+    if (!t) return 9999;
+    return Math.floor((t - now) / (1000 * 60 * 60 * 24));
+  };
 
   let color = "#b2f2bb"; // hijau aman
   let label = "Aman";
@@ -137,8 +115,7 @@ function getStatusKendaraan(k) {
   const stnk = daysDiff(k.STNK);
   const kir = daysDiff(k.KIR);
   const pajak5 = daysDiff(k.pajak5tahun);
-
-  const servisDiff = Math.floor((now - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
+  const servisDiff = Math.floor((now - parseDate(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
 
   if (stnk <= 0 || kir <= 0 || pajak5 <= 0) {
     color = "#ffa8a8"; // merah
@@ -159,8 +136,47 @@ function getStatusKendaraan(k) {
   return { color, label };
 }
 
-/* =============== HALAMAN USER =============== */
-/* =============== HALAMAN USER (PERBAIKAN FINAL) =============== */
+/* ================= DASHBOARD (USER) ================= */
+async function initDashboard() {
+  const user = getSession();
+  if (!user) return (location.href = "login.html");
+
+  document.title = "Dashboard — PT ANISA JAYA UTAMA";
+  const tbl = document.querySelector("#tblKendaraan tbody");
+  tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
+
+  const res = await api("getKendaraan");
+  if (!res.success || !Array.isArray(res.data)) {
+    tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
+    return;
+  }
+
+  renderTabelKendaraan(res.data, user.role);
+}
+
+/* ================= RENDER TABEL KENDARAAN ================= */
+function renderTabelKendaraan(data, role = "user") {
+  const tbl = document.querySelector("#tblKendaraan tbody");
+  let html = "";
+
+  data.forEach((k) => {
+    const status = getStatusKendaraan(k);
+    html += `
+      <tr style="background:${status.color}">
+        <td>${k.Platnomor || "-"}</td>
+        <td>${k.Letak || "-"}</td>
+        <td>${fmtDate(k.STNK)}</td>
+        <td>${fmtDate(k.KIR)}</td>
+        <td>${fmtDate(k.ServisTerakhir)}</td>
+        <td>${fmtDate(k.pajak5tahun)}</td>
+        <td>${status.label}</td>
+      </tr>`;
+  });
+
+  tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
+}
+
+/* ================= USER PAGE ================= */
 async function initUser() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -169,16 +185,13 @@ async function initUser() {
   tbl.innerHTML = `<tr><td colspan="3" align="center">Memuat data...</td></tr>`;
 
   const res = await api("getUsers");
-
-  console.log("📡 Response getUsers:", res);
-
   if (!res.success || !Array.isArray(res.data)) {
     tbl.innerHTML = `<tr><td colspan="3" align="center">Gagal memuat data user</td></tr>`;
     return;
   }
 
   let html = "";
-  res.data.forEach(u => {
+  res.data.forEach((u) => {
     html += `
       <tr>
         <td>${u.nama || "-"}</td>
@@ -190,7 +203,7 @@ async function initUser() {
   tbl.innerHTML = html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
 }
 
-/* =============== TAMBAH KENDARAAN =============== */
+/* ================= SIMPAN KENDARAAN (ADMIN) ================= */
 async function simpanKendaraan() {
   const plat = document.getElementById("plat").value.trim();
   const letak = document.getElementById("letak").value.trim();
@@ -203,16 +216,14 @@ async function simpanKendaraan() {
     return toast("Plat nomor dan lokasi harus diisi!");
 
   const res = await api("addKendaraan", {
-    plat,
-    letak,
-    stnk,
-    kir,
-    servis,
-    pajak5
+    Platnomor: plat,
+    Letak: letak,
+    STNK: stnk,
+    KIR: kir,
+    ServisTerakhir: servis,
+    pajak5tahun: pajak5
   });
 
   toast(res.message);
-  if (res.success) location.href = "dashboard.html";
+  if (res.success) location.href = "kendaraan.html";
 }
-
-
