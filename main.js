@@ -1,215 +1,217 @@
-/****************************************************
- * PT ANISA JAYA UTAMA — BY ROY
- * main.js v1.5 — Stabil (STNK, KIR, Servis, Pajak 5 Tahun)
- ****************************************************/
+/* ==========================================================
+   PT ANISA JAYA UTAMA — BY ROY
+   main.js FINAL v3.9 — (Login, Register, Dashboard, Kendaraan)
+   Terhubung dengan Google Apps Script backend
+   ========================================================== */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxMwBMv4-0-ttB8WfhC5NfwNpJuKgVdcsz4vdWj8mViO4DGSBqaUKiIIgyAItPlEM-amg/exec";
-console.log("✅ main.js aktif — versi 1.5 stabil");
+/* GANTI URL DI BAWAH DENGAN URL GOOGLE APPS SCRIPT TERBARU ANDA */
+const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
 
-/* ====== Helper umum ====== */
+console.log("✅ main.js aktif & terhubung ke:", API_URL);
+
+/* =============== HELPER API TANPA PRE-FLIGHT (ANTI CORS) =============== */
 async function api(action, payload = {}) {
   try {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, // hindari preflight
       body: JSON.stringify({ action, ...payload })
     });
+
     const text = await res.text();
-    return JSON.parse(text);
-  } catch (e) {
-    console.error("Fetch error:", e);
-    return { success: false, message: "Server tidak dapat dihubungi." };
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("⚠️ Respon bukan JSON:", text);
+      return { success: false, message: "Respon tidak valid dari server" };
+    }
+  } catch (err) {
+    console.error("❌ Gagal fetch:", err);
+    return { success: false, message: "Gagal terhubung ke server Apps Script" };
   }
 }
 
+/* =============== UTILITAS UMUM =============== */
 function toast(msg) { alert(msg); }
-function getSession() { return JSON.parse(localStorage.getItem("aj_user") || "null"); }
-function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
-function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
 
-/* ===== FORMAT TANGGAL ===== */
-function formatTanggal(isoDate) {
-  if (!isoDate) return "-";
-  const d = new Date(isoDate);
-  if (isNaN(d)) return isoDate;
-  return d.toISOString().split("T")[0];
+function getSession() {
+  try {
+    return JSON.parse(localStorage.getItem("aj_user")) || null;
+  } catch {
+    return null;
+  }
 }
 
-/* ===== PERHITUNGAN ===== */
-
-// --- Hitung sisa hari (untuk STNK, KIR, Pajak) ---
-function hitungSisaHari(isoDate) {
-  if (!isoDate) return "";
-  const sekarang = new Date();
-  const target = new Date(isoDate);
-  const selisihMs = target - sekarang;
-  const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
-  if (selisihHari < 0) return `⚠ Telah lewat ${Math.abs(selisihHari)} hari`;
-  return `${selisihHari} hari lagi`;
+function setSession(user) {
+  localStorage.setItem("aj_user", JSON.stringify(user));
 }
 
-// --- Hitung waktu sejak servis terakhir ---
-function hitungSejakServis(isoDate) {
-  if (!isoDate) return "";
-  const sekarang = new Date();
-  const lastServis = new Date(isoDate);
-  const selisihMs = sekarang - lastServis;
-  const selisihHari = Math.floor(selisihMs / (1000 * 60 * 60 * 24));
-  const bulan = Math.floor(selisihHari / 30);
-  const hari = selisihHari % 30;
-  return `Sudah ${bulan} bulan ${hari} hari`;
+function logout() {
+  localStorage.removeItem("aj_user");
+  location.href = "login.html";
 }
 
-/* ===== WARNA PERINGATAN ===== */
-
-// Untuk STNK / KIR / Pajak (≤10 hari)
-function warnaPeringatan(isoDate) {
-  if (!isoDate) return "";
-  const sisa = new Date(isoDate) - new Date();
-  const hari = sisa / (1000 * 60 * 60 * 24);
-  if (hari < 0) return "expired";
-  if (hari <= 10) return "warning";
-  return "";
+function fmtDate(d) {
+  if (!d) return "-";
+  const t = new Date(d);
+  if (isNaN(t)) return d;
+  return t.toISOString().split("T")[0];
 }
 
-// Untuk Servis (berdasarkan lama sejak servis)
-function warnaServis(isoDate) {
-  if (!isoDate) return "";
-  const sekarang = new Date();
-  const lastServis = new Date(isoDate);
-  const selisihHari = Math.floor((sekarang - lastServis) / (1000 * 60 * 60 * 24));
-  const bulan = selisihHari / 30;
-  if (bulan >= 4) return "expired";
-  if (bulan >= 3) return "warning";
-  return "safe";
+/* =============== LOGIN =============== */
+async function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!username || !password) return toast("Isi username dan password!");
+
+  const res = await api("login", { username, password });
+
+  if (res.success) {
+    setSession(res.user);
+    toast("Selamat datang, " + res.user.nama);
+    location.href = "dashboard.html";
+  } else {
+    toast(res.message || "Username atau password salah");
+  }
 }
 
-/* ===== RENDER KENDARAAN ===== */
-function renderKendaraan(rows) {
-  const tbody = document.querySelector("#tblKendaraan tbody");
-  if (!tbody) return;
+/* =============== REGISTER =============== */
+async function register() {
+  const username = document.getElementById("username").value.trim();
+  const nama = document.getElementById("nama").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  if (!rows?.length) {
-    tbody.innerHTML = `<tr><td colspan="7" align="center">🚫 Tidak ada data kendaraan</td></tr>`;
-    document.getElementById("legend")?.remove();
+  if (!username || !nama || !password)
+    return toast("Semua kolom wajib diisi!");
+
+  const res = await api("register", { username, nama, password });
+  toast(res.message);
+  if (res.success) location.href = "login.html";
+}
+
+/* =============== DASHBOARD =============== */
+async function initDashboard() {
+  const user = getSession();
+  if (!user) return (location.href = "login.html");
+
+  const tbl = document.querySelector("#tblKendaraan tbody");
+  tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
+
+  const res = await api("getKendaraan");
+  if (!res.success || !Array.isArray(res.data)) {
+    tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = rows.map(k => {
-    const stnkWarn = warnaPeringatan(k.STNK);
-    const kirWarn = warnaPeringatan(k.KIR);
-    const servisWarn = warnaServis(k.ServisTerakhir);
-    const pajakWarn = warnaPeringatan(k.pajak5tahun || k.Pajak5Tahun || k.Pajak5 || "");
-
-    return `
-      <tr>
-        <td>${k.PlatNomor || k.Platnomor || "-"}</td>
+  let html = "";
+  res.data.forEach(k => {
+    const status = getStatusKendaraan(k);
+    html += `
+      <tr style="background:${status.color}">
+        <td>${k.Platnomor || "-"}</td>
         <td>${k.Letak || "-"}</td>
-
-        <td class="${stnkWarn}">
-          ${formatTanggal(k.STNK)}<br>
-          <small>${hitungSisaHari(k.STNK)}</small>
-        </td>
-
-        <td class="${kirWarn}">
-          ${formatTanggal(k.KIR)}<br>
-          <small>${hitungSisaHari(k.KIR)}</small>
-        </td>
-
-        <td class="${servisWarn}">
-          ${formatTanggal(k.ServisTerakhir)}<br>
-          <small>${hitungSejakServis(k.ServisTerakhir)}</small>
-        </td>
-
-        <td class="${pajakWarn}">
-          ${formatTanggal(k.pajak5tahun)}<br>
-          <small>${hitungSisaHari(k.pajak5tahun)}</small>
-        </td>
-
-        <td>-</td>
+        <td>${fmtDate(k.STNK)}</td>
+        <td>${fmtDate(k.KIR)}</td>
+        <td>${fmtDate(k.ServisTerakhir)}</td>
+        <td>${fmtDate(k.pajak5tahun)}</td>
+        <td>${status.label}</td>
       </tr>`;
-  }).join("");
-
-  tampilkanLegenda();
-}
-
-/* ===== LEGENDA WARNA ===== */
-function tampilkanLegenda() {
-  const existing = document.getElementById("legend");
-  if (existing) existing.remove();
-
-  const legend = document.createElement("div");
-  legend.id = "legend";
-  legend.className = "legend-container";
-  legend.innerHTML = `
-    <div class="legend-item"><span class="legend-box safe"></span> Aman (Servis < 3 bulan)</div>
-    <div class="legend-item"><span class="legend-box warning"></span> Peringatan (STNK/KIR/Pajak ≤ 10 hari, Servis ≥ 3 bulan)</div>
-    <div class="legend-item"><span class="legend-box expired"></span> Lewat (STNK/KIR/Pajak habis, Servis ≥ 4 bulan)</div>
-  `;
-  const table = document.getElementById("tblKendaraan");
-  table.parentNode.appendChild(legend);
-}
-
-/* ===== PENCARIAN ===== */
-let searchTimer = null;
-let searchSeq = 0;
-
-function uniqueByPlat(arr) {
-  const seen = new Set();
-  return arr.filter(x => {
-    const key = (x.PlatNomor || x.Platnomor || "").toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
   });
+
+  tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
 }
 
-function handleSearchInput(termRaw) {
-  const term = (termRaw || "").trim();
-  if (searchTimer) clearTimeout(searchTimer);
+/* =============== HITUNG STATUS KENDARAAN =============== */
+function getStatusKendaraan(k) {
+  const now = new Date();
 
-  searchTimer = setTimeout(async () => {
-    const mySeq = ++searchSeq;
-    const tbody = document.querySelector("#tblKendaraan tbody");
-    if (!tbody) return;
-
-    if (term === "") {
-      tbody.innerHTML = `<tr><td colspan="7" align="center">🔄 Memuat data...</td></tr>`;
-      const res = await api("getKendaraan", { qPlat: "", qLetak: "" });
-      if (mySeq !== searchSeq) return;
-      if (res.success) renderKendaraan(res.data);
-      return;
-    }
-
-    tbody.innerHTML = `<tr><td colspan="7" align="center">🔎 Mencari...</td></tr>`;
-    const [byPlat, byLetak] = await Promise.all([
-      api("getKendaraan", { qPlat: term, qLetak: "" }),
-      api("getKendaraan", { qPlat: "", qLetak: term })
-    ]);
-
-    if (mySeq !== searchSeq) return;
-    const list1 = byPlat.success ? (byPlat.data || []) : [];
-    const list2 = byLetak.success ? (byLetak.data || []) : [];
-    const merged = uniqueByPlat([...list1, ...list2]);
-    renderKendaraan(merged);
-  }, 250);
-}
-
-/* ===== LOAD SEMUA ===== */
-async function loadAllKendaraan() {
-  const tbody = document.querySelector("#tblKendaraan tbody");
-  if (!tbody) return;
-  tbody.innerHTML = `<tr><td colspan="7" align="center">🔄 Memuat data...</td></tr>`;
-  const data = await api("getKendaraan", { qPlat: "", qLetak: "" });
-  if (data.success) renderKendaraan(data.data);
-  else tbody.innerHTML = `<tr><td colspan="7" align="center">⚠ Gagal memuat data</td></tr>`;
-}
-
-/* ===== EVENT ===== */
-document.addEventListener("DOMContentLoaded", () => {
-  const q = document.getElementById("q");
-  if (q) {
-    loadAllKendaraan();
-    q.addEventListener("input", () => handleSearchInput(q.value));
+  function daysDiff(tgl) {
+    const d = new Date(tgl);
+    return Math.floor((d - now) / (1000 * 60 * 60 * 24));
   }
-});
+
+  let color = "#b2f2bb"; // hijau aman
+  let label = "Aman";
+
+  const stnk = daysDiff(k.STNK);
+  const kir = daysDiff(k.KIR);
+  const pajak5 = daysDiff(k.pajak5tahun);
+
+  const servisDiff = Math.floor((now - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
+
+  if (stnk <= 0 || kir <= 0 || pajak5 <= 0) {
+    color = "#ffa8a8"; // merah
+    label = "Lewat";
+  } else if (stnk <= 10 || kir <= 10 || pajak5 <= 10) {
+    color = "#fff3bf"; // kuning
+    label = "Peringatan";
+  }
+
+  if (servisDiff >= 120) {
+    color = "#ffa8a8";
+    label = "Servis lewat 4 bulan";
+  } else if (servisDiff >= 90) {
+    color = "#fff3bf";
+    label = "Servis >3 bulan";
+  }
+
+  return { color, label };
+}
+
+/* =============== HALAMAN USER =============== */
+/* =============== HALAMAN USER (PERBAIKAN FINAL) =============== */
+async function initUser() {
+  const user = getSession();
+  if (!user) return (location.href = "login.html");
+
+  const tbl = document.querySelector("#tblUser tbody");
+  tbl.innerHTML = `<tr><td colspan="3" align="center">Memuat data...</td></tr>`;
+
+  const res = await api("getUsers");
+
+  console.log("📡 Response getUsers:", res);
+
+  if (!res.success || !Array.isArray(res.data)) {
+    tbl.innerHTML = `<tr><td colspan="3" align="center">Gagal memuat data user</td></tr>`;
+    return;
+  }
+
+  let html = "";
+  res.data.forEach(u => {
+    html += `
+      <tr>
+        <td>${u.nama || "-"}</td>
+        <td>${u.username || "-"}</td>
+        <td>${u.role || "-"}</td>
+      </tr>`;
+  });
+
+  tbl.innerHTML = html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
+}
+
+/* =============== TAMBAH KENDARAAN =============== */
+async function simpanKendaraan() {
+  const plat = document.getElementById("plat").value.trim();
+  const letak = document.getElementById("letak").value.trim();
+  const stnk = document.getElementById("stnk").value;
+  const kir = document.getElementById("kir").value;
+  const servis = document.getElementById("servis").value;
+  const pajak5 = document.getElementById("pajak5").value;
+
+  if (!plat || !letak)
+    return toast("Plat nomor dan lokasi harus diisi!");
+
+  const res = await api("addKendaraan", {
+    plat,
+    letak,
+    stnk,
+    kir,
+    servis,
+    pajak5
+  });
+
+  toast(res.message);
+  if (res.success) location.href = "dashboard.html";
+}
+
