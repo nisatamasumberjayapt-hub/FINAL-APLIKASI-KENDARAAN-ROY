@@ -3,56 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data User - PT ANISA JAYA UTAMA</title>
+  <title>Daftar User - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #1b5e20;
-      color: white;
-    }
-    .navbar {
-      background-color: #1b5e20;
-      color: white;
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .menu a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .menu a.active {
-      text-decoration: underline;
-    }
-  </style>
 </head>
-<body onload="loadUsers()">
-  <div class="navbar">
-    <h2>PT ANISA JAYA UTAMA — BY ROY</h2>
-    <div class="menu">
+<body onload="initUser()">
+  <header>
+    <h1>PT ANISA JAYA UTAMA — BY ROY</h1>
+    <nav>
       <a href="dashboard.html">🏠 Dashboard</a>
       <a href="kendaraan.html">🚗 Kendaraan</a>
-      <a href="user.html" class="active">👥 User</a>
-      <a href="#" onclick="logout()">🚪 Logout</a>
-    </div>
-  </div>
+      <a href="user.html">🧍‍♂️ User</a>
+      <a href="#" onclick="logout()">📜 Logout</a>
+    </nav>
+  </header>
 
-  <div class="card">
-    <h3>Daftar User</h3>
-    <table>
+  <div class="container">
+    <h2>Daftar User</h2>
+
+    <table id="tblUser">
       <thead>
         <tr>
           <th>Nama Lengkap</th>
@@ -60,13 +28,12 @@
           <th>Role</th>
         </tr>
       </thead>
-      <tbody id="tblUser">
+      <tbody>
         <tr><td colspan="3" align="center">Memuat data...</td></tr>
       </tbody>
     </table>
-<script src="main.js?v=20251109-final3"></script>
+  </div>
 
-
-
+  <script src="main.js?v=20251109-final3"></script>
 </body>
 </html>
