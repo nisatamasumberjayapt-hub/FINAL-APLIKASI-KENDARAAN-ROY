@@ -5,7 +5,7 @@
    ========================================================== */
 
 /* GANTI URL DI BAWAH DENGAN URL GOOGLE APPS SCRIPT TERBARU ANDA */
-const API_URL = "https://script.google.com/macros/s/AKfycbwupFec4Nr2U0orr-9t0dFIhFjsl5hWfT--xYxdgCEAbC17p6W12cngio-Mxv_XRWRv8A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
 
 console.log("✅ main.js aktif & terhubung ke:", API_URL);
 
@@ -214,4 +214,5 @@ async function simpanKendaraan() {
   toast(res.message);
   if (res.success) location.href = "dashboard.html";
 }
+
 
