@@ -4,44 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
-
-  <!-- Pakai styles.css-mu sendiri. Kalau belum ada, boleh pakai inline style sederhana. -->
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Ringan saja; silakan timpa dari styles.css */
-    body { font-family: system-ui, Arial, sans-serif; background:#f7f9f7; color:#123; }
-    header { background:#0c5d27; color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
-    header nav a{ color:#fff; text-decoration:none; margin-left:14px; }
-    main{ max-width:1200px; margin:28px auto; padding:0 14px; }
-    .grid{ display:grid; grid-template-columns:320px 1fr; gap:18px; }
-    .card{ background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
-    .card .pad{ padding:20px; }
+    body { font-family: system-ui, Arial, sans-serif; background:#f5f7f5; color:#123; margin:0; }
+    header { background:#0c5d27; color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
+    header nav a{ color:#fff; text-decoration:none; margin-left:16px; font-weight:500; }
+    main{ max-width:1300px; margin:28px auto; padding:0 16px; }
 
-    .card h2{ margin:0 0 14px; color:#0b4d1b; }
-    label{ display:block; font-weight:600; font-size:14px; color:#0b4d1b; margin:10px 0 6px; }
-    input[type="text"], input[type="date"]{
-      width:100%; padding:10px 12px; border:1.5px solid #cfd8cf; border-radius:8px; font-size:14px;
-    }
-    .row-btn{ display:flex; gap:10px; margin-top:16px; }
-    .btn{ padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+    .grid{ display:grid; grid-template-columns:340px 1fr; gap:24px; }
+    .card{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.07); }
+    .pad{ padding:20px; }
+
+    h2{ margin:0 0 14px; color:#0b4d1b; font-size:20px; }
+    label{ display:block; font-weight:600; font-size:14px; margin:8px 0 4px; color:#0c5d27; }
+    input[type="text"],input[type="date"]{ width:100%; padding:9px 12px; border:1.3px solid #cdd9cd; border-radius:8px; }
+    .row-btn{ display:flex; gap:10px; margin-top:14px; }
+    .btn{ border:none; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; }
     .btn-primary{ background:#0c5d27; color:#fff; }
-    .btn-dark{ background:#555; color:#fff; }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+    .btn-dark{ background:#444; color:#fff; }
 
-    .toolbar{ display:flex; align-items:center; gap:8px; margin-bottom:12px; }
-    .toolbar input{ flex:1; }
+    .toolbar{ display:flex; align-items:center; gap:6px; margin-bottom:12px; position:relative; }
+    #searchInput{ flex:1; padding:10px 12px; border:1.5px solid #cdd9cd; border-radius:8px; }
+    #clearSearch{ position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:16px; cursor:pointer; color:#888; }
 
-    table{ width:100%; border-collapse:collapse; }
-    thead th{ background:#0c5d27; color:#fff; font-weight:700; text-align:left; padding:12px; }
-    tbody td{ padding:12px; border-bottom:1px solid #eef2ee; vertical-align:top; }
+    table{ width:100%; border-collapse:collapse; font-size:14px; table-layout:auto; }
+    th, td{ padding:10px 14px; border-bottom:1px solid #e0ebe0; vertical-align:top; }
+    thead th{ background:#0c5d27; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
     tbody tr:hover{ background:#f6fbf6; }
-    .legend{ display:flex; align-items:center; gap:14px; padding:12px 20px; }
-    .dot{ width:12px; height:12px; border-radius:3px; display:inline-block; margin-right:6px; vertical-align:middle; }
+
+    .legend{ display:flex; align-items:center; gap:14px; margin-top:10px; font-size:13px; color:#333; }
+    .dot{ width:12px; height:12px; border-radius:3px; display:inline-block; margin-right:6px; }
     .dot.green{ background:#2ecc71; }
     .dot.yellow{ background:#f1c40f; }
     .dot.red{ background:#e74c3c; }
 
-    /* tombol aksi dari JS */
     .btn-edit{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
     .btn-delete{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
   </style>
@@ -59,11 +55,10 @@
 
   <main>
     <div class="grid">
-      <!-- KIRI: FORM TAMBAH -->
+      <!-- KIRI -->
       <section class="card">
         <div class="pad">
           <h2>Tambah Kendaraan</h2>
-
           <label for="plat">Plat Nomor</label>
           <input id="plat" type="text" placeholder="Contoh: B1234XYZ" />
 
@@ -80,36 +75,28 @@
           <input id="servis" type="date" />
 
           <label for="pajak5">Pajak 5 Tahunan</label>
-          <!-- PENTING: id = pajak5 (sesuai main.js v7.4) -->
           <input id="pajak5" type="date" />
 
           <div class="row-btn">
-            <button class="btn btn-primary" onclick="simpanKendaraan()">➕ Tambah</button>
+            <button class="btn btn-primary" onclick="simpanKendaraan()">Tambah</button>
             <button class="btn btn-dark" onclick="
-              document.getElementById('plat').value='';
-              document.getElementById('letak').value='';
-              document.getElementById('stnk').value='';
-              document.getElementById('kir').value='';
-              document.getElementById('servis').value='';
-              document.getElementById('pajak5').value='';
-            ">✖ Batal</button>
+              document.querySelectorAll('#plat,#letak,#stnk,#kir,#servis,#pajak5').forEach(e=>e.value='');
+            ">Batal</button>
           </div>
         </div>
       </section>
 
-      <!-- KANAN: TABEL -->
+      <!-- KANAN -->
       <section class="card">
         <div class="pad">
           <h2>Daftar Kendaraan</h2>
-
-          <!-- Kotak cari WAJIB id=searchInput (sesuai main.js) -->
           <div class="toolbar">
             <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
-            <!-- tombol reset akan dibuat otomatis oleh main.js -->
+            <button id="clearSearch" title="Reset pencarian" style="display:none;">×</button>
           </div>
 
-          <div class="table-container">
-            <table id="tblKendaraan" class="tabel">
+          <div class="table-container" style="overflow-x:auto;">
+            <table id="tblKendaraan">
               <thead>
                 <tr>
                   <th>Plat Nomor</th>
@@ -135,7 +122,6 @@
     </div>
   </main>
 
-  <!-- WAJIB: script ke main.js v7.4 kamu -->
   <script src="main.js?v=7.4"></script>
 </body>
 </html>
