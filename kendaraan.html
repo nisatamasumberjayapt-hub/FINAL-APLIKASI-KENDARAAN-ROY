@@ -6,6 +6,7 @@
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* ======== LAYOUT 2 KOLOM (FORM + TABEL) ======== */
     .kendaraan-wrapper {
       display: flex;
       justify-content: center;
@@ -15,27 +16,34 @@
       width: 95%;
       max-width: 1400px;
     }
+
+    /* ======== FORM KIRI ======== */
     .form-container {
-      flex: 0 0 29%;
+      flex: 0 0 27%;
       background: #fff;
       padding: 25px 25px 30px 25px;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
       align-self: flex-start;
     }
+
     .form-container h2 {
       text-align: left;
       color: #0b4d1b;
       margin-bottom: 20px;
-      display: flex; align-items: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+
     .form-container label {
       display: block;
-      margin-top: 12px;
+      margin-top: 10px;
       font-weight: bold;
       color: #0b4d1b;
       text-align: left;
     }
+
     .form-container input {
       width: 100%;
       padding: 9px 10px;
@@ -44,36 +52,103 @@
       margin-top: 5px;
       font-size: 14px;
     }
-    .form-actions { margin-top: 18px; display: flex; gap: 10px; }
-    #btnPrimary { flex: 1; }
-    #btnCancel  { flex: 1; background:#444; }
-    #btnCancel[disabled] { opacity: .6; cursor: not-allowed; }
 
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #btnPrimary, #btnCancel {
+      flex: 1;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #btnPrimary {
+      background: #0b4d1b;
+      color: white;
+    }
+
+    #btnPrimary:hover {
+      background: #096019;
+    }
+
+    #btnCancel {
+      background: #444;
+      color: white;
+    }
+
+    #btnCancel[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ======== TABEL KANAN ======== */
     .tabel-container {
-      flex: 0 0 68%;
+      flex: 0 0 70%;
       background: #fff;
       padding: 25px 30px;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
+
     .tabel-container h2 {
       color: #0b4d1b;
       text-align: left;
       margin-bottom: 10px;
-      display: flex; align-items: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .search-box { margin: 10px 0 20px 0; width: 100%; }
-    .legend { margin-top: 14px; text-align: left; font-size: 14px; }
 
-    .btn-sm {
-      padding: 6px 10px; border: 0; border-radius: 6px;
-      background:#0b5e20; color:#fff; cursor:pointer; font-size: 13px;
+    .search-box {
+      margin: 10px 0 20px 0;
+      width: 100%;
     }
-    .btn-sm:hover { filter: brightness(1.1); }
 
-    @media (max-width: 1024px) {
-      .kendaraan-wrapper { flex-direction: column; gap: 16px; }
-      .form-container, .tabel-container { flex: 0 0 100%; width: 100%; }
+    .legend {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .btn-edit {
+      background: #0b4d1b;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-edit:hover {
+      background: #107c2a;
+    }
+
+    /* ======== RESPONSIVE MODE ======== */
+    @media (max-width: 900px) {
+      .kendaraan-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .form-container, .tabel-container {
+        flex: 0 0 100%;
+        width: 95%;
+      }
+
+      .form-container {
+        order: 1;
+      }
+
+      .tabel-container {
+        order: 2;
+      }
     }
   </style>
 </head>
@@ -90,10 +165,9 @@
 
   <main>
     <div class="kendaraan-wrapper">
-      <!-- === FORM KIRI === -->
+      <!-- ======== FORM KIRI ======== -->
       <div class="form-container">
         <h2>🚙 Tambah Kendaraan</h2>
-
         <label for="plat">Plat Nomor</label>
         <input type="text" id="plat" placeholder="Contoh: B1234XYZ" disabled>
 
@@ -113,13 +187,12 @@
         <input type="date" id="pajak" disabled>
 
         <div class="form-actions">
-          <!-- Satu tombol dinamis: Tambah ➜ Simpan ➜ Update -->
-          <button id="btnPrimary" class="btn">➕ Tambah</button>
-          <button id="btnCancel" class="btn" disabled>✖ Batal</button>
+          <button id="btnPrimary">➕ Tambah</button>
+          <button id="btnCancel" disabled>✖ Batal</button>
         </div>
       </div>
 
-      <!-- === TABEL KANAN === -->
+      <!-- ======== TABEL KANAN ======== -->
       <div class="tabel-container">
         <h2>📋 Daftar Kendaraan</h2>
         <div class="search-box">
@@ -146,22 +219,122 @@
         </div>
 
         <div class="legend">
-          <span>🟩 Aman</span> &nbsp;|&nbsp;
-          <span>🟨 Peringatan (≤10 hari / Servis ≥3 bulan)</span> &nbsp;|&nbsp;
-          <span>🟥 Lewat (STNK/KIR/Pajak habis)</span>
+          🟩 Aman &nbsp;|&nbsp; 🟨 Peringatan (≤10 hari / Servis ≥3 bulan) &nbsp;|&nbsp; 🟥 Lewat (STNK/KIR/Pajak habis)
         </div>
       </div>
     </div>
   </main>
 
+  <!-- ======== SCRIPT ======== -->
   <script src="main.js?v=20251109-final3"></script>
+
+  <!-- SCRIPT TAMBAHAN UNTUK SISTEM FORM DINAMIS -->
   <script>
-    // Halaman kendaraan akan hidupkan mode & render via main.js
-    function initKendaraan() {
-      if (typeof initKendaraanPage === "function") initKendaraanPage();
-      // fallback: kalau belum ada, pakai initDashboard agar tabel tetap kebaca
-      else if (typeof initDashboard === "function") initDashboard();
+    let formMode = "view"; 
+    let kendaraanEdit = null;
+    const inputIds = ["plat", "lokasi", "stnk", "kir", "servis", "pajak"];
+
+    function setFormEnabled(enabled) {
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = !enabled;
+      });
     }
+
+    function clearForm() {
+      inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+    }
+
+    function switchToViewMode() {
+      formMode = "view";
+      setFormEnabled(false);
+      clearForm();
+      document.getElementById("btnPrimary").textContent = "➕ Tambah";
+      document.getElementById("btnCancel").disabled = true;
+    }
+
+    function switchToAddMode() {
+      formMode = "add";
+      setFormEnabled(true);
+      clearForm();
+      document.getElementById("btnPrimary").textContent = "💾 Simpan";
+      document.getElementById("btnCancel").disabled = false;
+    }
+
+    function switchToEditMode(data) {
+      formMode = "edit";
+      setFormEnabled(true);
+      document.getElementById("btnPrimary").textContent = "✅ Update";
+      document.getElementById("btnCancel").disabled = false;
+      kendaraanEdit = data;
+
+      document.getElementById("plat").value = data.Platnomor || "";
+      document.getElementById("lokasi").value = data.Letak || "";
+      document.getElementById("stnk").value = data.STNK ? data.STNK.split("T")[0] : "";
+      document.getElementById("kir").value = data.KIR ? data.KIR.split("T")[0] : "";
+      document.getElementById("servis").value = data.ServisTerakhir ? data.ServisTerakhir.split("T")[0] : "";
+      document.getElementById("pajak").value = data.pajak5tahun ? data.pajak5tahun.split("T")[0] : "";
+    }
+
+    document.getElementById("btnPrimary").addEventListener("click", async () => {
+      if (formMode === "view") {
+        switchToAddMode();
+        return;
+      }
+
+      const plat = document.getElementById("plat").value.trim();
+      const lokasi = document.getElementById("lokasi").value.trim();
+      const stnk = document.getElementById("stnk").value;
+      const kir = document.getElementById("kir").value;
+      const servis = document.getElementById("servis").value;
+      const pajak = document.getElementById("pajak").value;
+
+      if (!plat || !lokasi || !stnk || !kir || !servis || !pajak) {
+        alert("⚠️ Semua kolom wajib diisi!");
+        return;
+      }
+
+      const payload = {
+        Platnomor: plat,
+        Letak: lokasi,
+        STNK: stnk,
+        KIR: kir,
+        ServisTerakhir: servis,
+        pajak5tahun: pajak
+      };
+
+      if (formMode === "add") {
+        const r = await api("addKendaraan", payload);
+        alert(r.message || (r.success ? "✅ Data tersimpan!" : "❌ Gagal menyimpan"));
+        if (r.success) location.reload();
+      } else if (formMode === "edit") {
+        const r = await api("updateKendaraan", { PlatnomorLama: kendaraanEdit.Platnomor, ...payload });
+        alert(r.message || (r.success ? "✅ Data terupdate!" : "❌ Gagal update"));
+        if (r.success) location.reload();
+      }
+    });
+
+    document.getElementById("btnCancel").addEventListener("click", switchToViewMode);
+
+    window.editKendaraanInline = function(encoded) {
+      const data = JSON.parse(decodeURIComponent(encoded));
+      switchToEditMode(data);
+    };
+
+    function overrideEditButtons() {
+      document.querySelectorAll(".btn-edit").forEach(btn => {
+        const encoded = btn.getAttribute("onclick").match(/'(.*?)'/)[1];
+        btn.setAttribute("onclick", `editKendaraanInline('${encoded}')`);
+      });
+    }
+
+    window.addEventListener("load", () => {
+      setTimeout(overrideEditButtons, 1200);
+      switchToViewMode();
+    });
   </script>
 </body>
 </html>
