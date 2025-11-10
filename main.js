@@ -160,6 +160,7 @@ function getStatusKendaraan(k) {
 }
 
 /* =============== HALAMAN USER =============== */
+/* =============== HALAMAN USER (PERBAIKAN FINAL) =============== */
 async function initUser() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
@@ -168,6 +169,9 @@ async function initUser() {
   tbl.innerHTML = `<tr><td colspan="3" align="center">Memuat data...</td></tr>`;
 
   const res = await api("getUsers");
+
+  console.log("📡 Response getUsers:", res);
+
   if (!res.success || !Array.isArray(res.data)) {
     tbl.innerHTML = `<tr><td colspan="3" align="center">Gagal memuat data user</td></tr>`;
     return;
@@ -177,12 +181,13 @@ async function initUser() {
   res.data.forEach(u => {
     html += `
       <tr>
-        <td>${u.nama}</td>
-        <td>${u.username}</td>
-        <td>${u.role}</td>
+        <td>${u.nama || "-"}</td>
+        <td>${u.username || "-"}</td>
+        <td>${u.role || "-"}</td>
       </tr>`;
   });
-  tbl.innerHTML = html;
+
+  tbl.innerHTML = html || `<tr><td colspan="3" align="center">Tidak ada data user</td></tr>`;
 }
 
 /* =============== TAMBAH KENDARAAN =============== */
@@ -209,3 +214,4 @@ async function simpanKendaraan() {
   toast(res.message);
   if (res.success) location.href = "dashboard.html";
 }
+
