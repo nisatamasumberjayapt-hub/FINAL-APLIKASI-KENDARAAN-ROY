@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v4.8 — FINAL (Warna fix + Aksi kosong)
+ * main.js v4.9 FINAL (Fix Warna & Aksi Kosong)
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v4.8 FINAL");
+console.log("✅ main.js aktif — v4.9 FINAL");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -24,12 +24,18 @@ async function api(action, payload = {}) {
 
 /* ================= UTILITAS ================= */
 function toast(msg) { alert(msg); }
+
 function getSession() {
   try { return JSON.parse(localStorage.getItem("aj_user")) || null; }
   catch { return null; }
 }
+
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
-function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
+
+function logout() {
+  localStorage.removeItem("aj_user");
+  location.href = "login.html";
+}
 
 function fmtDate(d) {
   if (!d) return "-";
@@ -46,6 +52,7 @@ async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   if (!username || !password) return toast("Isi username dan password!");
+
   const res = await api("login", { username, password });
   if (res.success) {
     setSession(res.user);
@@ -59,8 +66,10 @@ async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
+
   if (!username || !nama || !password)
     return toast("Semua kolom wajib diisi!");
+
   const res = await api("register", { username, nama, password });
   toast(res.message);
   if (res.success) location.href = "login.html";
@@ -99,19 +108,29 @@ function getStatusKendaraan(k) {
   const pajak5 = diffDays(k.pajak5tahun);
   const servis = Math.floor((now - new Date(k.ServisTerakhir)) / (1000 * 60 * 60 * 24));
 
-  // Tentukan status
-  let color = "#e9f9e9"; // hijau (aman)
+  // default hijau
+  let color = "#e9f9e9"; // hijau muda
   let label = "Aman";
 
-  // Merah = sudah lewat
-  if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servis >= 120) {
-    color = "#ffd8d8"; // merah
-    label = "Lewat";
+  // kalau semua masih jauh (lebih dari 30 hari)
+  if (stnk > 30 && kir > 30 && pajak5 > 30 && servis < 90) {
+    color = "#e9f9e9"; // hijau
+    label = "Aman";
   }
-  // Kuning = mendekati
-  else if (stnk <= 30 || kir <= 30 || pajak5 <= 30 || servis >= 90) {
+  // kalau ada yang mendekati
+  else if (
+    (stnk <= 30 && stnk > 0) ||
+    (kir <= 30 && kir > 0) ||
+    (pajak5 <= 30 && pajak5 > 0) ||
+    (servis >= 90 && servis < 120)
+  ) {
     color = "#fff3c6"; // kuning
     label = "Peringatan";
+  }
+  // kalau ada yang lewat
+  else if (stnk <= 0 || kir <= 0 || pajak5 <= 0 || servis >= 120) {
+    color = "#ffd8d8"; // merah
+    label = "Lewat";
   }
 
   return { color, label };
@@ -158,7 +177,7 @@ function renderTabelKendaraan(data) {
         <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
         <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatServis(k.ServisTerakhir)}</small></td>
         <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
-        <td></td>
+        <td></td> <!-- Kolom aksi dikosongkan -->
       </tr>`;
   });
 
