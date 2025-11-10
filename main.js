@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v5.0 — FIX WARNA 100% (Aman, Kuning, Merah)
+ * main.js v5.1 FINAL — Fix Warna + Debug Mode Aktif
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v5.0 FINAL");
+console.log("✅ main.js aktif — v5.1 FINAL (Debug Mode ON)");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -14,7 +14,13 @@ async function api(action, payload = {}) {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action, ...payload }),
     });
-    return await res.json();
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("⚠️ Response bukan JSON:", text);
+      return { success: false, message: "Respon tidak valid dari server" };
+    }
   } catch (err) {
     console.error("❌ Fetch error:", err);
     return { success: false, message: "Gagal menghubungi server" };
@@ -26,6 +32,7 @@ function toast(msg) { alert(msg); }
 function getSession() { try { return JSON.parse(localStorage.getItem("aj_user")) || null; } catch { return null; } }
 function setSession(u) { localStorage.setItem("aj_user", JSON.stringify(u)); }
 function logout() { localStorage.removeItem("aj_user"); location.href = "login.html"; }
+
 function fmtDate(d) {
   if (!d) return "-";
   const t = new Date(d);
@@ -50,8 +57,7 @@ async function register() {
   const username = document.getElementById("username").value.trim();
   const nama = document.getElementById("nama").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !nama || !password)
-    return toast("Semua kolom wajib diisi!");
+  if (!username || !nama || !password) return toast("Semua kolom wajib diisi!");
   const res = await api("register", { username, nama, password });
   toast(res.message);
   if (res.success) location.href = "login.html";
@@ -61,14 +67,18 @@ async function register() {
 async function initDashboard() {
   const user = getSession();
   if (!user) return (location.href = "login.html");
+
   const tbl = document.querySelector("#tblKendaraan tbody");
   tbl.innerHTML = `<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
+
   const res = await api("getKendaraan");
   if (!res.success || !Array.isArray(res.data)) {
     tbl.innerHTML = `<tr><td colspan="7" align="center">Gagal memuat data kendaraan</td></tr>`;
     return;
   }
+
   renderTabelKendaraan(res.data);
+  debugDates(res.data.slice(0, 10)); // 🔍 tampilkan log debug di console
 }
 
 /* ================= FIX WARNA ================= */
@@ -78,7 +88,7 @@ function getStatusKendaraan(k) {
 
   function parseDateSafe(tgl) {
     if (!tgl) return null;
-    const parts = tgl.split("-");
+    const parts = String(tgl).split("-");
     if (parts.length === 3) {
       const [y, m, d] = parts.map(Number);
       return new Date(y, m - 1, d);
@@ -112,10 +122,11 @@ function getStatusKendaraan(k) {
   ) {
     color = "#fff3c6"; label = "Peringatan";
   }
+
   return { color, label };
 }
 
-/* ================= FORMAT TANGGAL ================= */
+/* ================= FORMAT SELISIH ================= */
 function formatSelisih(tgl) {
   if (!tgl) return "-";
   const now = new Date(); now.setHours(0, 0, 0, 0);
@@ -139,7 +150,7 @@ function formatServis(tgl) {
   return `Sudah ${bulan} bulan ${hari} hari`;
 }
 
-/* ================= RENDER ================= */
+/* ================= RENDER TABEL ================= */
 function renderTabelKendaraan(data) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
@@ -153,7 +164,7 @@ function renderTabelKendaraan(data) {
         <td>${fmtDate(k.KIR)}<br><small>${formatSelisih(k.KIR)}</small></td>
         <td>${fmtDate(k.ServisTerakhir)}<br><small>${formatServis(k.ServisTerakhir)}</small></td>
         <td>${fmtDate(k.pajak5tahun)}<br><small>${formatSelisih(k.pajak5tahun)}</small></td>
-        <td></td>
+        <td></td> <!-- kolom aksi dikosongkan -->
       </tr>`;
   });
   tbl.innerHTML = html || `<tr><td colspan="7" align="center">Tidak ada data kendaraan</td></tr>`;
@@ -192,4 +203,43 @@ async function simpanKendaraan() {
   });
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
+}
+
+/* ================= DEBUG LOGGER ================= */
+function debugDates(rows) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  console.log("🕒 NOW:", now.toString(), "ISO:", now.toISOString());
+
+  function parseDateSafe(tgl) {
+    if (!tgl) return null;
+    const parts = String(tgl).split("-");
+    if (parts.length === 3) {
+      const [y, m, d] = parts.map(Number);
+      return new Date(y, m - 1, d);
+    }
+    return new Date(tgl);
+  }
+
+  const out = rows.map((k, i) => {
+    const dSTNK  = parseDateSafe(k.STNK);
+    const dKIR   = parseDateSafe(k.KIR);
+    const dSrv   = parseDateSafe(k.ServisTerakhir);
+    const dPaj5  = parseDateSafe(k.pajak5tahun);
+
+    const diff = (d) => {
+      if (!d || isNaN(d)) return null;
+      const copy = new Date(d); copy.setHours(0,0,0,0);
+      return Math.floor((copy - now) / 86400000);
+    };
+
+    return {
+      idx: i+1, Plat: k.Platnomor,
+      STNK: k.STNK,   dSTNK: dSTNK ? dSTNK.toISOString().split("T")[0] : null,   sisaSTNK: diff(dSTNK),
+      KIR: k.KIR,     dKIR:  dKIR  ? dKIR.toISOString().split("T")[0]  : null,   sisaKIR:  diff(dKIR),
+      Servis: k.ServisTerakhir, dSrv: dSrv ? dSrv.toISOString().split("T")[0] : null,  hariSejakServis: (dSrv ? Math.floor((now - dSrv)/86400000) : null),
+      Pajak5: k.pajak5tahun, dPaj5: dPaj5 ? dPaj5.toISOString().split("T")[0] : null, sisaPajak5: diff(dPaj5),
+    };
+  });
+
+  console.table(out);
 }
