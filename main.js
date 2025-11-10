@@ -3,7 +3,7 @@
  * main.js v7.0 — Kendaraan (Admin) + Edit + Search + Warna Aman
  ****************************************************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxj8QBPHX0DFPZDuwpnY4dCn29YaQ8V5ZkWAJyXBmO19z6un32XgeIt50IDFaAt7PxM/exec";
 console.log("✅ main.js aktif — v7.0 Kendaraan");
 
 /* ================= HELPER API ================= */
@@ -512,5 +512,6 @@ function initKendaraanPage() {
   enterViewMode();
   reloadKendaraanList();
 }
+
 
 
