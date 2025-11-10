@@ -6,7 +6,6 @@
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ======== LAYOUT 2 KOLOM (FORM + TABEL) ======== */
     .kendaraan-wrapper {
       display: flex;
       justify-content: center;
@@ -17,18 +16,15 @@
       max-width: 1400px;
     }
 
-    /* ======== FORM KIRI ======== */
     .form-container {
       flex: 0 0 27%;
       background: #fff;
-      padding: 25px 25px 30px 25px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      align-self: flex-start;
     }
 
     .form-container h2 {
-      text-align: left;
       color: #0b4d1b;
       margin-bottom: 20px;
       display: flex;
@@ -41,7 +37,6 @@
       margin-top: 10px;
       font-weight: bold;
       color: #0b4d1b;
-      text-align: left;
     }
 
     .form-container input {
@@ -69,26 +64,11 @@
       cursor: pointer;
     }
 
-    #btnPrimary {
-      background: #0b4d1b;
-      color: white;
-    }
+    #btnPrimary { background: #0b4d1b; color: white; }
+    #btnPrimary:hover { background: #097b20; }
+    #btnCancel { background: #444; color: white; }
+    #btnCancel[disabled] { opacity: 0.6; cursor: not-allowed; }
 
-    #btnPrimary:hover {
-      background: #096019;
-    }
-
-    #btnCancel {
-      background: #444;
-      color: white;
-    }
-
-    #btnCancel[disabled] {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* ======== TABEL KANAN ======== */
     .tabel-container {
       flex: 0 0 70%;
       background: #fff;
@@ -97,63 +77,20 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
 
-    .tabel-container h2 {
-      color: #0b4d1b;
-      text-align: left;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .search-box {
-      margin: 10px 0 20px 0;
-      width: 100%;
-    }
-
-    .legend {
-      margin-top: 15px;
-      text-align: left;
-      font-size: 14px;
-    }
-
     .btn-edit {
       background: #0b4d1b;
-      border: none;
       color: white;
+      border: none;
       padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
     }
 
-    .btn-edit:hover {
-      background: #107c2a;
-    }
-
-    /* ======== RESPONSIVE MODE ======== */
-    @media (max-width: 900px) {
-      .kendaraan-wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .form-container, .tabel-container {
-        flex: 0 0 100%;
-        width: 95%;
-      }
-
-      .form-container {
-        order: 1;
-      }
-
-      .tabel-container {
-        order: 2;
-      }
-    }
+    .btn-edit:hover { background: #107c2a; }
   </style>
 </head>
 
-<body onload="initKendaraan()">
+<body>
   <header>
     <h1>🚗 PT ANISA JAYA UTAMA — BY ROY</h1>
     <nav>
@@ -165,9 +102,10 @@
 
   <main>
     <div class="kendaraan-wrapper">
-      <!-- ======== FORM KIRI ======== -->
+      <!-- FORM -->
       <div class="form-container">
         <h2>🚙 Tambah Kendaraan</h2>
+
         <label for="plat">Plat Nomor</label>
         <input type="text" id="plat" placeholder="Contoh: B1234XYZ" disabled>
 
@@ -192,7 +130,7 @@
         </div>
       </div>
 
-      <!-- ======== TABEL KANAN ======== -->
+      <!-- TABEL -->
       <div class="tabel-container">
         <h2>📋 Daftar Kendaraan</h2>
         <div class="search-box">
@@ -212,78 +150,108 @@
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="kendaraanBody">
               <tr><td colspan="7" align="center">Memuat data kendaraan...</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="legend">
-          🟩 Aman &nbsp;|&nbsp; 🟨 Peringatan (≤10 hari / Servis ≥3 bulan) &nbsp;|&nbsp; 🟥 Lewat (STNK/KIR/Pajak habis)
+          🟩 Aman | 🟨 Peringatan (≤10 hari / Servis ≥3 bulan) | 🟥 Lewat (STNK/KIR/Pajak habis)
         </div>
       </div>
     </div>
   </main>
 
-  <!-- ======== SCRIPT ======== -->
   <script src="main.js?v=20251109-final3"></script>
 
-  <!-- SCRIPT TAMBAHAN UNTUK SISTEM FORM DINAMIS -->
   <script>
-    let formMode = "view"; 
-    let kendaraanEdit = null;
-    const inputIds = ["plat", "lokasi", "stnk", "kir", "servis", "pajak"];
+    /* ===== FORM MODE SYSTEM ===== */
+    let mode = "view"; // view | add | edit
+    let editData = null;
+    const ids = ["plat", "lokasi", "stnk", "kir", "servis", "pajak"];
 
-    function setFormEnabled(enabled) {
-      inputIds.forEach(id => {
+    function setForm(enabled) {
+      ids.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = !enabled;
+        if (!el) return;
+        el.disabled = !enabled;
       });
     }
 
     function clearForm() {
-      inputIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
+      ids.forEach(id => document.getElementById(id).value = "");
     }
 
-    function switchToViewMode() {
-      formMode = "view";
-      setFormEnabled(false);
+    function setButtonState() {
+      const btnAdd = document.getElementById("btnPrimary");
+      const btnCancel = document.getElementById("btnCancel");
+      if (mode === "view") {
+        btnAdd.textContent = "➕ Tambah";
+        btnCancel.disabled = true;
+      } else if (mode === "add") {
+        btnAdd.textContent = "💾 Simpan";
+        btnCancel.disabled = false;
+      } else if (mode === "edit") {
+        btnAdd.textContent = "✅ Update";
+        btnCancel.disabled = false;
+      }
+    }
+
+    function enterViewMode() {
+      mode = "view";
       clearForm();
-      document.getElementById("btnPrimary").textContent = "➕ Tambah";
-      document.getElementById("btnCancel").disabled = true;
+      setForm(false);
+      setButtonState();
     }
 
-    function switchToAddMode() {
-      formMode = "add";
-      setFormEnabled(true);
+    function enterAddMode() {
+      mode = "add";
       clearForm();
-      document.getElementById("btnPrimary").textContent = "💾 Simpan";
-      document.getElementById("btnCancel").disabled = false;
+      setForm(true);
+      setButtonState();
+      document.getElementById("plat").focus();
     }
 
-    function switchToEditMode(data) {
-      formMode = "edit";
-      setFormEnabled(true);
-      document.getElementById("btnPrimary").textContent = "✅ Update";
-      document.getElementById("btnCancel").disabled = false;
-      kendaraanEdit = data;
+    function enterEditMode(row) {
+      mode = "edit";
+      setForm(true);
+      setButtonState();
 
-      document.getElementById("plat").value = data.Platnomor || "";
-      document.getElementById("lokasi").value = data.Letak || "";
-      document.getElementById("stnk").value = data.STNK ? data.STNK.split("T")[0] : "";
-      document.getElementById("kir").value = data.KIR ? data.KIR.split("T")[0] : "";
-      document.getElementById("servis").value = data.ServisTerakhir ? data.ServisTerakhir.split("T")[0] : "";
-      document.getElementById("pajak").value = data.pajak5tahun ? data.pajak5tahun.split("T")[0] : "";
+      document.getElementById("plat").value = row.Platnomor || "";
+      document.getElementById("lokasi").value = row.Letak || "";
+      document.getElementById("stnk").value = row.STNK?.split("T")[0] || "";
+      document.getElementById("kir").value = row.KIR?.split("T")[0] || "";
+      document.getElementById("servis").value = row.ServisTerakhir?.split("T")[0] || "";
+      document.getElementById("pajak").value = row.pajak5tahun?.split("T")[0] || "";
+
+      document.getElementById("plat").disabled = true; // kunci plat saat edit
+      editData = row;
+    }
+
+    async function reloadTable() {
+      const res = await api("getKendaraan");
+      if (res && res.success) {
+        const tbody = document.getElementById("kendaraanBody");
+        tbody.innerHTML = "";
+        res.data.forEach(k => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${k.Platnomor}</td>
+            <td>${k.Letak}</td>
+            <td>${k.STNK?.split("T")[0] || ""}</td>
+            <td>${k.KIR?.split("T")[0] || ""}</td>
+            <td>${k.ServisTerakhir?.split("T")[0] || ""}</td>
+            <td>${k.pajak5tahun?.split("T")[0] || ""}</td>
+            <td><button class="btn-edit" onclick='enterEditMode(${JSON.stringify(k)})'>✏️ Edit</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
     }
 
     document.getElementById("btnPrimary").addEventListener("click", async () => {
-      if (formMode === "view") {
-        switchToAddMode();
-        return;
-      }
+      if (mode === "view") return enterAddMode();
 
       const plat = document.getElementById("plat").value.trim();
       const lokasi = document.getElementById("lokasi").value.trim();
@@ -297,44 +265,27 @@
         return;
       }
 
-      const payload = {
-        Platnomor: plat,
-        Letak: lokasi,
-        STNK: stnk,
-        KIR: kir,
-        ServisTerakhir: servis,
-        pajak5tahun: pajak
-      };
+      const data = { Platnomor: plat, Letak: lokasi, STNK: stnk, KIR: kir, ServisTerakhir: servis, pajak5tahun: pajak };
 
-      if (formMode === "add") {
-        const r = await api("addKendaraan", payload);
+      if (mode === "add") {
+        const r = await api("addKendaraan", data);
         alert(r.message || (r.success ? "✅ Data tersimpan!" : "❌ Gagal menyimpan"));
-        if (r.success) location.reload();
-      } else if (formMode === "edit") {
-        const r = await api("updateKendaraan", { PlatnomorLama: kendaraanEdit.Platnomor, ...payload });
-        alert(r.message || (r.success ? "✅ Data terupdate!" : "❌ Gagal update"));
-        if (r.success) location.reload();
+        if (r.success) await reloadTable();
+        enterViewMode();
+      } else if (mode === "edit") {
+        const r = await api("updateKendaraan", { PlatnomorLama: editData.Platnomor, ...data });
+        alert(r.message || (r.success ? "✅ Data diperbarui!" : "❌ Gagal update"));
+        if (r.success) await reloadTable();
+        enterViewMode();
       }
     });
 
-    document.getElementById("btnCancel").addEventListener("click", switchToViewMode);
+    document.getElementById("btnCancel").addEventListener("click", enterViewMode);
 
-    window.editKendaraanInline = function(encoded) {
-      const data = JSON.parse(decodeURIComponent(encoded));
-      switchToEditMode(data);
+    window.onload = async () => {
+      enterViewMode();
+      await reloadTable();
     };
-
-    function overrideEditButtons() {
-      document.querySelectorAll(".btn-edit").forEach(btn => {
-        const encoded = btn.getAttribute("onclick").match(/'(.*?)'/)[1];
-        btn.setAttribute("onclick", `editKendaraanInline('${encoded}')`);
-      });
-    }
-
-    window.addEventListener("load", () => {
-      setTimeout(overrideEditButtons, 1200);
-      switchToViewMode();
-    });
   </script>
 </body>
 </html>
