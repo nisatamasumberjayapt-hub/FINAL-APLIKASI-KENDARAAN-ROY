@@ -1,10 +1,10 @@
 /****************************************************
  * PT ANISA JAYA UTAMA — BY ROY
- * main.js v6.0 — Indikator Kotak per Kolom (Stabil)
+ * main.js v6.1 — Indikator per kolom + Pencarian Refresh
  ****************************************************/
 
 const API_URL = "https://script.google.com/macros/s/AKfycbx5Ij7T7FBL1cs6327qrkLnQNwI2MSqw27di59sn3ud1pDqRzY3wb2zuBhF_N9wzrEc/exec";
-console.log("✅ main.js aktif — v6.0 per-kolom indikator");
+console.log("✅ main.js aktif — v6.1 per-kolom + pencarian");
 
 /* ================= HELPER API ================= */
 async function api(action, payload = {}) {
@@ -77,50 +77,50 @@ async function initDashboard() {
   }
 
   renderTabelKendaraan(res.data);
+  initSearch(); // aktifkan fitur pencarian realtime + tombol refresh
 }
 
 /* ================= STATUS PER TANGGAL ================= */
-function getStatusTanggal(tgl, tipe = "stnk") {
+function getStatusTanggal(tgl) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
   const d = new Date(tgl);
-  if (isNaN(d)) return { icon: "⬜", text: "Tanggal tidak valid" };
+  if (isNaN(d)) return { color: "gray", text: "Tanggal tidak valid" };
 
   const diff = Math.floor((d - now) / (1000 * 60 * 60 * 24));
   const abs = Math.abs(diff);
   const bulan = Math.floor(abs / 30);
   const hari = abs % 30;
 
-  let icon = "🟩"; // aman
+  let color = "green";
   let ket = diff < 0
     ? `Telah lewat ${bulan} bulan ${hari} hari`
     : diff > 0
     ? `${bulan} bulan ${hari} hari lagi`
     : "Hari ini";
 
-  // ubah ikon berdasarkan kondisi
-  if (diff <= 0) icon = "🟥";
-  else if (diff <= 30) icon = "🟨";
+  if (diff <= 0) color = "red";
+  else if (diff <= 30) color = "gold";
 
-  return { icon, text: ket };
+  return { color, text: ket };
 }
 
 /* ================= SERVIS ================= */
 function getStatusServis(tgl) {
   const now = new Date();
   const d = new Date(tgl);
-  if (isNaN(d)) return { icon: "⬜", text: "-" };
+  if (isNaN(d)) return { color: "gray", text: "-" };
 
   const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
   const bulan = Math.floor(diff / 30);
   const hari = diff % 30;
 
-  let icon = "🟩";
-  if (bulan >= 4) icon = "🟥";
-  else if (bulan >= 3) icon = "🟨";
+  let color = "green";
+  if (bulan >= 4) color = "red";
+  else if (bulan >= 3) color = "gold";
 
-  return { icon, text: `Sudah ${bulan} bulan ${hari} hari` };
+  return { color, text: `Sudah ${bulan} bulan ${hari} hari` };
 }
 
 /* ================= RENDER ================= */
@@ -128,19 +128,23 @@ function renderTabelKendaraan(data) {
   const tbl = document.querySelector("#tblKendaraan tbody");
   let html = "";
   data.forEach((k) => {
-    const stnk = getStatusTanggal(k.STNK, "stnk");
-    const kir = getStatusTanggal(k.KIR, "kir");
-    const pajak = getStatusTanggal(k.pajak5tahun, "pajak");
+    const stnk = getStatusTanggal(k.STNK);
+    const kir = getStatusTanggal(k.KIR);
+    const pajak = getStatusTanggal(k.pajak5tahun);
     const servis = getStatusServis(k.ServisTerakhir);
 
     html += `
       <tr>
         <td>${k.Platnomor || "-"}</td>
         <td>${k.Letak || "-"}</td>
-        <td>${stnk.icon} ${fmtDate(k.STNK)}<br><small>${stnk.text}</small></td>
-        <td>${kir.icon} ${fmtDate(k.KIR)}<br><small>${kir.text}</small></td>
-        <td>${servis.icon} ${fmtDate(k.ServisTerakhir)}<br><small>${servis.text}</small></td>
-        <td>${pajak.icon} ${fmtDate(k.pajak5tahun)}<br><small>${pajak.text}</small></td>
+        <td><span style="display:inline-block;width:12px;height:12px;background:${stnk.color};border-radius:2px;margin-right:5px;"></span>
+            ${fmtDate(k.STNK)}<br><small>${stnk.text}</small></td>
+        <td><span style="display:inline-block;width:12px;height:12px;background:${kir.color};border-radius:2px;margin-right:5px;"></span>
+            ${fmtDate(k.KIR)}<br><small>${kir.text}</small></td>
+        <td><span style="display:inline-block;width:12px;height:12px;background:${servis.color};border-radius:2px;margin-right:5px;"></span>
+            ${fmtDate(k.ServisTerakhir)}<br><small>${servis.text}</small></td>
+        <td><span style="display:inline-block;width:12px;height:12px;background:${pajak.color};border-radius:2px;margin-right:5px;"></span>
+            ${fmtDate(k.pajak5tahun)}<br><small>${pajak.text}</small></td>
         <td></td>
       </tr>`;
   });
@@ -180,4 +184,46 @@ async function simpanKendaraan() {
   });
   toast(res.message);
   if (res.success) location.href = "kendaraan.html";
+}
+
+/* ================= PENCARIAN + REFRESH ================= */
+function initSearch() {
+  const searchBox = document.querySelector("#searchInput");
+  if (!searchBox) return;
+
+  // buat tombol X
+  const clearBtn = document.createElement("button");
+  clearBtn.textContent = "❌";
+  clearBtn.title = "Reset pencarian";
+  clearBtn.style.marginLeft = "8px";
+  clearBtn.style.padding = "2px 6px";
+  clearBtn.style.border = "none";
+  clearBtn.style.background = "#c0392b";
+  clearBtn.style.color = "white";
+  clearBtn.style.borderRadius = "4px";
+  clearBtn.style.cursor = "pointer";
+  clearBtn.style.fontSize = "14px";
+
+  searchBox.parentNode.insertBefore(clearBtn, searchBox.nextSibling);
+
+  const rows = document.querySelectorAll("#tblKendaraan tbody tr");
+
+  // fungsi filter
+  function doFilter() {
+    const filter = searchBox.value.toLowerCase();
+    rows.forEach((row) => {
+      const plat = row.cells[0]?.textContent.toLowerCase() || "";
+      const letak = row.cells[1]?.textContent.toLowerCase() || "";
+      row.style.display = (plat.includes(filter) || letak.includes(filter)) ? "" : "none";
+    });
+  }
+
+  // event ketika ketik
+  searchBox.addEventListener("keyup", doFilter);
+
+  // tombol X = reset
+  clearBtn.addEventListener("click", () => {
+    searchBox.value = "";
+    rows.forEach(r => r.style.display = "");
+  });
 }
