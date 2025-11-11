@@ -1,61 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Login - PT ANISA JAYA UTAMA</title>
+<link rel="stylesheet" href="styles.css" />
+
+<style>
+  body {
+    background: #eef3fa;
+    font-family: "Poppins", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    padding: 28px;
+    width: min(92vw, 360px);
+    text-align: center;
+    position: relative;
+  }
+
+  h2 {
+    margin-bottom: 16px;
+    color: #1b1f23;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  #btnLogin {
+    width: 100%;
+    background: #1b6e2a;
+    color: white;
+    border: none;
+    padding: 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-weight: bold;
+  }
+
+  #btnLogin:hover {
+    background: #13521d;
+  }
+
+  a { color: #2c7bd9; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ====== Animasi Loading ====== */
+  #loadingScreen {
+    position: fixed;
+    inset: 0;
+    background: #f5f8ff;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-family: "Poppins", Arial, sans-serif;
+  }
+
+  .scene {
+    position: relative;
+    width: 250px;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .road {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    background: #555;
+  }
+
+  .monkeycar {
+    position: absolute;
+    bottom: 20px;
+    left: -80px;
+    animation: drive 5s linear forwards;
+  }
+
+  @keyframes drive {
+    0% { left: -80px; }
+    100% { left: 220px; }
+  }
+
+  .text {
+    margin-top: 20px;
+    color: #004aad;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .hidden { display: none; }
+
+  /* Emot notif lucu */
+  .popup {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #fff5f5;
+    border: 2px solid #ff6961;
+    color: #d32f2f;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    font-size: 14px;
+    display: none;
+    z-index: 1100;
+    animation: pop .4s ease;
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script defer src="main.js?v=20251112-anim"></script>
+</head>
+<body>
+
+<div class="card">
+  <h2>Login Pengguna</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button id="btnLogin">Masuk</button>
+  <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+</div>
+
+<!-- Layar loading animasi -->
+<div id="loadingScreen">
+  <div class="scene">
+    <img id="monkeycar" class="monkeycar" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="60">
+    <div class="road"></div>
+  </div>
+  <div class="text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
+</div>
+
+<div class="popup" id="popupError">🙊 Username atau password salah! Monyet gak suka 😜</div>
+
 <script>
-  const btn = document.getElementById('btnLogin');
-  const pass = document.getElementById('password');
-  const user = document.getElementById('username');
-  const toggle = document.getElementById('togglePass');
-  const layer = document.getElementById('loadingLayer');
+  const btn = document.getElementById("btnLogin");
+  const loading = document.getElementById("loadingScreen");
+  const popup = document.getElementById("popupError");
+  const text = document.getElementById("loadingText");
+  const monkey = document.getElementById("monkeycar");
 
-  // 👁️ Toggle password
-  toggle.addEventListener('click', () => {
-    if (pass.type === 'password') {
-      pass.type = 'text';
-      toggle.textContent = '🙈';
-    } else {
-      pass.type = 'password';
-      toggle.textContent = '👁️';
-    }
-  });
+  btn.addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if (!username || !password) return alert("Isi username dan password!");
 
-  // Tekan Enter = klik login
-  [user, pass].forEach(el => el.addEventListener('keydown', e => {
-    if (e.key === 'Enter') btn.click();
-  }));
-
-  // Fungsi login
-  btn.addEventListener('click', async () => {
-    if (typeof api !== 'function' || typeof login !== 'function') {
-      alert("⚠️ File main.js belum termuat. Coba reload (Ctrl+F5).");
-      return;
-    }
-
-    const u = user.value.trim();
-    const p = pass.value.trim();
-    if (!u || !p) {
-      alert('Isi username dan password!');
-      return;
-    }
-
-    // 🌟 Tampilkan animasi loading dulu
-    layer.style.display = 'flex';
+    // Tampilkan animasi loading dulu
+    loading.style.display = "flex";
+    text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
+    monkey.style.animation = "drive 5s linear forwards";
 
     try {
-      const res = await api('login', { username: u, password: p });
+      const res = await api("login", { username, password });
 
       if (res.success) {
-        // Simpan sesi pengguna dan delay biar animasi sempat tampil
-        localStorage.setItem('aj_user', JSON.stringify(res.user));
+        // Lanjut animasi sampai akhir
+        text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
         setTimeout(() => {
-          location.href = 'dashboard.html';
-        }, 1500);
+          setSession(res.user);
+          location.href = "dashboard.html";
+        }, 2000);
       } else {
-        // Login gagal → sembunyikan animasi dan tampilkan pesan
-        layer.style.display = 'none';
-        alert(res.message || 'Username atau password salah');
+        // Gagal: tampil notif lucu
+        monkey.style.animationPlayState = "paused";
+        text.textContent = "🙈 Monyet berhenti mikir...";
+        popup.style.display = "block";
+        setTimeout(() => { 
+          popup.style.display = "none"; 
+          loading.style.display = "none";
+        }, 2000);
       }
     } catch (err) {
-      layer.style.display = 'none';
-      alert('Terjadi kesalahan koneksi ke server!');
-      console.error(err);
+      popup.innerText = "⚠️ Server error, coba lagi nanti!";
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 2000);
+      loading.style.display = "none";
     }
   });
 </script>
+
+</body>
+</html>
