@@ -7,167 +7,129 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root{
-      --aju-blue:#4a90e2; --aju-blue-d:#2c7bd9; --line:#d6deea;
-      --text:#1b1f23; --muted:#6b7280; --ok:#1b6e2a;
+      --aju-blue:#4a90e2;
+      --aju-blue-d:#2c7bd9;
+      --line:#d6deea;
+      --text:#1b1f23;
+      --ok:#1b6e2a;
+      --muted:#6b7280;
     }
     body{
-      margin:0;background:#f5f7fb;font-family: "Poppins","Segoe UI",Arial,sans-serif;
+      margin:0;background:#f4f6fb;font-family:"Poppins","Segoe UI",Arial,sans-serif;
       min-height:100vh;display:grid;place-items:center;
     }
     .card{
       width:min(92vw,380px);background:#fff;border-radius:14px;
-      box-shadow:0 10px 26px rgba(0,0,0,.08);padding:26px 22px;animation:fade .4s ease;
+      box-shadow:0 10px 25px rgba(0,0,0,.08);
+      padding:26px 22px;animation:fade .4s ease;
     }
     @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-    .brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:6px}
-    .brand i{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#e8f1ff;color:#2563eb;font-size:20px}
+    .brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+    .brand img{width:42px;height:42px}
     .brand b{color:#004aad}
-    h2{margin:6px 0 18px;color:var(--text);font-size:18px;text-align:center}
-
-    .field{margin-bottom:12px}
-    .label{font-size:12px;color:#60708a;margin:0 0 6px 2px}
+    h2{margin:6px 0 18px;text-align:center;color:var(--text)}
+    .field{margin-bottom:14px}
+    .label{font-size:12px;color:#60708a;margin:0 0 5px 2px}
     .input-wrap{position:relative}
     input[type=text],input[type=password]{
-      width:100%;padding:12px 40px 12px 12px;border:1px solid var(--line);
-      border-radius:10px;font-size:14px;box-sizing:border-box;transition:.2s background,border;
-      background:#fbfdff;
+      width:100%;padding:11px 40px 11px 11px;border:1px solid var(--line);
+      border-radius:10px;font-size:14px;background:#fbfdff;transition:.2s;
     }
-    input:focus{outline:none;border-color:var(--aju-blue);box-shadow:0 0 0 3px rgba(74,144,226,.15)}
+    input:focus{outline:none;border-color:var(--aju-blue);box-shadow:0 0 0 2px rgba(74,144,226,.2)}
     .eye{
       position:absolute;right:6px;top:50%;transform:translateY(-50%);
-      width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#f3f6fb;
-      display:grid;place-items:center;cursor:pointer;font-size:15px
+      width:34px;height:34px;border:1px solid var(--line);border-radius:8px;
+      background:#f3f6fb;display:grid;place-items:center;cursor:pointer;font-size:15px;
     }
     #btnLogin{
-      width:100%;padding:11px 12px;border:none;border-radius:10px;background:var(--ok);
-      color:#fff;font-weight:700;cursor:pointer;transition:.2s
+      width:100%;padding:11px;border:none;border-radius:10px;background:var(--ok);
+      color:#fff;font-weight:700;cursor:pointer;transition:.2s;
     }
     #btnLogin:hover{filter:brightness(.95)}
-    p{margin:12px 0 0;color:var(--muted);font-size:13px;text-align:center}
+    p{text-align:center;font-size:13px;color:var(--muted)}
     a{color:var(--aju-blue-d);text-decoration:none}
     a:hover{text-decoration:underline}
-    footer{margin-top:10px;font-size:12px;color:#8b93a7;text-align:center}
+    footer{text-align:center;font-size:12px;color:#8b93a7;margin-top:10px}
 
-    /* Loading layer */
+    /* loading */
     #loadingLayer{display:none;position:fixed;inset:0;background:rgba(245,248,255,.96);
-      z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#004aad}
-    .motor{width:140px;height:90px;animation:move 3.5s linear infinite}
+      z-index:99;flex-direction:column;align-items:center;justify-content:center;color:#004aad}
+    .motor{width:140px;height:90px;animation:move 3s linear infinite}
     .motor img{width:100%;animation:bounce .4s ease-in-out infinite alternate}
     @keyframes move{from{transform:translateX(-120px)}to{transform:translateX(120px)}}
     @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-6px)}}
   </style>
 
-  <!-- muat main.js dengan cache-busting; kalau gagal kita punya fallback -->
-  <script>
-    (function(){
-      const s=document.createElement('script');
-      s.src='main.js?v='+Date.now(); s.defer=true;
-      s.onload=()=>window.__mainLoaded=true;
-      s.onerror=()=>window.__mainLoaded=false;
-      document.head.appendChild(s);
-    })();
-  </script>
+  <script defer src="main.js?v=20251112"></script>
 </head>
 
 <body>
   <div class="card">
     <div class="brand">
-      <i>💠</i> <b>PT Anisa Jaya Utama</b>
+      <img src="https://cdn-icons-png.flaticon.com/512/1040/1040238.png" alt="logo" />
+      <b>PT Anisa Jaya Utama</b>
     </div>
     <h2>Login Pengguna</h2>
 
     <div class="field">
       <div class="label">Username</div>
       <div class="input-wrap">
-        <input id="username" type="text" placeholder="admin" autocomplete="username" />
+        <input id="username" type="text" placeholder="Username" autocomplete="username" />
       </div>
     </div>
 
     <div class="field">
       <div class="label">Password</div>
       <div class="input-wrap">
-        <input id="password" type="password" placeholder="••••••" autocomplete="current-password" />
-        <button class="eye" id="togglePass" type="button" title="Tampilkan sandi">👁️</button>
+        <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+        <button id="togglePass" class="eye">👁️</button>
       </div>
     </div>
 
-    <button id="btnLogin" type="button">Masuk</button>
-
+    <button id="btnLogin">Masuk</button>
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
     <footer>© PT Anisa Jaya Utama</footer>
   </div>
 
-  <!-- Loading -->
   <div id="loadingLayer">
-    <div class="motor"><img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor"/></div>
-    <div>🐒 Mengantar data ke server... tunggu sebentar ya 💨</div>
+    <div class="motor">
+      <img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor" />
+    </div>
+    <div>🐒 Mengantar data... tunggu sebentar ya 💨</div>
   </div>
 
   <script>
-    const btn   = document.getElementById('btnLogin');
-    const eye   = document.getElementById('togglePass');
-    const pass  = document.getElementById('password');
-    const user  = document.getElementById('username');
-    const layer = document.getElementById('loadingLayer');
+    const btn=document.getElementById('btnLogin');
+    const pass=document.getElementById('password');
+    const user=document.getElementById('username');
+    const toggle=document.getElementById('togglePass');
+    const layer=document.getElementById('loadingLayer');
 
-    eye.addEventListener('click', ()=>{
-      if(pass.type==='password'){ pass.type='text'; eye.textContent='🙈'; }
-      else { pass.type='password'; eye.textContent='👁️'; }
+    toggle.addEventListener('click',()=>{
+      if(pass.type==='password'){pass.type='text';toggle.textContent='🙈';}
+      else{pass.type='password';toggle.textContent='👁️';}
     });
 
-    // tekan Enter = login
-    [user, pass].forEach(el=>el.addEventListener('keydown',e=>{ if(e.key==='Enter') btn.click(); }));
+    [user,pass].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')btn.click();}));
 
-    // ===== Fallback login jika main.js tidak ter-load =====
-    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-    async function fallbackLogin(u, p){
-      try{
-        const res = await fetch(API_URL,{
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify({action:'login', username:u, password:p})
-        });
-        const text = await res.text();
-        let json;
-        try{ json = JSON.parse(text); }catch{ return {success:false, message:'Respon bukan JSON'}; }
-        return json;
-      }catch(e){
-        return {success:false, message:'Gagal konek server'};
-      }
-    }
-
-    btn.addEventListener('click', async (e)=>{
-      e.preventDefault();
+    btn.addEventListener('click',async()=>{
+      if(typeof login!=='function'){alert("⚠️ File main.js belum termuat. Coba reload (Ctrl+F5).");return;}
       const u=user.value.trim(), p=pass.value.trim();
-      if(!u || !p){ alert('Isi username & password.'); return; }
+      if(!u||!p){alert('Isi username dan password!');return;}
 
-      layer.style.display='flex'; btn.disabled=true;
+      // Proses login via main.js
+      const before=localStorage.getItem('aj_user');
+      await login(); // ini jalan seperti dulu
 
-      // kalau main.js ada & punya fungsi login(), pakai itu
-      if (typeof window.login === 'function'){
-        // jalankan login() lalu cek apakah sesi tersimpan
-        const before = localStorage.getItem('aj_user');
-        try{
-          await window.login(); // ini akan redirect bila sukses
-        }catch(_){} // abaikan
-        setTimeout(()=>{
-          const after = localStorage.getItem('aj_user');
-          if(!after || after===before){ // gagal
-            layer.style.display='none'; btn.disabled=false;
-          }
-        }, 2200);
-        return;
-      }
-
-      // kalau main.js gagal termuat → fallback
-      const r = await fallbackLogin(u,p);
-      if (r && r.success && r.user){
-        try{ localStorage.setItem('aj_user', JSON.stringify(r.user)); }catch(_){}
-        location.href = 'dashboard.html';
-      }else{
-        layer.style.display='none'; btn.disabled=false;
-        alert(r && r.message ? r.message : 'Login gagal');
-      }
+      // Cek apakah login sukses (redirect otomatis oleh main.js)
+      setTimeout(()=>{
+        const after=localStorage.getItem('aj_user');
+        if(after && after!==before){
+          // sukses → tampil animasi lalu ke dashboard
+          layer.style.display='flex';
+          setTimeout(()=>{location.href='dashboard.html';},1500);
+        }
+      },500);
     });
   </script>
 </body>
