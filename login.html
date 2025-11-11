@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - PT ANISA JAYA UTAMA</title>
+
 <style>
   body {
     font-family: "Poppins", sans-serif;
@@ -15,7 +16,6 @@
     margin: 0;
   }
 
-  /* ====== CARD LOGIN ====== */
   .card {
     background: #ffffffc9;
     border-radius: 18px;
@@ -34,7 +34,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  h2 {
+  .card h2 {
     font-size: 22px;
     color: #1a1a1a;
     margin-bottom: 20px;
@@ -44,7 +44,7 @@
     gap: 8px;
   }
 
-  h2::before {
+  .card h2::before {
     content: "❤️";
     font-size: 20px;
     animation: pulse 1.5s infinite ease-in-out;
@@ -53,6 +53,11 @@
   @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.2); opacity: 1; }
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 12px;
   }
 
   input {
@@ -105,7 +110,7 @@
   }
   a:hover { text-decoration: underline; }
 
-  /* ====== LOADING SCREEN ====== */
+  /* ===== Layar Loading ===== */
   #loadingScreen {
     position: fixed;
     inset: 0;
@@ -118,38 +123,30 @@
     animation: fadeIn 0.6s ease;
   }
 
-  .spinner {
-    width: 220px;
-    height: 220px;
-    border: 6px solid rgba(111, 168, 255, 0.2);
-    border-top: 6px solid #6fa8ff;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-    position: absolute;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
   .monkey {
-    width: 170px;
-    position: relative;
-    z-index: 10;
-    animation: think 2s ease-in-out infinite alternate;
+    width: 160px;
+    height: 160px;
+    background-image: url('assets/monkey_sprite.png');
+    background-size: 300%;
+    animation: float 1.8s ease-in-out infinite;
+    transition: background-position 0.5s ease;
   }
 
-  @keyframes think {
-    0% { transform: rotate(-2deg); }
-    100% { transform: rotate(2deg); }
+  .monkey.think { background-position: 0% 0%; }
+  .monkey.angry { background-position: 50% 0%; }
+  .monkey.happy { background-position: 100% 0%; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px) rotate(-2deg); }
   }
 
   .loading-text {
-    margin-top: 200px;
+    margin-top: 18px;
     font-size: 16px;
     color: #004aad;
     text-align: center;
+    max-width: 260px;
   }
 
   .error-msg {
@@ -167,21 +164,34 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #ccc;
+    border-top-color: #1b6e2a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: 15px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 </style>
 </head>
 <body>
 
-<!-- FORM LOGIN -->
-<div class="card" id="loginCard">
+<div class="card">
   <h2>PT ANISA JAYA UTAMA</h2>
   <h3 style="margin-top:-10px;margin-bottom:18px;color:#333;">Login Pengguna</h3>
 
-  <div style="position:relative;margin-bottom:12px;">
-    <input type="text" id="username" placeholder="Username" />
+  <div class="input-group">
+    <input type="text" id="username" placeholder="Username">
   </div>
 
-  <div style="position:relative;margin-bottom:12px;">
-    <input type="password" id="password" placeholder="Password" />
+  <div class="input-group">
+    <input type="password" id="password" placeholder="Password">
     <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
 
@@ -189,77 +199,83 @@
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- ANIMASI LOADING -->
+<!-- Animasi Loading -->
 <div id="loadingScreen">
+  <div id="monkey" class="monkey think"></div>
+  <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
   <div class="spinner"></div>
-
-  <!-- SVG MONYET -->
-  <svg class="monkey" viewBox="0 0 200 200">
-    <circle cx="100" cy="100" r="60" fill="#d9a674" />
-    <circle cx="70" cy="90" r="12" fill="#8b5a2b" />
-    <circle cx="130" cy="90" r="12" fill="#8b5a2b" />
-    <circle cx="70" cy="88" r="6" fill="#fff" />
-    <circle cx="130" cy="88" r="6" fill="#fff" />
-    <circle cx="70" cy="88" r="3" fill="#000" />
-    <circle cx="130" cy="88" r="3" fill="#000" />
-    <path d="M80 125 Q100 145 120 125" stroke="#5a3d1c" stroke-width="4" fill="none" />
-    <circle cx="100" cy="100" r="70" stroke="#a3784d" stroke-width="3" fill="none" />
-    <circle cx="45" cy="100" r="25" fill="#d9a674" />
-    <circle cx="155" cy="100" r="25" fill="#d9a674" />
-    <text x="100" y="35" text-anchor="middle" font-size="36" fill="#7a5b35">?</text>
-  </svg>
-
-  <div class="loading-text" id="loadingText">
-    🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔
-  </div>
-  <div class="error-msg" id="errorMsg">
-    🙈 Username atau password salah! Monyet gak suka 😜
-  </div>
+  <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
 </div>
 
 <script>
-const btn = document.getElementById("btnLogin");
-const toggle = document.getElementById("togglePass");
-const pass = document.getElementById("password");
-const loading = document.getElementById("loadingScreen");
-const card = document.getElementById("loginCard");
-const text = document.getElementById("loadingText");
-const errorMsg = document.getElementById("errorMsg");
+  const btn = document.getElementById("btnLogin");
+  const toggle = document.getElementById("togglePass");
+  const pass = document.getElementById("password");
+  const loading = document.getElementById("loadingScreen");
+  const text = document.getElementById("loadingText");
+  const errorMsg = document.getElementById("errorMsg");
+  const monkey = document.getElementById("monkey");
 
-toggle.addEventListener("click", () => {
-  if (pass.type === "password") {
-    pass.type = "text";
-    toggle.textContent = "🙈";
-  } else {
-    pass.type = "password";
-    toggle.textContent = "👁️";
+  function setSession(u) {
+    localStorage.setItem("aj_user", JSON.stringify(u));
   }
-});
 
-btn.addEventListener("click", async () => {
-  const username = document.getElementById("username").value.trim();
-  const password = pass.value.trim();
-  if (!username || !password) return alert("Isi username dan password!");
-
-  card.style.display = "none";
-  loading.style.display = "flex";
-  text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
-  errorMsg.style.display = "none";
-
-  setTimeout(() => {
-    if (username === "admin" && password === "admin123") {
-      text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
-      setTimeout(() => (window.location.href = "dashboard.html"), 1500);
-    } else {
-      text.textContent = "🙈 Monyet berhenti mikir...";
-      errorMsg.style.display = "block";
-      setTimeout(() => {
-        loading.style.display = "none";
-        card.style.display = "block";
-      }, 2000);
+  async function api(action, payload = {}) {
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, ...payload }),
+      });
+      const text = await res.text();
+      return JSON.parse(text);
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: "Server error" };
     }
-  }, 2000);
-});
+  }
+
+  // 👁️ Toggle password visibility
+  toggle.addEventListener("click", () => {
+    if (pass.type === "password") {
+      pass.type = "text";
+      toggle.textContent = "🙈";
+    } else {
+      pass.type = "password";
+      toggle.textContent = "👁️";
+    }
+  });
+
+  btn.addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = pass.value.trim();
+    if (!username || !password) return alert("Isi username dan password!");
+
+    loading.style.display = "flex";
+    text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
+    errorMsg.style.display = "none";
+    monkey.className = "monkey think";
+
+    try {
+      const res = await api("login", { username, password });
+      if (res.success) {
+        text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
+        monkey.className = "monkey happy";
+        setTimeout(() => {
+          setSession(res.user);
+          location.href = "dashboard.html";
+        }, 1500);
+      } else {
+        monkey.className = "monkey angry";
+        text.textContent = "🙈 Monyet berhenti mikir...";
+        errorMsg.style.display = "block";
+        setTimeout(() => loading.style.display = "none", 2000);
+      }
+    } catch {
+      text.textContent = "⚠️ Server error, coba lagi nanti!";
+      setTimeout(() => loading.style.display = "none", 2000);
+    }
+  });
 </script>
 </body>
 </html>
