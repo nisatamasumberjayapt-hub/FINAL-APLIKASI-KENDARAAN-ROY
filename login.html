@@ -4,149 +4,268 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login - PT ANISA JAYA UTAMA</title>
-
-  <!-- CSS global kamu -->
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /* Hanya styling kecil untuk kartu login (tetap ringan) */
+    /* ====== TAMPILAN LOGIN ====== */
     body {
-      background: #f3f6fb;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+      background: #f2f6fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
     }
+
     .card {
       width: 360px;
-      max-width: calc(100vw - 32px);
       background: #fff;
       border-radius: 14px;
-      padding: 22px 18px;
-      box-shadow: 0 10px 30px rgba(28, 70, 160, 0.10);
-      border: 1px solid rgba(28, 70, 160, 0.10);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      padding: 25px 20px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+      position: relative;
+      z-index: 2;
     }
+
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
       justify-content: center;
-      margin-bottom: 10px;
-      color: #1c46a0;
-      font-weight: 700;
+      gap: 10px;
+      margin-bottom: 8px;
     }
-    .brand .dot {
-      width: 36px; height: 36px;
+
+    .brand img {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      display: grid;place-items: center;
-      background: #e9f2ff;
-      border: 1px solid #cfe3ff;
-      font-size: 18px;
     }
+
+    .brand span {
+      font-weight: 700;
+      font-size: 16px;
+      color: #004aad;
+    }
+
     h2 {
-      text-align: center;
-      margin: 6px 0 14px;
-      font-size: 18px;
-      color: #2b2f3a;
+      margin: 10px 0 20px;
+      color: #1b1f23;
+      font-size: 17px;
     }
-    .field {
-      margin: 10px 0;
-      position: relative;
-    }
-    .field input {
+
+    input {
       width: 100%;
-      height: 44px;
       padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #dbe3f0;
-      outline: none;
+      margin-bottom: 12px;
+      border: 1px solid #d0d7e2;
+      border-radius: 8px;
       font-size: 14px;
-      transition: 0.15s;
-      background: #fff;
+      transition: 0.2s;
     }
-    .field input:focus {
-      border-color: #1c46a0;
-      box-shadow: 0 0 0 3px rgba(28, 70, 160, 0.12);
+
+    input:focus {
+      outline: none;
+      border-color: #2c7bd9;
+      box-shadow: 0 0 0 2px rgba(44, 123, 217, 0.15);
     }
-    .toggle {
+
+    .input-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    #togglePass {
       position: absolute;
-      right: 8px; top: 50%; transform: translateY(-50%);
-      width: 34px; height: 34px; border-radius: 8px;
-      border: 1px solid #e5edf8;
-      background: #f7faff;
-      display: grid; place-items: center;
-      cursor: pointer; font-size: 16px;
+      right: 8px;
+      background: #f1f4f9;
+      border: 1px solid #d0d7e2;
+      border-radius: 6px;
+      width: 34px;
+      height: 34px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .btn {
+
+    #togglePass:hover {
+      background: #e3e9f3;
+    }
+
+    #btnLogin {
       width: 100%;
-      height: 44px;
-      border: none;
-      border-radius: 10px;
+      padding: 10px;
       background: #1b6e2a;
-      color: #fff; font-weight: 600;
-      cursor: pointer; transition: 0.15s;
-      margin-top: 6px;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: 0.25s;
+      position: relative;
+      overflow: hidden;
     }
-    .btn:hover { background: #145321; }
-    .muted {
-      text-align: center; margin-top: 10px; font-size: 13px; color: #6d7485;
+
+    #btnLogin:hover {
+      background: #145321;
     }
-    .muted a { color: #1c46a0; text-decoration: none; }
-    .muted a:hover { text-decoration: underline; }
+
+    p {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    a {
+      color: #2c7bd9;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     footer {
-      text-align: center; margin-top: 14px; font-size: 12px; color: #8b93a7;
+      text-align: center;
+      font-size: 12px;
+      color: #8b93a7;
+      margin-top: 10px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ====== LAYER LOADING ====== */
+    #loadingLayer {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(245, 248, 255, 0.96);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      font-size: 15px;
+      color: #004aad;
+      font-weight: 500;
+    }
+
+    .motor {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      animation: moveRight 3.5s linear infinite;
+    }
+
+    .motor img {
+      width: 100%;
+      animation: bounce 0.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes moveRight {
+      from { transform: translateX(-100px); }
+      to { transform: translateX(100px); }
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-6px); }
     }
   </style>
 
-  <!-- Penting: muat main.js dengan defer + cache-buster agar selalu versi terbaru -->
-  <script defer src="main.js?v=loginfix_2025_11_10_1"></script>
+  <!-- Pastikan main.js terbaru -->
+  <script defer src="main.js?v=20251111"></script>
 </head>
+
 <body>
+  <!-- ====== FORM LOGIN ====== -->
   <div class="card">
     <div class="brand">
-      <span class="dot">🌀</span>
+      <img src="https://cdn-icons-png.flaticon.com/512/1040/1040238.png" alt="logo" />
       <span>PT Anisa Jaya Utama</span>
     </div>
+
     <h2>Login Pengguna</h2>
 
-    <div class="field">
-      <input id="username" type="text" placeholder="Username" autocomplete="username" />
+    <input id="username" type="text" placeholder="Username" autocomplete="username" required />
+
+    <div class="input-row">
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required />
+      <button id="togglePass" type="button" title="Tampilkan password">👁️</button>
     </div>
 
-    <div class="field">
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
-      <button id="togglePass" class="toggle" type="button" title="Lihat / sembunyikan password">👁️</button>
-    </div>
+    <button id="btnLogin" type="button">Masuk</button>
 
-    <button id="btnLogin" class="btn" type="button">Masuk</button>
+    <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 
-    <p class="muted">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
     <footer>© PT Anisa Jaya Utama</footer>
   </div>
 
-  <script>
-    // Toggle password aman & simpel
-    document.getElementById("togglePass").addEventListener("click", function () {
-      const p = document.getElementById("password");
-      const show = p.type === "password";
-      p.type = show ? "text" : "password";
-      this.textContent = show ? "🙈" : "👁️";
-    });
+  <!-- ====== LAYER LOADING (🐒🛵) ====== -->
+  <div id="loadingLayer">
+    <div class="motor">
+      <img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor" />
+    </div>
+    <p>🐒 Sedang mengantar data ke server... tunggu sebentar ya 💨</p>
+  </div>
 
-    // Panggil login() dari main.js (sudah dimuat via defer)
-    document.getElementById("btnLogin").addEventListener("click", function () {
-      if (typeof login === "function") {
-        login(); // akan redirect ke dashboard.html jika sukses (sesuai main.js kamu)
+  <script>
+    // ====== TOGGLE PASSWORD ======
+    document.getElementById("togglePass").addEventListener("click", (e) => {
+      const p = document.getElementById("password");
+      if (p.type === "password") {
+        p.type = "text";
+        e.target.textContent = "🙈";
       } else {
-        // fallback kalau ekstrem caching: paksa reload satu kali
-        location.href = "login.html?v=" + Date.now();
+        p.type = "password";
+        e.target.textContent = "👁️";
       }
     });
 
-    // Enter to submit
-    ["username","password"].forEach(id => {
-      document.getElementById(id).addEventListener("keydown", e => {
-        if (e.key === "Enter") document.getElementById("btnLogin").click();
+    // ====== LOGIN BUTTON ======
+    const btn = document.getElementById("btnLogin");
+    const loading = document.getElementById("loadingLayer");
+
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      if (typeof login !== "function") {
+        alert("⚠️ main.js belum termuat, coba reload halaman (Ctrl + F5)");
+        return;
+      }
+
+      // Tampilkan animasi motor loading
+      loading.style.display = "flex";
+
+      // Jalankan fungsi login (main.js)
+      try {
+        await login();
+      } catch (err) {
+        console.error(err);
+      } finally {
+        // Jika gagal login, matikan animasi setelah 2.5 detik
+        setTimeout(() => {
+          loading.style.display = "none";
+        }, 2500);
+      }
+    });
+
+    // Enter key listener
+    ["username", "password"].forEach(id => {
+      document.getElementById(id).addEventListener("keydown", (e) => {
+        if (e.key === "Enter") btn.click();
       });
     });
   </script>
