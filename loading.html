@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading... | PT Anisa Jaya Utama</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e8f0ff, #cfe0ff);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .scene {
+      position: relative;
+      width: 400px;
+      height: 220px;
+    }
+
+    .road {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      height: 5px;
+      background: #555;
+      border-radius: 2px;
+    }
+
+    .house {
+      position: absolute;
+      right: 0;
+      bottom: 25px;
+      width: 100px;
+      height: 100px;
+      background: #ffd966;
+      border: 3px solid #b58c00;
+      border-radius: 6px;
+    }
+
+    .roof {
+      position: absolute;
+      top: -40px;
+      left: -5px;
+      width: 110px;
+      height: 40px;
+      background: #d35400;
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    }
+
+    .monkey {
+      position: absolute;
+      bottom: 40px;
+      left: -120px;
+      width: 80px;
+      animation: ride 4s linear forwards;
+    }
+
+    @keyframes ride {
+      0% { left: -120px; }
+      80% { left: 300px; }
+      100% { left: 290px; transform: rotate(-5deg); }
+    }
+
+    .loading-text {
+      margin-top: 40px;
+      font-size: 1.1rem;
+      color: #1d3557;
+      text-align: center;
+    }
+
+    .dots::after {
+      content: '';
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="road"></div>
+    <div class="house">
+      <div class="roof"></div>
+    </div>
+
+    <!-- SVG monyet naik motor -->
+    <svg class="monkey" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="80" fill="#ffe0b2"/>
+      <ellipse cx="100" cy="120" rx="60" ry="35" fill="#a0522d"/>
+      <circle cx="75" cy="85" r="15" fill="#3e2723"/>
+      <circle cx="125" cy="85" r="15" fill="#3e2723"/>
+      <circle cx="75" cy="85" r="7" fill="#fff"/>
+      <circle cx="125" cy="85" r="7" fill="#fff"/>
+      <path d="M60 150 Q100 180 140 150" stroke="#4e342e" stroke-width="6" fill="none"/>
+      <circle cx="80" cy="170" r="15" fill="#444"/>
+      <circle cx="120" cy="170" r="15" fill="#444"/>
+      <rect x="70" y="130" width="60" height="20" rx="5" fill="#1976d2"/>
+      <rect x="90" y="115" width="20" height="15" rx="5" fill="#1565c0"/>
+      <circle cx="85" cy="110" r="8" fill="#3e2723"/>
+      <circle cx="115" cy="110" r="8" fill="#3e2723"/>
+    </svg>
+  </div>
+
+  <div class="loading-text">
+    🐒 Monyet lagi otw ke kantor Roy<span class="dots"></span><br>
+    🚦 Mesin lagi dipanasin, bentar lagi siap!
+  </div>
+
+  <script>
+    // Auto redirect ke dashboard setelah 4 detik
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 4000);
+  </script>
+</body>
+</html>
