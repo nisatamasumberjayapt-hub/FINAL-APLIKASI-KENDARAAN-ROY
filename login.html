@@ -5,271 +5,169 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login - PT ANISA JAYA UTAMA</title>
   <link rel="stylesheet" href="styles.css" />
-
   <style>
-    body {
-      font-family: "Poppins", "Segoe UI", Arial, sans-serif;
-      background: #f4f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
+    :root{
+      --aju-blue:#4a90e2; --aju-blue-d:#2c7bd9; --line:#d6deea;
+      --text:#1b1f23; --muted:#6b7280; --ok:#1b6e2a;
     }
+    body{
+      margin:0;background:#f5f7fb;font-family: "Poppins","Segoe UI",Arial,sans-serif;
+      min-height:100vh;display:grid;place-items:center;
+    }
+    .card{
+      width:min(92vw,380px);background:#fff;border-radius:14px;
+      box-shadow:0 10px 26px rgba(0,0,0,.08);padding:26px 22px;animation:fade .4s ease;
+    }
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:6px}
+    .brand i{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#e8f1ff;color:#2563eb;font-size:20px}
+    .brand b{color:#004aad}
+    h2{margin:6px 0 18px;color:var(--text);font-size:18px;text-align:center}
 
-    .card {
-      width: 350px;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      padding: 25px 20px;
-      text-align: center;
-      animation: fadeIn 0.6s ease;
-      position: relative;
-      z-index: 2;
+    .field{margin-bottom:12px}
+    .label{font-size:12px;color:#60708a;margin:0 0 6px 2px}
+    .input-wrap{position:relative}
+    input[type=text],input[type=password]{
+      width:100%;padding:12px 40px 12px 12px;border:1px solid var(--line);
+      border-radius:10px;font-size:14px;box-sizing:border-box;transition:.2s background,border;
+      background:#fbfdff;
     }
+    input:focus{outline:none;border-color:var(--aju-blue);box-shadow:0 0 0 3px rgba(74,144,226,.15)}
+    .eye{
+      position:absolute;right:6px;top:50%;transform:translateY(-50%);
+      width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#f3f6fb;
+      display:grid;place-items:center;cursor:pointer;font-size:15px
+    }
+    #btnLogin{
+      width:100%;padding:11px 12px;border:none;border-radius:10px;background:var(--ok);
+      color:#fff;font-weight:700;cursor:pointer;transition:.2s
+    }
+    #btnLogin:hover{filter:brightness(.95)}
+    p{margin:12px 0 0;color:var(--muted);font-size:13px;text-align:center}
+    a{color:var(--aju-blue-d);text-decoration:none}
+    a:hover{text-decoration:underline}
+    footer{margin-top:10px;font-size:12px;color:#8b93a7;text-align:center}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .brand img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    .brand span {
-      font-weight: 700;
-      font-size: 16px;
-      color: #004aad;
-    }
-
-    h2 {
-      margin: 10px 0 20px;
-      color: #1b1f23;
-      font-size: 17px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      border: 1px solid #d0d7e2;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #2c7bd9;
-      box-shadow: 0 0 0 2px rgba(44, 123, 217, 0.15);
-    }
-
-    .input-row {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    #togglePass {
-      position: absolute;
-      right: 8px;
-      background: #f1f4f9;
-      border: 1px solid #d0d7e2;
-      border-radius: 6px;
-      width: 34px;
-      height: 34px;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    #togglePass:hover {
-      background: #e3e9f3;
-    }
-
-    #btnLogin {
-      width: 100%;
-      padding: 10px;
-      background: #1b6e2a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      transition: 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #btnLogin:hover {
-      background: #145321;
-    }
-
-    p {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    a {
-      color: #2c7bd9;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: #8b93a7;
-      margin-top: 10px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ====== LAYER LOADING ====== */
-    #loadingLayer {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(245, 248, 255, 0.96);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      font-size: 15px;
-      color: #004aad;
-      font-weight: 500;
-    }
-
-    .motor {
-      position: relative;
-      width: 140px;
-      height: 90px;
-      animation: moveRight 3.5s linear infinite;
-    }
-
-    .motor img {
-      width: 100%;
-      animation: bounce 0.4s ease-in-out infinite alternate;
-    }
-
-    @keyframes moveRight {
-      from { transform: translateX(-100px); }
-      to { transform: translateX(100px); }
-    }
-
-    @keyframes bounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-6px); }
-    }
+    /* Loading layer */
+    #loadingLayer{display:none;position:fixed;inset:0;background:rgba(245,248,255,.96);
+      z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#004aad}
+    .motor{width:140px;height:90px;animation:move 3.5s linear infinite}
+    .motor img{width:100%;animation:bounce .4s ease-in-out infinite alternate}
+    @keyframes move{from{transform:translateX(-120px)}to{transform:translateX(120px)}}
+    @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-6px)}}
   </style>
 
-  <script defer src="main.js?v=20251111"></script>
+  <!-- muat main.js dengan cache-busting; kalau gagal kita punya fallback -->
+  <script>
+    (function(){
+      const s=document.createElement('script');
+      s.src='main.js?v='+Date.now(); s.defer=true;
+      s.onload=()=>window.__mainLoaded=true;
+      s.onerror=()=>window.__mainLoaded=false;
+      document.head.appendChild(s);
+    })();
+  </script>
 </head>
 
 <body>
   <div class="card">
     <div class="brand">
-      <img src="https://cdn-icons-png.flaticon.com/512/1040/1040238.png" alt="logo" />
-      <span>PT Anisa Jaya Utama</span>
+      <i>💠</i> <b>PT Anisa Jaya Utama</b>
     </div>
-
     <h2>Login Pengguna</h2>
 
-    <input id="username" type="text" placeholder="Username" autocomplete="username" required />
+    <div class="field">
+      <div class="label">Username</div>
+      <div class="input-wrap">
+        <input id="username" type="text" placeholder="admin" autocomplete="username" />
+      </div>
+    </div>
 
-    <div class="input-row">
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required />
-      <button id="togglePass" type="button" title="Tampilkan password">👁️</button>
+    <div class="field">
+      <div class="label">Password</div>
+      <div class="input-wrap">
+        <input id="password" type="password" placeholder="••••••" autocomplete="current-password" />
+        <button class="eye" id="togglePass" type="button" title="Tampilkan sandi">👁️</button>
+      </div>
     </div>
 
     <button id="btnLogin" type="button">Masuk</button>
 
     <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
-
     <footer>© PT Anisa Jaya Utama</footer>
   </div>
 
+  <!-- Loading -->
   <div id="loadingLayer">
-    <div class="motor">
-      <img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor" />
-    </div>
-    <p>🐒 Sedang mengantar data ke server... tunggu sebentar ya 💨</p>
+    <div class="motor"><img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor"/></div>
+    <div>🐒 Mengantar data ke server... tunggu sebentar ya 💨</div>
   </div>
 
   <script>
-    const btn = document.getElementById("btnLogin");
-    const loading = document.getElementById("loadingLayer");
+    const btn   = document.getElementById('btnLogin');
+    const eye   = document.getElementById('togglePass');
+    const pass  = document.getElementById('password');
+    const user  = document.getElementById('username');
+    const layer = document.getElementById('loadingLayer');
 
-    // toggle password
-    document.getElementById("togglePass").addEventListener("click", (e) => {
-      const p = document.getElementById("password");
-      if (p.type === "password") {
-        p.type = "text";
-        e.target.textContent = "🙈";
-      } else {
-        p.type = "password";
-        e.target.textContent = "👁️";
-      }
-    });
-
-    // login button
-    btn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (typeof login !== "function") {
-        alert("⚠️ main.js belum termuat, reload halaman (Ctrl+F5)");
-        return;
-      }
-
-      // tampilkan loading, lalu jalankan login()
-      loading.style.display = "flex";
-      btn.disabled = true;
-
-      try {
-        // panggil login() dan tunggu hasilnya
-        const before = localStorage.getItem("aj_user");
-        await login();
-
-        // kalau login gagal (user tetap null), tutup loading
-        setTimeout(() => {
-          const after = localStorage.getItem("aj_user");
-          if (!after || after === before) {
-            loading.style.display = "none";
-            btn.disabled = false;
-          }
-        }, 2500);
-      } catch (err) {
-        console.error("Login error:", err);
-        loading.style.display = "none";
-        btn.disabled = false;
-      }
+    eye.addEventListener('click', ()=>{
+      if(pass.type==='password'){ pass.type='text'; eye.textContent='🙈'; }
+      else { pass.type='password'; eye.textContent='👁️'; }
     });
 
     // tekan Enter = login
-    ["username", "password"].forEach(id => {
-      document.getElementById(id).addEventListener("keydown", (e) => {
-        if (e.key === "Enter") btn.click();
-      });
+    [user, pass].forEach(el=>el.addEventListener('keydown',e=>{ if(e.key==='Enter') btn.click(); }));
+
+    // ===== Fallback login jika main.js tidak ter-load =====
+    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
+    async function fallbackLogin(u, p){
+      try{
+        const res = await fetch(API_URL,{
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({action:'login', username:u, password:p})
+        });
+        const text = await res.text();
+        let json;
+        try{ json = JSON.parse(text); }catch{ return {success:false, message:'Respon bukan JSON'}; }
+        return json;
+      }catch(e){
+        return {success:false, message:'Gagal konek server'};
+      }
+    }
+
+    btn.addEventListener('click', async (e)=>{
+      e.preventDefault();
+      const u=user.value.trim(), p=pass.value.trim();
+      if(!u || !p){ alert('Isi username & password.'); return; }
+
+      layer.style.display='flex'; btn.disabled=true;
+
+      // kalau main.js ada & punya fungsi login(), pakai itu
+      if (typeof window.login === 'function'){
+        // jalankan login() lalu cek apakah sesi tersimpan
+        const before = localStorage.getItem('aj_user');
+        try{
+          await window.login(); // ini akan redirect bila sukses
+        }catch(_){} // abaikan
+        setTimeout(()=>{
+          const after = localStorage.getItem('aj_user');
+          if(!after || after===before){ // gagal
+            layer.style.display='none'; btn.disabled=false;
+          }
+        }, 2200);
+        return;
+      }
+
+      // kalau main.js gagal termuat → fallback
+      const r = await fallbackLogin(u,p);
+      if (r && r.success && r.user){
+        try{ localStorage.setItem('aj_user', JSON.stringify(r.user)); }catch(_){}
+        location.href = 'dashboard.html';
+      }else{
+        layer.style.display='none'; btn.disabled=false;
+        alert(r && r.message ? r.message : 'Login gagal');
+      }
     });
   </script>
 </body>
