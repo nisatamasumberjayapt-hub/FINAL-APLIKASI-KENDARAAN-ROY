@@ -9,12 +9,19 @@
     body{ font-family:system-ui,Arial,sans-serif; background:#f6f9f6; margin:0; color:#123; }
     header{ background:#0c5d27; color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
     header nav a{ color:#fff; text-decoration:none; margin-left:16px; }
-    main{ max-width:1300px; margin:30px auto; padding:0 16px; }
+    main{ max-width:1400px; margin:30px auto; padding:0 16px; }
     .card{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.07); padding:20px; }
+
     h2{ margin-top:0; color:#0c5d27; }
-    .toolbar{ display:flex; align-items:center; position:relative; margin-bottom:14px; }
+    .toolbar{ display:flex; align-items:center; gap:6px; margin-bottom:14px; }
     #searchInput{ flex:1; padding:10px 12px; border:1.5px solid #cdd9cd; border-radius:8px; }
-    #clearSearch{ position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:16px; cursor:pointer; color:#888; }
+    #refreshBtn{
+      width:34px; height:34px; border:none; border-radius:6px;
+      background:#0c5d27; color:#fff; font-size:16px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:0.2s;
+    }
+    #refreshBtn:hover{ background:#126f31; }
 
     table{ width:100%; border-collapse:collapse; font-size:14px; table-layout:auto; }
     th,td{ padding:10px 14px; border-bottom:1px solid #e0ebe0; vertical-align:top; }
@@ -45,7 +52,7 @@
 
       <div class="toolbar">
         <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
-        <button id="clearSearch" style="display:none;">×</button>
+        <button id="refreshBtn" title="Segarkan" onclick="reloadDashboard()">⟳</button>
       </div>
 
       <table id="tblKendaraan">
@@ -70,6 +77,12 @@
     </section>
   </main>
 
-  <script src="main.js?v=7.4"></script>
+  <script src="main.js?v=7.5"></script>
+  <script>
+    async function reloadDashboard() {
+      const res = await api("getKendaraan");
+      if (res.success) renderTabelKendaraan(res.data, false);
+    }
+  </script>
 </body>
 </html>
