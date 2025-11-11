@@ -3,112 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏠 Dashboard | PT Anisa Jaya Utama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Dashboard | PT Anisa Jaya Utama</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="main.js"></script>
 </head>
-<body>
+<body onload="initDashboard()">
   <header>
-    <h1>🏢 PT Anisa Jaya Utama — <small>by Roy</small></h1>
+    <div class="logo">🚙 PT Anisa Jaya Utama — <span>by Roy</span></div>
     <nav>
-      <a href="dashboard.html" class="active">🏠 Dashboard</a>
-      <a href="kendaraan.html">🚙 Kendaraan</a>
-      <a href="#">👤 User</a>
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="kendaraan.html">🚗 Kendaraan</a>
+      <a href="user.html">👤 User</a>
       <a href="#" onclick="logout()">🔒 Logout</a>
     </nav>
   </header>
 
-  <main class="dashboard-container">
-    <section class="dashboard-box">
-      <h2>📊 Daftar Kendaraan</h2>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat / Letak)">
-        <button id="clearSearch" class="btn-clear" title="Hapus pencarian">❌</button>
-      </div>
+  <main class="container">
+    <h2>📊 Daftar Kendaraan</h2>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Cari kendaraan (Plat / Letak)">
+      <button id="clearSearch">❌</button>
+    </div>
 
+    <div class="table-container">
       <table id="tblKendaraan">
         <thead>
           <tr>
-            <th>🚗 Plat Nomor</th>
+            <th>🚘 Plat Nomor</th>
             <th>📍 Letak</th>
-            <th>🧾 STNK</th>
+            <th>📋 STNK</th>
             <th>🔧 KIR</th>
             <th>🛠 Servis Terakhir</th>
             <th>💰 Pajak 5 Tahunan</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr><td colspan="6" align="center">Memuat data...</td></tr>
+        </tbody>
       </table>
+    </div>
 
-      <div class="legend">
-        <span class="dot green"></span> Aman
-        <span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)
-        <span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)
-      </div>
-    </section>
+    <div class="legend">
+      <span class="legend-item"><span class="dot green"></span> Aman</span>
+      <span class="legend-item"><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span>
+      <span class="legend-item"><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
+    </div>
   </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-
-    async function api(action, payload = {}) {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {"Content-Type": "text/plain;charset=utf-8"},
-        body: JSON.stringify({action, ...payload})
-      });
-      const text = await res.text();
-      try { return JSON.parse(text); } catch { return {}; }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("clearSearch").onclick = clearSearch;
-      document.getElementById("searchInput").oninput = applySearch;
-      loadData();
-    });
-
-    function clearSearch() {
-      document.getElementById("searchInput").value = "";
-      applySearch();
-    }
-
-    function applySearch() {
-      const val = document.getElementById("searchInput").value.toLowerCase();
-      document.getElementById("clearSearch").style.display = val ? "inline-block" : "none";
-      document.querySelectorAll("#tblKendaraan tbody tr").forEach(tr => {
-        const plat = tr.cells[0].innerText.toLowerCase();
-        const letak = tr.cells[1].innerText.toLowerCase();
-        tr.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
-      });
-    }
-
-    async function loadData() {
-      const tbody = document.querySelector("#tblKendaraan tbody");
-      tbody.innerHTML = "<tr><td colspan='6' align='center'>⏳ Memuat data...</td></tr>";
-
-      const res = await api("getKendaraan");
-      if (!res.success) {
-        tbody.innerHTML = "<tr><td colspan='6' align='center'>❌ Gagal memuat data</td></tr>";
-        return;
-      }
-
-      const data = res.data.sort((a, b) => a.Platnomor.localeCompare(b.Platnomor));
-      tbody.innerHTML = data.map(k => `
-        <tr>
-          <td>${k.Platnomor}</td>
-          <td>${k.Letak}</td>
-          <td>${k.STNK ? k.STNK.split("T")[0] : "-"}</td>
-          <td>${k.KIR ? k.KIR.split("T")[0] : "-"}</td>
-          <td>${k.ServisTerakhir ? k.ServisTerakhir.split("T")[0] : "-"}</td>
-          <td>${k.pajak5tahun ? k.pajak5tahun.split("T")[0] : "-"}</td>
-        </tr>
-      `).join("");
-    }
-
-    function logout() {
-      localStorage.removeItem("aj_user");
-      location.href = "login.html";
-    }
-  </script>
 </body>
 </html>
