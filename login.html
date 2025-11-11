@@ -7,10 +7,9 @@
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /* ====== TAMPILAN LOGIN ====== */
     body {
       font-family: "Poppins", "Segoe UI", Arial, sans-serif;
-      background: #f2f6fb;
+      background: #f4f7fb;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,7 +19,7 @@
     }
 
     .card {
-      width: 360px;
+      width: 350px;
       background: #fff;
       border-radius: 14px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
@@ -153,7 +152,6 @@
       width: 100%; height: 100%;
       background: rgba(245, 248, 255, 0.96);
       z-index: 100;
-      display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
@@ -165,8 +163,8 @@
 
     .motor {
       position: relative;
-      width: 150px;
-      height: 100px;
+      width: 140px;
+      height: 90px;
       animation: moveRight 3.5s linear infinite;
     }
 
@@ -186,12 +184,10 @@
     }
   </style>
 
-  <!-- Pastikan main.js terbaru -->
   <script defer src="main.js?v=20251111"></script>
 </head>
 
 <body>
-  <!-- ====== FORM LOGIN ====== -->
   <div class="card">
     <div class="brand">
       <img src="https://cdn-icons-png.flaticon.com/512/1040/1040238.png" alt="logo" />
@@ -214,7 +210,6 @@
     <footer>© PT Anisa Jaya Utama</footer>
   </div>
 
-  <!-- ====== LAYER LOADING (🐒🛵) ====== -->
   <div id="loadingLayer">
     <div class="motor">
       <img src="https://cdn-icons-png.flaticon.com/512/5234/5234213.png" alt="motor" />
@@ -223,7 +218,10 @@
   </div>
 
   <script>
-    // ====== TOGGLE PASSWORD ======
+    const btn = document.getElementById("btnLogin");
+    const loading = document.getElementById("loadingLayer");
+
+    // toggle password
     document.getElementById("togglePass").addEventListener("click", (e) => {
       const p = document.getElementById("password");
       if (p.type === "password") {
@@ -235,34 +233,39 @@
       }
     });
 
-    // ====== LOGIN BUTTON ======
-    const btn = document.getElementById("btnLogin");
-    const loading = document.getElementById("loadingLayer");
-
+    // login button
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
       if (typeof login !== "function") {
-        alert("⚠️ main.js belum termuat, coba reload halaman (Ctrl + F5)");
+        alert("⚠️ main.js belum termuat, reload halaman (Ctrl+F5)");
         return;
       }
 
-      // Tampilkan animasi motor loading
+      // tampilkan loading, lalu jalankan login()
       loading.style.display = "flex";
+      btn.disabled = true;
 
-      // Jalankan fungsi login (main.js)
       try {
+        // panggil login() dan tunggu hasilnya
+        const before = localStorage.getItem("aj_user");
         await login();
-      } catch (err) {
-        console.error(err);
-      } finally {
-        // Jika gagal login, matikan animasi setelah 2.5 detik
+
+        // kalau login gagal (user tetap null), tutup loading
         setTimeout(() => {
-          loading.style.display = "none";
+          const after = localStorage.getItem("aj_user");
+          if (!after || after === before) {
+            loading.style.display = "none";
+            btn.disabled = false;
+          }
         }, 2500);
+      } catch (err) {
+        console.error("Login error:", err);
+        loading.style.display = "none";
+        btn.disabled = false;
       }
     });
 
-    // Enter key listener
+    // tekan Enter = login
     ["username", "password"].forEach(id => {
       document.getElementById(id).addEventListener("keydown", (e) => {
         if (e.key === "Enter") btn.click();
