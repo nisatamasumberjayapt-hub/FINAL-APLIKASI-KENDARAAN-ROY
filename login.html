@@ -4,11 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - PT ANISA JAYA UTAMA</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
   body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(180deg, #f0f4ff 0%, #e7eefc 100%);
+    background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,129 +19,141 @@
     margin: 0;
   }
 
+  /* === CARD LOGIN === */
   .card {
-    background: #ffffffc9;
+    background: rgba(255,255,255,0.9);
     border-radius: 18px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 140, 255, 0.15);
-    padding: 35px 28px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1), 0 0 15px rgba(0,100,255,0.1);
+    padding: 35px 30px;
     width: min(90vw, 370px);
     text-align: center;
     position: relative;
     backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.6);
     animation: fadeIn 0.6s ease;
   }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .card h2 {
+  h2 {
     font-size: 22px;
-    color: #1a1a1a;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    margin-bottom: 6px;
+    color: #1b1b1b;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
   }
-
-  .card h2::before {
+  h2::before {
     content: "❤️";
-    font-size: 20px;
-    animation: pulse 1.5s infinite ease-in-out;
+    display: inline-block;
+    animation: beat 1.3s infinite;
+    margin-right: 6px;
+  }
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
   }
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.2); opacity: 1; }
+  .subtitle {
+    color: #444;
+    margin-bottom: 25px;
   }
 
   .input-group {
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
   }
-
   input {
     width: 100%;
-    padding: 11px 12px;
+    padding: 12px 14px;
     border: 1px solid #ccc;
     border-radius: 10px;
-    font-size: 14px;
     outline: none;
+    font-size: 14px;
     transition: 0.2s;
-    background: rgba(255, 255, 255, 0.8);
   }
-
   input:focus {
     border-color: #2b7cff;
-    box-shadow: 0 0 8px rgba(43, 124, 255, 0.3);
+    box-shadow: 0 0 8px rgba(43,124,255,0.3);
   }
-
   .toggle-pass {
     position: absolute;
     right: 10px;
     top: 9px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
   }
 
   #btnLogin {
     width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
     background: #1b6e2a;
     color: white;
-    border: none;
-    padding: 11px;
-    border-radius: 10px;
-    cursor: pointer;
     font-weight: bold;
+    cursor: pointer;
     font-size: 15px;
-    transition: 0.2s;
-    box-shadow: 0 3px 8px rgba(27, 110, 42, 0.3);
+    transition: 0.25s;
+    box-shadow: 0 3px 8px rgba(27,110,42,0.3);
   }
-
   #btnLogin:hover {
-    background: #145520;
-    box-shadow: 0 4px 10px rgba(27, 110, 42, 0.4);
+    background: #13561f;
   }
-
-  a {
-    color: #1b6e2a;
-    text-decoration: none;
-    font-weight: 500;
-  }
+  a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
   a:hover { text-decoration: underline; }
 
-  /* ===== Layar Loading ===== */
+  /* === LOADING SCREEN === */
   #loadingScreen {
     position: fixed;
     inset: 0;
-    background: #f7f9ff;
+    background: #f8fbff;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    animation: fadeIn 0.6s ease;
   }
 
+  /* === MONKEY ANIMATION === */
   .monkey {
     width: 160px;
     height: 160px;
-    background-image: url('assets/monkey_sprite.png');
-    background-size: 300%;
-    animation: float 1.8s ease-in-out infinite;
-    transition: background-position 0.5s ease;
+    position: relative;
+    animation: floaty 2s ease-in-out infinite;
+  }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .monkey svg {
+    width: 100%;
+    height: 100%;
   }
 
-  .monkey.think { background-position: 0% 0%; }
-  .monkey.angry { background-position: 50% 0%; }
-  .monkey.happy { background-position: 100% 0%; }
+  /* tangan mikir */
+  .monkey svg path.hand {
+    transform-origin: center;
+    animation: handmove 2s ease-in-out infinite;
+  }
+  @keyframes handmove {
+    0%,100% { transform: rotate(0deg); }
+    50% { transform: rotate(5deg); }
+  }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px) rotate(-2deg); }
+  /* tanda tanya */
+  .question {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    animation: floatQ 1.8s ease-in-out infinite;
+  }
+  @keyframes floatQ {
+    0%,100% { transform: translate(-50%, 0); opacity: 0.6; }
+    50% { transform: translate(-50%, -6px); opacity: 1; }
   }
 
   .loading-text {
@@ -146,7 +161,6 @@
     font-size: 16px;
     color: #004aad;
     text-align: center;
-    max-width: 260px;
   }
 
   .error-msg {
@@ -157,41 +171,21 @@
     border-radius: 8px;
     padding: 10px 15px;
     display: none;
-    animation: pop 0.4s ease;
-  }
-
-  @keyframes pop {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid #ccc;
-    border-top-color: #1b6e2a;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-top: 15px;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
   }
 </style>
 </head>
 <body>
 
-<div class="card">
+<!-- FORM LOGIN -->
+<div class="card" id="loginCard">
   <h2>PT ANISA JAYA UTAMA</h2>
-  <h3 style="margin-top:-10px;margin-bottom:18px;color:#333;">Login Pengguna</h3>
+  <div class="subtitle">Login Pengguna</div>
 
   <div class="input-group">
-    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="username" placeholder="Username" />
   </div>
-
   <div class="input-group">
-    <input type="password" id="password" placeholder="Password">
+    <input type="password" id="password" placeholder="Password" />
     <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
 
@@ -199,11 +193,23 @@
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- Animasi Loading -->
+<!-- LOADING SCREEN -->
 <div id="loadingScreen">
-  <div id="monkey" class="monkey think"></div>
+  <div class="monkey">
+    <svg viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="50" fill="#d9b07e"/>
+      <circle cx="45" cy="55" r="8" fill="#fff"/>
+      <circle cx="75" cy="55" r="8" fill="#fff"/>
+      <circle cx="45" cy="55" r="4" fill="#000"/>
+      <circle cx="75" cy="55" r="4" fill="#000"/>
+      <path d="M48 78 Q60 90 72 78" stroke="#000" stroke-width="3" fill="none" />
+      <circle cx="25" cy="60" r="15" fill="#c4956b"/>
+      <circle cx="95" cy="60" r="15" fill="#c4956b"/>
+      <path class="hand" d="M58 82 Q60 85 62 82" stroke="#8b5e3c" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <div class="question">❓</div>
+  </div>
   <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
-  <div class="spinner"></div>
   <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
 </div>
 
@@ -214,28 +220,9 @@
   const loading = document.getElementById("loadingScreen");
   const text = document.getElementById("loadingText");
   const errorMsg = document.getElementById("errorMsg");
-  const monkey = document.getElementById("monkey");
+  const card = document.getElementById("loginCard");
 
-  function setSession(u) {
-    localStorage.setItem("aj_user", JSON.stringify(u));
-  }
-
-  async function api(action, payload = {}) {
-    try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec", {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action, ...payload }),
-      });
-      const text = await res.text();
-      return JSON.parse(text);
-    } catch (err) {
-      console.error(err);
-      return { success: false, message: "Server error" };
-    }
-  }
-
-  // 👁️ Toggle password visibility
+  // 👁️ Toggle password
   toggle.addEventListener("click", () => {
     if (pass.type === "password") {
       pass.type = "text";
@@ -246,36 +233,56 @@
     }
   });
 
+  // Tombol login
   btn.addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     const password = pass.value.trim();
     if (!username || !password) return alert("Isi username dan password!");
 
+    card.style.display = "none";
     loading.style.display = "flex";
     text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
     errorMsg.style.display = "none";
-    monkey.className = "monkey think";
 
     try {
       const res = await api("login", { username, password });
       if (res.success) {
         text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
-        monkey.className = "monkey happy";
         setTimeout(() => {
           setSession(res.user);
           location.href = "dashboard.html";
         }, 1500);
       } else {
-        monkey.className = "monkey angry";
         text.textContent = "🙈 Monyet berhenti mikir...";
         errorMsg.style.display = "block";
-        setTimeout(() => loading.style.display = "none", 2000);
+        setTimeout(() => {
+          loading.style.display = "none";
+          card.style.display = "block";
+        }, 2200);
       }
     } catch {
       text.textContent = "⚠️ Server error, coba lagi nanti!";
-      setTimeout(() => loading.style.display = "none", 2000);
+      setTimeout(() => {
+        loading.style.display = "none";
+        card.style.display = "block";
+      }, 2000);
     }
   });
+
+  function setSession(u){ localStorage.setItem("aj_user", JSON.stringify(u)); }
+  async function api(action, payload = {}) {
+    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, ...payload }),
+      });
+      return await res.json();
+    } catch {
+      return { success:false };
+    }
+  }
 </script>
 </body>
 </html>
