@@ -4,32 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
-  <link rel="stylesheet" href="styles.css" />
   <style>
-    body { font-family: system-ui, Arial, sans-serif; background:#f5f7f5; color:#123; margin:0; }
+    body { font-family: system-ui, Arial, sans-serif; background:#f6f9f6; margin:0; color:#123; }
     header { background:#0c5d27; color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
     header nav a{ color:#fff; text-decoration:none; margin-left:16px; font-weight:500; }
-    main{ max-width:1300px; margin:28px auto; padding:0 16px; }
-
+    main{ max-width:1400px; margin:28px auto; padding:0 16px; }
     .grid{ display:grid; grid-template-columns:340px 1fr; gap:24px; }
-    .card{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.07); }
+    .card{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.08); }
     .pad{ padding:20px; }
 
     h2{ margin:0 0 14px; color:#0b4d1b; font-size:20px; }
     label{ display:block; font-weight:600; font-size:14px; margin:8px 0 4px; color:#0c5d27; }
-    input[type="text"],input[type="date"]{ width:100%; padding:9px 12px; border:1.3px solid #cdd9cd; border-radius:8px; }
+    input[type="text"],input[type="date"]{ width:100%; padding:9px 12px; border:1.4px solid #cdd9cd; border-radius:8px; }
     .row-btn{ display:flex; gap:10px; margin-top:14px; }
-    .btn{ border:none; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; }
+    .btn{ border:none; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; transition:0.2s; }
     .btn-primary{ background:#0c5d27; color:#fff; }
-    .btn-dark{ background:#444; color:#fff; }
+    .btn-dark{ background:#555; color:#fff; }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
 
-    .toolbar{ display:flex; align-items:center; gap:6px; margin-bottom:12px; position:relative; }
+    .toolbar{ display:flex; align-items:center; gap:6px; margin-bottom:12px; }
     #searchInput{ flex:1; padding:10px 12px; border:1.5px solid #cdd9cd; border-radius:8px; }
-    #clearSearch{ position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:16px; cursor:pointer; color:#888; }
+    #refreshBtn{
+      width:36px; height:36px; border:none; border-radius:6px;
+      background:#0c5d27; color:#fff; font-size:18px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    #refreshBtn:hover{ background:#128c3f; }
 
     table{ width:100%; border-collapse:collapse; font-size:14px; table-layout:auto; }
     th, td{ padding:10px 14px; border-bottom:1px solid #e0ebe0; vertical-align:top; }
-    thead th{ background:#0c5d27; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
+    thead th{ background:#0c5d27; color:#fff; font-weight:700; text-align:left; }
     tbody tr:hover{ background:#f6fbf6; }
 
     .legend{ display:flex; align-items:center; gap:14px; margin-top:10px; font-size:13px; color:#333; }
@@ -38,12 +42,12 @@
     .dot.yellow{ background:#f1c40f; }
     .dot.red{ background:#e74c3c; }
 
-    .btn-edit{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
-    .btn-delete{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
+    .btn-edit{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#f1c40f; color:#000; }
+    .btn-delete{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#c0392b; color:#fff; }
   </style>
 </head>
 
-<body onload="initKendaraan()">
+<body onload="initKendaraanPage()">
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
     <nav>
@@ -55,62 +59,58 @@
 
   <main>
     <div class="grid">
-      <!-- KIRI -->
+      <!-- FORM -->
       <section class="card">
         <div class="pad">
-          <h2>Tambah Kendaraan</h2>
+          <h2>Form Kendaraan</h2>
           <label for="plat">Plat Nomor</label>
-          <input id="plat" type="text" placeholder="Contoh: B1234XYZ" />
+          <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled />
 
           <label for="letak">Letak / Garasi</label>
-          <input id="letak" type="text" placeholder="Contoh: Jakarta" />
+          <input id="letak" type="text" placeholder="Contoh: Jakarta" disabled />
 
           <label for="stnk">STNK</label>
-          <input id="stnk" type="date" />
+          <input id="stnk" type="date" disabled />
 
           <label for="kir">KIR</label>
-          <input id="kir" type="date" />
+          <input id="kir" type="date" disabled />
 
           <label for="servis">Servis Terakhir</label>
-          <input id="servis" type="date" />
+          <input id="servis" type="date" disabled />
 
           <label for="pajak5">Pajak 5 Tahunan</label>
-          <input id="pajak5" type="date" />
+          <input id="pajak5" type="date" disabled />
 
           <div class="row-btn">
-            <button class="btn btn-primary" onclick="simpanKendaraan()">Tambah</button>
-            <button class="btn btn-dark" onclick="
-              document.querySelectorAll('#plat,#letak,#stnk,#kir,#servis,#pajak5').forEach(e=>e.value='');
-            ">Batal</button>
+            <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">Tambah</button>
+            <button id="btnCancel" class="btn btn-dark" onclick="handleCancel()" disabled>Batal</button>
           </div>
         </div>
       </section>
 
-      <!-- KANAN -->
+      <!-- TABEL -->
       <section class="card">
         <div class="pad">
           <h2>Daftar Kendaraan</h2>
           <div class="toolbar">
             <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
-            <button id="clearSearch" title="Reset pencarian" style="display:none;">×</button>
+            <button id="refreshBtn" title="Segarkan" onclick="reloadKendaraanList()">⟳</button>
           </div>
 
-          <div class="table-container" style="overflow-x:auto;">
-            <table id="tblKendaraan">
-              <thead>
-                <tr>
-                  <th>Plat Nomor</th>
-                  <th>Letak</th>
-                  <th>STNK</th>
-                  <th>KIR</th>
-                  <th>Servis Terakhir</th>
-                  <th>Pajak 5 Tahunan</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
+          <table id="tblKendaraan">
+            <thead>
+              <tr>
+                <th>Plat Nomor</th>
+                <th>Letak</th>
+                <th>STNK</th>
+                <th>KIR</th>
+                <th>Servis Terakhir</th>
+                <th>Pajak 5 Tahunan</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
 
           <div class="legend">
             <span><span class="dot green"></span> Aman</span>
@@ -122,6 +122,90 @@
     </div>
   </main>
 
-  <script src="main.js?v=7.4"></script>
+  <script src="main.js?v=7.5"></script>
+  <script>
+    let MODE = "view"; // view | add | edit
+    let DATA = [];
+    let EDIT_PLAT = "";
+
+    const $ = id => document.getElementById(id);
+
+    function setForm(enabled){
+      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>{
+        const el = $(id);
+        if(enabled) el.removeAttribute("disabled");
+        else el.setAttribute("disabled","disabled");
+      });
+    }
+
+    function clearForm(){
+      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).value="");
+    }
+
+    function syncButtons(){
+      const btnP=$("btnPrimary"), btnC=$("btnCancel");
+      if(MODE==="view"){ btnP.textContent="Tambah"; btnC.disabled=true; }
+      if(MODE==="add"){ btnP.textContent="Simpan"; btnC.disabled=false; }
+      if(MODE==="edit"){ btnP.textContent="Update"; btnC.disabled=false; }
+    }
+
+    function enterView(){ MODE="view"; setForm(false); clearForm(); syncButtons(); }
+    function enterAdd(){ MODE="add"; setForm(true); clearForm(); syncButtons(); $("plat").focus(); }
+    function enterEdit(row){ MODE="edit"; setForm(true); syncButtons();
+      $("plat").value=row.Platnomor;
+      $("letak").value=row.Letak;
+      $("stnk").value=row.STNK;
+      $("kir").value=row.KIR;
+      $("servis").value=row.ServisTerakhir;
+      $("pajak5").value=row.pajak5tahun;
+      EDIT_PLAT=row.Platnomor;
+    }
+
+    async function handlePrimaryClick(){
+      if(MODE==="view") return enterAdd();
+
+      const plat=$("plat").value.trim(), letak=$("letak").value.trim(),
+            stnk=$("stnk").value, kir=$("kir").value,
+            servis=$("servis").value, pajak=$("pajak5").value;
+      if(!plat||!letak||!stnk||!kir||!servis||!pajak) return alert("Semua kolom wajib diisi!");
+
+      if(MODE==="add"){
+        const r=await api("addKendaraan",{Platnomor:plat,Letak:letak,STNK:stnk,KIR:kir,ServisTerakhir:servis,pajak5tahun:pajak});
+        alert(r.message||"Tersimpan");
+        if(r.success){ await reloadKendaraanList(); enterView(); }
+      }
+      if(MODE==="edit"){
+        const r=await api("updateKendaraan",{PlatnomorLama:EDIT_PLAT,Platnomor:plat,Letak:letak,STNK:stnk,KIR:kir,ServisTerakhir:servis,pajak5tahun:pajak});
+        alert(r.message||"Terupdate");
+        if(r.success){ await reloadKendaraanList(); enterView(); }
+      }
+    }
+
+    function handleCancel(){ enterView(); }
+
+    async function reloadKendaraanList(){
+      const res=await api("getKendaraan");
+      if(res.success){ DATA=res.data; renderTabelKendaraan(DATA,true); }
+    }
+
+    async function initKendaraanPage(){
+      const u=getSession();
+      if(!u) return(location.href="login.html");
+      enterView();
+      await reloadKendaraanList();
+      const s=$("searchInput");
+      s.addEventListener("input",()=>{
+        const val=s.value.toLowerCase();
+        const filtered=DATA.filter(k=>k.Platnomor.toLowerCase().includes(val)||k.Letak.toLowerCase().includes(val));
+        renderTabelKendaraan(filtered,true);
+      });
+    }
+
+    // Override edit handler agar langsung isi form
+    function editKendaraan(dataStr){
+      const data=JSON.parse(decodeURIComponent(dataStr));
+      enterEdit(data);
+    }
+  </script>
 </body>
 </html>
