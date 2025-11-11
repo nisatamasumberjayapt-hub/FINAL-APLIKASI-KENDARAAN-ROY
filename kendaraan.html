@@ -4,201 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kendaraan | PT Anisa Jaya Utama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="main.js"></script>
 </head>
-<body>
+<body onload="initKendaraan()">
   <header>
-    <h1>🚗 PT Anisa Jaya Utama — <small>by Roy</small></h1>
+    <div class="logo">🚙 PT Anisa Jaya Utama — <span>by Roy</span></div>
     <nav>
       <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="kendaraan.html" class="active">🚙 Kendaraan</a>
-      <a href="#">👤 User</a>
+      <a href="kendaraan.html" class="active">🚗 Kendaraan</a>
+      <a href="user.html">👤 User</a>
       <a href="#" onclick="logout()">🔒 Logout</a>
     </nav>
   </header>
 
-  <main class="container">
+  <main class="container grid">
     <section class="form-section">
-      <h2>📝 Form Kendaraan</h2>
-      <form id="formKendaraan">
-        <input id="plat" placeholder="Contoh: B1234XYZ" disabled>
-        <input id="letak" placeholder="Contoh: Jakarta" disabled>
-        <label>STNK:</label>
-        <input id="stnk" type="date" disabled>
-        <label>KIR:</label>
-        <input id="kir" type="date" disabled>
-        <label>Servis Terakhir:</label>
-        <input id="servis" type="date" disabled>
-        <label>Pajak 5 Tahunan:</label>
-        <input id="pajak5" type="date" disabled>
-        <div class="buttons">
-          <button type="button" id="btnTambah" class="btn-green">➕ Tambah</button>
-          <button type="button" id="btnBatal" class="btn-gray">✖️ Batal</button>
-        </div>
-      </form>
+      <h3>📝 Form Kendaraan</h3>
+      <input type="text" id="plat" placeholder="Plat Nomor (Contoh: B1234XYZ)" disabled>
+      <input type="text" id="letak" placeholder="Letak / Garasi" disabled>
+      <input type="date" id="stnk" disabled>
+      <input type="date" id="kir" disabled>
+      <input type="date" id="servis" disabled>
+      <input type="date" id="pajak5" disabled>
+
+      <div class="btn-group">
+        <button id="btnTambah" onclick="toggleTambah()">➕ Tambah</button>
+        <button id="btnBatal" onclick="batalEdit()">❌ Batal</button>
+      </div>
     </section>
 
     <section class="table-section">
-      <h2>📋 Daftar Kendaraan</h2>
-      <div class="search-box">
+      <h3>📋 Daftar Kendaraan</h3>
+      <div class="search-container">
         <input type="text" id="searchInput" placeholder="Cari kendaraan (Plat / Letak)">
-        <button id="clearSearch" class="btn-clear" title="Hapus pencarian">❌</button>
+        <button id="clearSearch">❌</button>
       </div>
-      <table id="tblKendaraan">
-        <thead>
-          <tr>
-            <th>Plat Nomor</th>
-            <th>Letak</th>
-            <th>STNK</th>
-            <th>KIR</th>
-            <th>Servis Terakhir</th>
-            <th>Pajak 5 Tahunan</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+
+      <div class="table-container">
+        <table id="tblKendaraan">
+          <thead>
+            <tr>
+              <th>🚘 Plat Nomor</th>
+              <th>📍 Letak</th>
+              <th>📋 STNK</th>
+              <th>🔧 KIR</th>
+              <th>🛠 Servis Terakhir</th>
+              <th>💰 Pajak 5 Tahunan</th>
+              <th>⚙️ Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="7" align="center">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <div class="legend">
-        <span class="dot green"></span> Aman
-        <span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)
-        <span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)
+        <span class="legend-item"><span class="dot green"></span> Aman</span>
+        <span class="legend-item"><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span>
+        <span class="legend-item"><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
       </div>
     </section>
   </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-    const formEls = ["plat", "letak", "stnk", "kir", "servis", "pajak5"].map(id => document.getElementById(id));
-    const [platEl, letakEl, stnkEl, kirEl, servisEl, pajakEl] = formEls;
-
-    let editMode = false;
-    let platEdit = "";
-
-    async function api(action, data = {}) {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {"Content-Type": "text/plain;charset=utf-8"},
-        body: JSON.stringify({action, ...data})
-      });
-      const text = await res.text();
-      try { return JSON.parse(text); } catch { return {}; }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("btnTambah").onclick = handleTambah;
-      document.getElementById("btnBatal").onclick = resetForm;
-      document.getElementById("clearSearch").onclick = clearSearch;
-      document.getElementById("searchInput").oninput = applySearch;
-      loadData();
-      disableForm(true);
-    });
-
-    function disableForm(state) {
-      formEls.forEach(i => i.disabled = state);
-    }
-
-    function clearForm() {
-      formEls.forEach(i => i.value = "");
-    }
-
-    function resetForm() {
-      clearForm();
-      disableForm(true);
-      editMode = false;
-      platEdit = "";
-      document.getElementById("btnTambah").textContent = "➕ Tambah";
-    }
-
-    function clearSearch() {
-      document.getElementById("searchInput").value = "";
-      applySearch();
-    }
-
-    function applySearch() {
-      const val = document.getElementById("searchInput").value.toLowerCase();
-      document.getElementById("clearSearch").style.display = val ? "inline-block" : "none";
-      document.querySelectorAll("#tblKendaraan tbody tr").forEach(row => {
-        const plat = row.cells[0].innerText.toLowerCase();
-        const letak = row.cells[1].innerText.toLowerCase();
-        row.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
-      });
-    }
-
-    async function loadData() {
-      const tbl = document.querySelector("#tblKendaraan tbody");
-      tbl.innerHTML = "<tr><td colspan='7' align='center'>⏳ Memuat data...</td></tr>";
-      const res = await api("getKendaraan");
-      if (!res.success) return;
-      renderTable(res.data.sort((a,b) => a.Platnomor.localeCompare(b.Platnomor)));
-    }
-
-    function renderTable(data) {
-      const tbl = document.querySelector("#tblKendaraan tbody");
-      tbl.innerHTML = data.map(k => `
-        <tr>
-          <td>${k.Platnomor}</td>
-          <td>${k.Letak}</td>
-          <td>${k.STNK ? k.STNK.split("T")[0] : "-"}</td>
-          <td>${k.KIR ? k.KIR.split("T")[0] : "-"}</td>
-          <td>${k.ServisTerakhir ? k.ServisTerakhir.split("T")[0] : "-"}</td>
-          <td>${k.pajak5tahun ? k.pajak5tahun.split("T")[0] : "-"}</td>
-          <td>
-            <button class="btn-yellow" onclick='editKendaraan(${JSON.stringify(k)})'>✏️ Edit</button>
-            <button class="btn-red" onclick='hapusKendaraan("${k.Platnomor}")'>🗑 Hapus</button>
-          </td>
-        </tr>
-      `).join("");
-    }
-
-    function editKendaraan(k) {
-      editMode = true;
-      platEdit = k.Platnomor;
-      disableForm(false);
-      platEl.disabled = true;
-      platEl.value = k.Platnomor;
-      letakEl.value = k.Letak;
-      stnkEl.value = k.STNK?.split("T")[0] || "";
-      kirEl.value = k.KIR?.split("T")[0] || "";
-      servisEl.value = k.ServisTerakhir?.split("T")[0] || "";
-      pajakEl.value = k.pajak5tahun?.split("T")[0] || "";
-      document.getElementById("btnTambah").textContent = "✅ Update";
-    }
-
-    async function handleTambah() {
-      if (editMode) return updateKendaraan();
-      disableForm(false);
-      platEl.focus();
-      document.getElementById("btnTambah").textContent = "💾 Simpan";
-      editMode = "tambah";
-    }
-
-    async function updateKendaraan() {
-      const data = {
-        PlatnomorLama: platEdit,
-        Letak: letakEl.value.trim(),
-        STNK: stnkEl.value,
-        KIR: kirEl.value,
-        ServisTerakhir: servisEl.value,
-        pajak5tahun: pajakEl.value
-      };
-      const res = await api("updateKendaraan", data);
-      alert(res.message || "Data diperbarui");
-      resetForm();
-      loadData();
-    }
-
-    async function hapusKendaraan(plat) {
-      if (!confirm("Yakin hapus kendaraan ini?")) return;
-      const res = await api("deleteKendaraan", {Platnomor: plat});
-      alert(res.message);
-      loadData();
-    }
-
-    function logout() {
-      localStorage.removeItem("aj_user");
-      location.href = "login.html";
-    }
-  </script>
 </body>
 </html>
