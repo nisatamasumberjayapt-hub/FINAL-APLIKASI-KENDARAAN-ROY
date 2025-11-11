@@ -1,289 +1,247 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login - PT ANISA JAYA UTAMA</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Login - PT ANISA JAYA UTAMA</title>
+<link rel="stylesheet" href="styles.css" />
 
-  <!-- Styles global kamu -->
-  <link rel="stylesheet" href="styles.css" />
+<style>
+/* 🌈 Background & font */
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #f4f7ff 0%, #e7ecfa 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
 
-  <style>
-    :root{
-      --aju-blue:#4fa3df;      /* biru AJU lembut */
-      --aju-blue-2:#2e7eb8;
-      --ink:#1f2937;
-      --muted:#6b7280;
-      --card:#ffffff;
-      --bg:#f5f7fb;
-      --success:#176b2d;
-    }
-    body{
-      background:linear-gradient(180deg,#f7fbff 0%, #eef4fb 60%, #eaf0f8 100%);
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--ink);
-    }
+/* 💳 Kartu login */
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08),
+              0 0 20px rgba(150, 200, 255, 0.3);
+  width: 360px;
+  padding: 35px 30px;
+  text-align: center;
+  animation: fadeIn 0.7s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    /* ===== Card Login ===== */
-    .login-card{
-      width:min(520px,92vw);
-      background:var(--card);
-      border-radius:18px;
-      padding:28px 28px 24px;
-      box-shadow:
-        0 10px 30px rgba(31,41,55,.12),
-        0 0 0 1px rgba(15,23,42,.03);
-      position:relative;
-      isolation:isolate;
-    }
-    .login-card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      border-radius:20px;
-      background: radial-gradient(120px 60px at 20% -10%, #ff7aa8 10%, transparent 60%),
-                  radial-gradient(120px 60px at 90% -10%, #6cc2ff 10%, transparent 60%);
-      filter: blur(24px) opacity(.35);
-      z-index:-1;
-    }
-    .brand{
-      display:flex; gap:12px; align-items:center; justify-content:center;
-      margin-top:6px; margin-bottom:14px;
-      color:var(--ink);
-      font-weight:700; font-size:20px;
-    }
-    .brand .love{filter: drop-shadow(0 1px 0 rgba(0,0,0,.06)); font-size:20px}
-    .subtitle{ text-align:center; color:var(--muted); margin-bottom:16px; }
+/* ❤️ Logo & judul */
+.card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.card h2::before {
+  content: "❤️";
+  font-size: 22px;
+  margin-right: 6px;
+  animation: pulse 1.6s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+.card h3 {
+  color: #333;
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
 
-    .field{
-      position:relative; margin:10px 0;
-    }
-    .input{
-      width:100%; height:46px;
-      border-radius:10px;
-      border:1px solid #e5e7eb;
-      background:#fafcff;
-      padding:10px 44px 10px 14px;
-      font-size:15px; outline:0;
-      transition: .15s border, .15s box-shadow, .15s background;
-    }
-    .input:focus{
-      border-color:var(--aju-blue);
-      box-shadow:0 0 0 3px rgba(79,163,223,.18);
-      background:#fff;
-    }
-    .eye{
-      position:absolute; right:10px; top:50%; translate:0 -50%;
-      width:32px; height:32px; border:0; border-radius:8px;
-      background:#f1f5f9; cursor:pointer; display:grid; place-items:center;
-      transition:.15s;
-    }
-    .eye:hover{ background:#e8eef6 }
-    .eye svg{ width:18px; height:18px; opacity:.9 }
+/* 🧾 Input */
+.input-group {
+  margin-bottom: 15px;
+  position: relative;
+}
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #d0d7e2;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+input:focus {
+  border-color: #1c75ff;
+  box-shadow: 0 0 8px rgba(28, 117, 255, 0.2);
+}
+.toggle-pass {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-    .btn{
-      width:100%; height:46px; border-radius:10px; border:0;
-      background:linear-gradient(180deg,#1b7a33,#146428);
-      color:#fff; font-weight:700; letter-spacing:.2px; cursor:pointer;
-      box-shadow:0 6px 18px rgba(23,107,45,.22);
-      transition:.15s transform, .15s filter, .15s box-shadow;
-      margin-top:8px;
-    }
-    .btn:hover{ filter:brightness(.98) }
-    .btn:active{ transform:translateY(1px) }
-    .helper{ text-align:center; margin-top:10px; color:var(--muted); font-size:14px }
-    .helper a{ color:var(--aju-blue-2); text-decoration:none }
-    .helper a:hover{ text-decoration:underline }
+/* 🔘 Tombol */
+#btnLogin {
+  width: 100%;
+  background: #1b6e2a;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 5px;
+  transition: 0.3s;
+  box-shadow: 0 4px 10px rgba(27, 110, 42, 0.3);
+}
+#btnLogin:hover {
+  background: #145520;
+  transform: scale(1.02);
+}
 
-    /* ===== Overlay + Monkey Loader Lucu ===== */
-    .overlay{
-      position:fixed; inset:0; display:none;
-      place-items:center; background:rgba(248,250,253,.92);
-      z-index:9999;
-      backdrop-filter:saturate(1.1) blur(1px);
-    }
-    .overlay.show{ display:grid }
+/* 🔗 Link */
+a {
+  color: #1b6e2a;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
 
-    .monkey-wrap{ text-align:center; color:#334155 }
-    .monkey{
-      width:min(160px,45vw); aspect-ratio:1/1; margin-inline:auto;
-      position:relative;
-    }
-    .monkey svg{ width:100%; height:100% }
+/* 🐒 Animasi Monyet Loading */
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  background: #f6f9ff;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.monkey {
+  width: 130px;
+  height: 130px;
+  animation: bounce 1.4s infinite ease-in-out;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.loading-text {
+  color: #004aad;
+  font-size: 16px;
+  margin-top: 20px;
+  text-align: center;
+}
+.error-msg {
+  margin-top: 18px;
+  background: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  color: #c62828;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
-    /* animasi gerak mikir: angguk, alis, tangan */
-    /* Kepala goyang halus */
-    .head { transform-origin:50% 65%; animation: headTilt 1.6s ease-in-out infinite }
-    @keyframes headTilt{
-      0%,100%{ transform: rotate(0deg) }
-      35%{ transform: rotate(-3.5deg) }
-      70%{ transform: rotate(3deg) }
-    }
-    /* Alis naik turun */
-    .browL,.browR{ animation: brow 1.6s ease-in-out infinite }
-    @keyframes brow{
-      0%,100%{ transform: translateY(0) }
-      40%{ transform: translateY(-2.5px) }
-    }
-    /* Tangan garuk kepala */
-    .hand{ transform-origin:80% 30%; animation: scratch 1.6s ease-in-out infinite }
-    @keyframes scratch{
-      0%,100%{ transform: rotate(0) translate(0,0) }
-      25%{ transform: rotate(-14deg) translate(-3px, -2px) }
-      50%{ transform: rotate(10deg) translate(2px, 1px) }
-    }
-    .think-text{
-      margin-top:12px;
-      font-size:15px;
-    }
-
-    /* ===== Banner error center (gantikan alert) ===== */
-    .toast{
-      position:fixed; left:50%; top:calc(50% + 130px); translate:-50% 0;
-      background:#fee2e2; color:#991b1b;
-      border:1px solid #fecaca; border-radius:12px; padding:10px 14px;
-      display:none; z-index:10000; box-shadow:0 8px 24px rgba(0,0,0,.1)
-    }
-    .toast.show{ display:block; animation: pop .15s ease-out }
-    @keyframes pop{ from{ transform:scale(.98) translate(-50%,2px)} to{ transform:scale(1) translate(-50%,0)} }
-
-    /* Small */
-    @media (max-width:420px){
-      .login-card{ padding:20px }
-    }
-  </style>
+<script defer src="main.js?v=20251113"></script>
 </head>
 <body>
 
-  <!-- ===== Card Login ===== -->
-  <div class="login-card" id="card">
-    <div class="brand">
-      <span class="love">💙</span>
-      <span>PT Anisa Jaya Utama</span>
-    </div>
-    <div class="subtitle">Login Pengguna</div>
+<!-- 💳 FORM LOGIN -->
+<div class="card">
+  <h2>PT Anisa Jaya Utama</h2>
+  <h3>Login Pengguna</h3>
 
-    <div class="field">
-      <input id="username" class="input" type="text" placeholder="Masukkan username" autocomplete="username" />
-    </div>
-
-    <div class="field">
-      <input id="password" class="input" type="password" placeholder="Masukkan password" autocomplete="current-password" />
-      <button type="button" class="eye" id="togglePass" aria-label="Lihat password" title="Lihat password">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" stroke="#0f172a" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="#0f172a"/></svg>
-      </button>
-    </div>
-
-    <button id="btnLogin" class="btn" type="button">Masuk</button>
-
-    <div class="helper">Belum punya akun? <a href="register.html">Daftar di sini</a></div>
+  <div class="input-group">
+    <input type="text" id="username" placeholder="Username">
   </div>
-
-  <!-- ===== Overlay + Monkey (gaya lucu) ===== -->
-  <div class="overlay" id="monkeyOverlay" aria-hidden="true">
-    <div class="monkey-wrap">
-      <div class="monkey" aria-label="Monyet lagi mikir">
-        <!-- SVG monyet lucu -->
-        <svg viewBox="0 0 200 200">
-          <!-- telinga -->
-          <g class="head">
-            <ellipse cx="58" cy="92" rx="18" ry="14" fill="#b97a56"/>
-            <ellipse cx="142" cy="92" rx="18" ry="14" fill="#b97a56"/>
-            <!-- kepala -->
-            <circle cx="100" cy="100" r="48" fill="#cc9168"/>
-            <!-- muka -->
-            <ellipse cx="100" cy="115" rx="36" ry="28" fill="#f2d2b6"/>
-            <!-- mata -->
-            <circle cx="86" cy="105" r="5.5" fill="#262626"/>
-            <circle cx="114" cy="105" r="5.5" fill="#262626"/>
-            <!-- alis -->
-            <rect class="browL" x="76" y="92" width="18" height="3" rx="1.5" fill="#7a4f36"/>
-            <rect class="browR" x="106" y="92" width="18" height="3" rx="1.5" fill="#7a4f36"/>
-            <!-- hidung -->
-            <ellipse cx="100" cy="118" rx="8" ry="6" fill="#7a4f36"/>
-            <!-- mulut -->
-            <path d="M88 130q12 8 24 0" stroke="#7a4f36" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </g>
-          <!-- tangan kanan garuk kepala -->
-          <g class="hand">
-            <path d="M135 130 q16 -18 10 -36" stroke="#cc9168" stroke-width="14" fill="none" stroke-linecap="round"/>
-            <circle cx="148" cy="92" r="7" fill="#cc9168"/>
-          </g>
-        </svg>
-      </div>
-      <div class="think-text">🙊 Monyet lagi mikir… apakah kamu orang yang benar? 🤔</div>
-    </div>
+  <div class="input-group">
+    <input type="password" id="password" placeholder="Password">
+    <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
+  <button id="btnLogin">Masuk</button>
+  <p style="margin-top:12px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+</div>
 
-  <!-- Toast (ganti alert) untuk error -->
-  <div id="toast" class="toast">🙈 Username atau password salah! Monyet gak suka 😝</div>
+<!-- 🐒 LAYAR LOADING -->
+<div id="loadingScreen">
+  <svg class="monkey" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="64" cy="64" r="58" fill="#f5c97d" stroke="#8b5a2b" stroke-width="4"/>
+    <circle cx="44" cy="54" r="8" fill="#fff"/>
+    <circle cx="84" cy="54" r="8" fill="#fff"/>
+    <circle cx="44" cy="54" r="4" fill="#000"/>
+    <circle cx="84" cy="54" r="4" fill="#000"/>
+    <ellipse cx="64" cy="80" rx="12" ry="8" fill="#8b5a2b"/>
+    <circle cx="20" cy="64" r="14" fill="#8b5a2b"/>
+    <circle cx="108" cy="64" r="14" fill="#8b5a2b"/>
+  </svg>
+  <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
+  <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
+</div>
 
-  <!-- Script utama kamu -->
-  <script src="main.js"></script>
+<script>
+const btn = document.getElementById("btnLogin");
+const toggle = document.getElementById("togglePass");
+const pass = document.getElementById("password");
+const loading = document.getElementById("loadingScreen");
+const text = document.getElementById("loadingText");
+const errorMsg = document.getElementById("errorMsg");
 
-  <!-- Interaksi halaman login (non-invasif) -->
-  <script>
-    // ===== helper elemen
-    const overlay = document.getElementById('monkeyOverlay');
-    const toast   = document.getElementById('toast');
-    const btn     = document.getElementById('btnLogin');
-    const pass    = document.getElementById('password');
-    const eye     = document.getElementById('togglePass');
+// 👁️ Toggle password visibility
+toggle.addEventListener("click", () => {
+  if (pass.type === "password") {
+    pass.type = "text";
+    toggle.textContent = "🙈";
+  } else {
+    pass.type = "password";
+    toggle.textContent = "👁️";
+  }
+});
 
-    // ===== eye toggle
-    eye.addEventListener('click', () => {
-      const show = pass.type === 'password';
-      pass.type = show ? 'text' : 'password';
-      eye.title = show ? 'Sembunyikan password' : 'Lihat password';
-    });
+btn.addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = pass.value.trim();
 
-    // ===== tampilkan/ sembunyikan overlay
-    function showMonkey(){ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); }
-    function hideMonkey(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
+  if (!username || !password) {
+    alert("Isi username dan password!");
+    return;
+  }
 
-    // ===== ganti window.alert menjadi toast center (supaya gak ganggu animasi)
-    (function hijackAlert(){
-      const native = window.alert;
-      window.alert = function(msg){
-        try{
-          if(String(msg).toLowerCase().includes('username') || String(msg).toLowerCase().includes('password')){
-            toast.textContent = '🙈 ' + msg;
-            toast.classList.add('show');
-            hideMonkey();
-            setTimeout(()=> toast.classList.remove('show'), 2800);
-            return;
-          }
-        }catch(e){}
-        native(msg);
-      }
-    })();
+  loading.style.display = "flex";
+  text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
+  errorMsg.style.display = "none";
 
-    // ===== klik tombol login
-    btn.addEventListener('click', () => {
-      // tampilkan animasi segera
-      showMonkey();
-
-      // jalankan fungsi login() dari main.js
-      try { 
-        if (typeof login === 'function') login();
-        else { hideMonkey(); alert('File main.js belum termuat. Coba reload.'); }
-      } catch(e){
-        hideMonkey();
-        alert('Terjadi kesalahan: ' + e.message);
-      }
-
-      // fallback: jika 12 detik belum pindah halaman dan overlay masih tampil, sembunyikan
+  try {
+    const res = await api("login", { username, password });
+    if (res.success) {
+      text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
       setTimeout(() => {
-        if (document.visibilityState === 'visible' && overlay.classList.contains('show')) {
-          hideMonkey();
-        }
-      }, 12000);
-    });
+        setSession(res.user);
+        location.href = "dashboard.html";
+      }, 1500);
+    } else {
+      text.textContent = "🙈 Monyet berhenti mikir...";
+      errorMsg.style.display = "block";
+      setTimeout(() => (loading.style.display = "none"), 2000);
+    }
+  } catch (err) {
+    text.textContent = "⚠️ Server error, coba lagi nanti!";
+    setTimeout(() => (loading.style.display = "none"), 2000);
+  }
+});
+</script>
 
-    // jika halaman berpindah (sukses login), overlay otomatis hilang karena halaman baru diload
-    // jika batal/close alert error, overlay disembunyikan di hijackAlert()
-  </script>
 </body>
 </html>
