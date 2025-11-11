@@ -8,8 +8,8 @@
 
 <style>
   body {
-    background: #eef3fa;
-    font-family: "Poppins", Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #f0f4ff 0%, #e7eefc 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,27 +18,63 @@
   }
 
   .card {
-    background: white;
-    border-radius: 14px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-    padding: 28px;
-    width: min(92vw, 360px);
+    background: #ffffffc9;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 140, 255, 0.15);
+    padding: 35px 28px;
+    width: min(90vw, 370px);
     text-align: center;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    animation: fadeIn 0.6s ease;
   }
 
-  h2 { color: #1b1f23; margin-bottom: 16px; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card h2 {
+    font-size: 22px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .card h2::before {
+    content: "❤️";
+    font-size: 20px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
 
   .input-group {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   input {
     width: 100%;
-    padding: 10px;
+    padding: 11px 12px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  input:focus {
+    border-color: #2b7cff;
+    box-shadow: 0 0 8px rgba(43, 124, 255, 0.3);
   }
 
   .toggle-pass {
@@ -55,67 +91,67 @@
     color: white;
     border: none;
     padding: 11px;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    margin-top: 8px;
     font-weight: bold;
+    font-size: 15px;
+    transition: 0.2s;
+    box-shadow: 0 3px 8px rgba(27, 110, 42, 0.3);
   }
 
-  #btnLogin:hover { background: #13521d; }
+  #btnLogin:hover {
+    background: #145520;
+    box-shadow: 0 4px 10px rgba(27, 110, 42, 0.4);
+  }
 
-  a { color: #2c7bd9; text-decoration: none; }
+  a {
+    color: #1b6e2a;
+    text-decoration: none;
+    font-weight: 500;
+  }
   a:hover { text-decoration: underline; }
 
-  /* ===== Animasi Loading ===== */
+  /* ===== Layar Loading ===== */
   #loadingScreen {
     position: fixed;
     inset: 0;
-    background: #f5f8ff;
+    background: #f7f9ff;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    font-family: "Poppins", Arial, sans-serif;
-    transition: opacity 0.3s ease;
   }
 
-  .scene {
-    position: relative;
-    width: 250px;
-    height: 200px;
-  }
-
-  .monkey {
-    width: 120px;
-    height: auto;
-    animation: think 2s infinite alternate ease-in-out;
+  .monkey-think {
+    width: 150px;
+    height: 150px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
+    background-size: cover;
+    animation: think 1.6s infinite ease-in-out alternate;
   }
 
   @keyframes think {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(-5px) rotate(-2deg); }
+    0% { transform: rotate(-2deg) translateY(0); }
+    100% { transform: rotate(2deg) translateY(-6px); }
   }
 
-  .text {
-    margin-top: 20px;
+  .loading-text {
+    margin-top: 18px;
+    font-size: 16px;
     color: #004aad;
-    font-size: 15px;
-    font-weight: 500;
     text-align: center;
   }
 
-  .errorMsg {
-    background: #ffe6e6;
-    color: #d32f2f;
-    border: 1px solid #ffb3b3;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 14px;
+  .error-msg {
     margin-top: 20px;
+    background: #ffe6e6;
+    border: 1px solid #ffb3b3;
+    color: #d32f2f;
+    border-radius: 8px;
+    padding: 10px 15px;
     display: none;
-    text-align: center;
-    animation: pop .4s ease;
+    animation: pop 0.4s ease;
   }
 
   @keyframes pop {
@@ -124,12 +160,13 @@
   }
 </style>
 
-<script defer src="main.js?v=20251112"></script>
+<script defer src="main.js?v=20251113"></script>
 </head>
 <body>
 
 <div class="card">
-  <h2>Login Pengguna</h2>
+  <h2>PT Anisa Jaya Utama</h2>
+  <h3 style="margin-top:-10px;margin-bottom:18px;color:#333;">Login Pengguna</h3>
 
   <div class="input-group">
     <input type="text" id="username" placeholder="Username">
@@ -141,16 +178,14 @@
   </div>
 
   <button id="btnLogin">Masuk</button>
-  <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- Layar Loading -->
+<!-- Animasi Loading -->
 <div id="loadingScreen">
-  <div class="scene">
-    <img class="monkey" id="monkeyImg" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="monyet mikir">
-  </div>
-  <div class="text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
-  <div class="errorMsg" id="errorMsg">🙊 Username atau password salah! Monyet gak suka 😜</div>
+  <div class="monkey-think"></div>
+  <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
+  <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
 </div>
 
 <script>
@@ -183,7 +218,6 @@
 
     try {
       const res = await api("login", { username, password });
-
       if (res.success) {
         text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
         setTimeout(() => {
@@ -193,16 +227,11 @@
       } else {
         text.textContent = "🙈 Monyet berhenti mikir...";
         errorMsg.style.display = "block";
-        setTimeout(() => {
-          loading.style.display = "none";
-        }, 2000);
+        setTimeout(() => loading.style.display = "none", 2000);
       }
-    } catch (err) {
+    } catch {
       text.textContent = "⚠️ Server error, coba lagi nanti!";
-      console.error(err);
-      setTimeout(() => {
-        loading.style.display = "none";
-      }, 2000);
+      setTimeout(() => loading.style.display = "none", 2000);
     }
   });
 </script>
