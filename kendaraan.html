@@ -2,209 +2,388 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚗 Data Kendaraan | PT Anisa Jaya Utama</title>
+
+  <!-- Font Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: system-ui, Arial, sans-serif; background:#f6f9f6; margin:0; color:#123; }
-    header { background:#0c5d27; color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
-    header nav a{ color:#fff; text-decoration:none; margin-left:16px; font-weight:500; }
-    main{ max-width:1400px; margin:28px auto; padding:0 16px; }
-    .grid{ display:grid; grid-template-columns:340px 1fr; gap:24px; }
-    .card{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.08); }
-    .pad{ padding:20px; }
-
-    h2{ margin:0 0 14px; color:#0b4d1b; font-size:20px; }
-    label{ display:block; font-weight:600; font-size:14px; margin:8px 0 4px; color:#0c5d27; }
-    input[type="text"],input[type="date"]{ width:100%; padding:9px 12px; border:1.4px solid #cdd9cd; border-radius:8px; }
-    .row-btn{ display:flex; gap:10px; margin-top:14px; }
-    .btn{ border:none; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; transition:0.2s; }
-    .btn-primary{ background:#0c5d27; color:#fff; }
-    .btn-dark{ background:#555; color:#fff; }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; }
-
-    .toolbar{ display:flex; align-items:center; gap:6px; margin-bottom:12px; }
-    #searchInput{ flex:1; padding:10px 12px; border:1.5px solid #cdd9cd; border-radius:8px; }
-    #refreshBtn{
-      width:36px; height:36px; border:none; border-radius:6px;
-      background:#0c5d27; color:#fff; font-size:18px; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
     }
-    #refreshBtn:hover{ background:#128c3f; }
 
-    table{ width:100%; border-collapse:collapse; font-size:14px; table-layout:auto; }
-    th, td{ padding:10px 14px; border-bottom:1px solid #e0ebe0; vertical-align:top; }
-    thead th{ background:#0c5d27; color:#fff; font-weight:700; text-align:left; }
-    tbody tr:hover{ background:#f6fbf6; }
+    header {
+      background-color: #3F80C4;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    .legend{ display:flex; align-items:center; gap:14px; margin-top:10px; font-size:13px; color:#333; }
-    .dot{ width:12px; height:12px; border-radius:3px; display:inline-block; margin-right:6px; }
-    .dot.green{ background:#2ecc71; }
-    .dot.yellow{ background:#f1c40f; }
-    .dot.red{ background:#e74c3c; }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-    .btn-edit{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#f1c40f; color:#000; }
-    .btn-delete{ padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#c0392b; color:#fff; }
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover { opacity: 0.8; }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 25px;
+      padding: 20px;
+    }
+
+    /* ===== FORM ===== */
+    .form-box {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 20px;
+      width: 320px;
+    }
+
+    .form-box h2 {
+      font-size: 18px;
+      color: #3F80C4;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: "Poppins";
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    button {
+      font-family: "Poppins";
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background-color: #38b000;
+      color: white;
+    }
+    .btn-primary:hover { background-color: #2d8600; }
+
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-cancel:hover { background-color: #555; }
+
+    /* ===== TABLE ===== */
+    .table-box {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 20px;
+      flex: 1;
+      min-width: 600px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #3F80C4;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #e6eef6;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    tr:hover { background-color: #f4f9ff; }
+
+    /* ===== SEARCH BAR ===== */
+    .search-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .btn-refresh {
+      margin-left: 8px;
+      background-color: #3F80C4;
+      color: white;
+      font-size: 16px;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    /* ===== LEGEND ===== */
+    .legend {
+      margin-top: 10px;
+      font-size: 13px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #555;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .green { background: #38b000; }
+    .yellow { background: #f1c40f; }
+    .red { background: #c0392b; }
+
+    /* BUTTONS EDIT DELETE */
+    .btn-edit {
+      background: #f1c40f;
+      color: #000;
+    }
+    .btn-edit:hover { background: #e0b90e; }
+
+    .btn-delete {
+      background: #c0392b;
+      color: #fff;
+    }
+    .btn-delete:hover { background: #a93226; }
   </style>
 </head>
 
-<body onload="initKendaraanPage()">
+<body>
   <header>
-    <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
+    <h1>🚙 PT Anisa Jaya Utama — <small>by Roy</small></h1>
     <nav>
       <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="user.html">👤 User</a>
-      <a href="login.html">🔒 Logout</a>
+      <a href="kendaraan.html">🚗 Kendaraan</a>
+      <a href="#">👤 User</a>
+      <a href="#" onclick="logout()">🔒 Logout</a>
     </nav>
   </header>
 
   <main>
-    <div class="grid">
-      <!-- FORM -->
-      <section class="card">
-        <div class="pad">
-          <h2>Form Kendaraan</h2>
-          <label for="plat">Plat Nomor</label>
-          <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled />
+    <!-- Form Kendaraan -->
+    <div class="form-box">
+      <h2>📝 Form Kendaraan</h2>
+      <input id="plat" placeholder="Contoh: B1234XYZ" />
+      <input id="letak" placeholder="Contoh: Jakarta" />
+      <input id="stnk" type="date" />
+      <input id="kir" type="date" />
+      <input id="servis" type="date" />
+      <input id="pajak5" type="date" />
 
-          <label for="letak">Letak / Garasi</label>
-          <input id="letak" type="text" placeholder="Contoh: Jakarta" disabled />
+      <div class="form-buttons">
+        <button id="btnTambah" class="btn-primary">➕ Tambah</button>
+        <button id="btnBatal" class="btn-cancel">✖️ Batal</button>
+      </div>
+    </div>
 
-          <label for="stnk">STNK</label>
-          <input id="stnk" type="date" disabled />
+    <!-- Daftar Kendaraan -->
+    <div class="table-box">
+      <h2>📋 Daftar Kendaraan</h2>
+      <div class="search-container">
+        <input id="searchInput" placeholder="🔍 Cari kendaraan (Plat / Letak)" />
+        <button id="btnRefresh" class="btn-refresh" title="Refresh data">🔄</button>
+      </div>
 
-          <label for="kir">KIR</label>
-          <input id="kir" type="date" disabled />
+      <table id="tblKendaraan">
+        <thead>
+          <tr>
+            <th>Plat Nomor</th>
+            <th>Letak</th>
+            <th>STNK</th>
+            <th>KIR</th>
+            <th>Servis Terakhir</th>
+            <th>Pajak 5 Tahunan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-          <label for="servis">Servis Terakhir</label>
-          <input id="servis" type="date" disabled />
-
-          <label for="pajak5">Pajak 5 Tahunan</label>
-          <input id="pajak5" type="date" disabled />
-
-          <div class="row-btn">
-            <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">Tambah</button>
-            <button id="btnCancel" class="btn btn-dark" onclick="handleCancel()" disabled>Batal</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- TABEL -->
-      <section class="card">
-        <div class="pad">
-          <h2>Daftar Kendaraan</h2>
-          <div class="toolbar">
-            <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
-            <button id="refreshBtn" title="Segarkan" onclick="reloadKendaraanList()">⟳</button>
-          </div>
-
-          <table id="tblKendaraan">
-            <thead>
-              <tr>
-                <th>Plat Nomor</th>
-                <th>Letak</th>
-                <th>STNK</th>
-                <th>KIR</th>
-                <th>Servis Terakhir</th>
-                <th>Pajak 5 Tahunan</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-
-          <div class="legend">
-            <span><span class="dot green"></span> Aman</span>
-            <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span>
-            <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
-          </div>
-        </div>
-      </section>
+      <div class="legend">
+        <span class="dot green"></span> Aman
+        <span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)
+        <span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)
+      </div>
     </div>
   </main>
 
-  <script src="main.js?v=7.5"></script>
+  <!-- ===== SCRIPT CRUD LOGIC ===== -->
   <script>
-    let MODE = "view"; // view | add | edit
-    let DATA = [];
-    let EDIT_PLAT = "";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
 
-    const $ = id => document.getElementById(id);
+    function toast(msg) { alert(msg); }
 
-    function setForm(enabled){
-      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>{
-        const el = $(id);
-        if(enabled) el.removeAttribute("disabled");
-        else el.setAttribute("disabled","disabled");
+    async function api(action, payload = {}) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, ...payload }),
       });
+      const txt = await res.text();
+      try { return JSON.parse(txt); } catch { return {}; }
     }
 
-    function clearForm(){
-      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).value="");
+    // INIT
+    document.addEventListener("DOMContentLoaded", initPage);
+    let editMode = false;
+    let editPlat = "";
+
+    async function initPage() {
+      document.getElementById("btnTambah").onclick = handleSave;
+      document.getElementById("btnBatal").onclick = resetForm;
+      document.getElementById("btnRefresh").onclick = loadData;
+      document.getElementById("searchInput").oninput = searchData;
+      loadData();
     }
 
-    function syncButtons(){
-      const btnP=$("btnPrimary"), btnC=$("btnCancel");
-      if(MODE==="view"){ btnP.textContent="Tambah"; btnC.disabled=true; }
-      if(MODE==="add"){ btnP.textContent="Simpan"; btnC.disabled=false; }
-      if(MODE==="edit"){ btnP.textContent="Update"; btnC.disabled=false; }
+    function resetForm() {
+      editMode = false;
+      editPlat = "";
+      document.getElementById("plat").value = "";
+      document.getElementById("letak").value = "";
+      document.getElementById("stnk").value = "";
+      document.getElementById("kir").value = "";
+      document.getElementById("servis").value = "";
+      document.getElementById("pajak5").value = "";
+      document.getElementById("btnTambah").textContent = "➕ Tambah";
     }
 
-    function enterView(){ MODE="view"; setForm(false); clearForm(); syncButtons(); }
-    function enterAdd(){ MODE="add"; setForm(true); clearForm(); syncButtons(); $("plat").focus(); }
-    function enterEdit(row){ MODE="edit"; setForm(true); syncButtons();
-      $("plat").value=row.Platnomor;
-      $("letak").value=row.Letak;
-      $("stnk").value=row.STNK;
-      $("kir").value=row.KIR;
-      $("servis").value=row.ServisTerakhir;
-      $("pajak5").value=row.pajak5tahun;
-      EDIT_PLAT=row.Platnomor;
-    }
+    async function handleSave() {
+      const plat = platEl.value.trim();
+      const letak = letakEl.value.trim();
+      const stnk = stnkEl.value;
+      const kir = kirEl.value;
+      const servis = servisEl.value;
+      const pajak5 = pajakEl.value;
 
-    async function handlePrimaryClick(){
-      if(MODE==="view") return enterAdd();
+      if (!plat || !letak) return toast("Plat nomor dan lokasi wajib diisi!");
 
-      const plat=$("plat").value.trim(), letak=$("letak").value.trim(),
-            stnk=$("stnk").value, kir=$("kir").value,
-            servis=$("servis").value, pajak=$("pajak5").value;
-      if(!plat||!letak||!stnk||!kir||!servis||!pajak) return alert("Semua kolom wajib diisi!");
+      const payload = { Platnomor: plat, Letak: letak, STNK: stnk, KIR: kir, ServisTerakhir: servis, pajak5tahun: pajak5 };
 
-      if(MODE==="add"){
-        const r=await api("addKendaraan",{Platnomor:plat,Letak:letak,STNK:stnk,KIR:kir,ServisTerakhir:servis,pajak5tahun:pajak});
-        alert(r.message||"Tersimpan");
-        if(r.success){ await reloadKendaraanList(); enterView(); }
+      let res;
+      if (editMode) {
+        res = await api("updateKendaraan", { PlatnomorLama: editPlat, ...payload });
+      } else {
+        res = await api("addKendaraan", payload);
       }
-      if(MODE==="edit"){
-        const r=await api("updateKendaraan",{PlatnomorLama:EDIT_PLAT,Platnomor:plat,Letak:letak,STNK:stnk,KIR:kir,ServisTerakhir:servis,pajak5tahun:pajak});
-        alert(r.message||"Terupdate");
-        if(r.success){ await reloadKendaraanList(); enterView(); }
-      }
+
+      toast(res.message || "Berhasil disimpan");
+      resetForm();
+      loadData();
     }
 
-    function handleCancel(){ enterView(); }
-
-    async function reloadKendaraanList(){
-      const res=await api("getKendaraan");
-      if(res.success){ DATA=res.data; renderTabelKendaraan(DATA,true); }
+    async function loadData() {
+      const tbl = document.querySelector("#tblKendaraan tbody");
+      tbl.innerHTML = "<tr><td colspan='7' align='center'>Memuat data...</td></tr>";
+      const res = await api("getKendaraan");
+      if (!res.success) return toast("Gagal memuat data");
+      renderTable(res.data);
     }
 
-    async function initKendaraanPage(){
-      const u=getSession();
-      if(!u) return(location.href="login.html");
-      enterView();
-      await reloadKendaraanList();
-      const s=$("searchInput");
-      s.addEventListener("input",()=>{
-        const val=s.value.toLowerCase();
-        const filtered=DATA.filter(k=>k.Platnomor.toLowerCase().includes(val)||k.Letak.toLowerCase().includes(val));
-        renderTabelKendaraan(filtered,true);
+    function renderTable(data) {
+      const tbl = document.querySelector("#tblKendaraan tbody");
+      let html = "";
+      data.forEach(k => {
+        html += `
+        <tr>
+          <td>${k.Platnomor}</td>
+          <td>${k.Letak}</td>
+          <td>${k.STNK}</td>
+          <td>${k.KIR}</td>
+          <td>${k.ServisTerakhir}</td>
+          <td>${k.pajak5tahun}</td>
+          <td>
+            <button class="btn-edit" onclick='editData(${JSON.stringify(k)})'>✏️ Edit</button>
+            <button class="btn-delete" onclick='hapusData("${k.Platnomor}")'>🗑 Hapus</button>
+          </td>
+        </tr>`;
       });
+      tbl.innerHTML = html;
     }
 
-    // Override edit handler agar langsung isi form
-    function editKendaraan(dataStr){
-      const data=JSON.parse(decodeURIComponent(dataStr));
-      enterEdit(data);
+    async function hapusData(plat) {
+      if (!confirm("Yakin hapus kendaraan ini?")) return;
+      const res = await api("deleteKendaraan", { Platnomor: plat });
+      toast(res.message);
+      loadData();
+    }
+
+    function editData(row) {
+      editMode = true;
+      editPlat = row.Platnomor;
+      document.getElementById("plat").value = row.Platnomor || "";
+      document.getElementById("letak").value = row.Letak || "";
+      document.getElementById("stnk").value = row.STNK || "";
+      document.getElementById("kir").value = row.KIR || "";
+      document.getElementById("servis").value = row.ServisTerakhir || "";
+      document.getElementById("pajak5").value = row.pajak5tahun || "";
+      document.getElementById("btnTambah").textContent = "✅ Update";
+    }
+
+    function searchData() {
+      const val = document.getElementById("searchInput").value.toLowerCase();
+      document.querySelectorAll("#tblKendaraan tbody tr").forEach(tr => {
+        const plat = tr.cells[0].innerText.toLowerCase();
+        const letak = tr.cells[1].innerText.toLowerCase();
+        tr.style.display = plat.includes(val) || letak.includes(val) ? "" : "none";
+      });
     }
   </script>
 </body>
