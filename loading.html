@@ -1,126 +1,182 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loading... | PT Anisa Jaya Utama</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Memuat… | PT Anisa Jaya Utama</title>
+  <meta name="color-scheme" content="light" />
   <style>
-    body {
-      background: linear-gradient(135deg, #e8f0ff, #cfe0ff);
-      font-family: "Poppins", sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+    :root{
+      --sky:#eaf3ff;
+      --road:#1b2938;
+      --line:#ffc857;
+      --grass:#b9e8b0;
+      --aju:#2c7bd9;
+      --aju-deep:#1e5aa8;
+      --text:#16324f;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;overflow:hidden;
+      font-family: Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(#dff0ff 0,#f6fbff 40%,#f7fbff 100%);
     }
 
-    .scene {
-      position: relative;
-      width: 400px;
-      height: 220px;
+    .scene{
+      position:relative;height:100%;display:grid;place-items:center;
+    }
+    /* horizon */
+    .sky{
+      position:absolute;inset:0;background:
+        radial-gradient(1000px 400px at 50% -150px, #cde5ff 0, #eaf5ff 55%, transparent 56%) top/100% 60% no-repeat,
+        linear-gradient(#eaf5ff 60%, var(--grass) 60%, var(--grass) 62%, #d2f2c8 100%);
     }
 
-    .road {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      height: 5px;
-      background: #555;
-      border-radius: 2px;
+    /* jalan */
+    .road{
+      position:absolute;left:0;right:0;bottom:12%;
+      height:140px;background:linear-gradient(var(--road),#0e1b27);
+      box-shadow:inset 0 10px 20px rgba(0,0,0,.25);
+    }
+    .line{
+      position:absolute;left:-20%;right:-20%;top:50%;
+      height:8px;background:
+        repeating-linear-gradient(90deg, var(--line) 0 80px, transparent 80px 140px);
+      transform:translateY(-50%);
+      animation:dash 1.2s linear infinite;
+      opacity:.9;
+    }
+    @keyframes dash{to{transform:translate(-140px,-50%)}}
+
+    /* motor + monyet */
+    .bike{
+      position:relative;width:280px;height:160px;
+      transform:translateY(10px);
+      animation:float .9s ease-in-out infinite alternate;
+      filter:drop-shadow(0 18px 24px rgba(0,0,0,.25));
+    }
+    @keyframes float{
+      from{transform:translateY(10px) rotate(-.6deg)}
+      to{transform:translateY(0) rotate(.6deg)}
+    }
+    .wheel{
+      position:absolute;bottom:12px;width:68px;height:68px;border-radius:50%;
+      background:radial-gradient(circle at 50% 50%, #333 18%, #111 19% 60%, #000 61% 100%);
+      border:6px solid #111;box-shadow:inset 0 0 0 4px #222;
+      animation:roll .6s linear infinite;
+    }
+    .wheel.left{left:38px}
+    .wheel.right{right:26px}
+    @keyframes roll{to{transform:rotate(360deg)}}
+
+    .body{
+      position:absolute;left:34px;right:16px;bottom:44px;height:54px;border-radius:18px;
+      background:linear-gradient(180deg,#2c7bd9,#1e5aa8);
+    }
+    .seat{
+      position:absolute;left:62px;right:84px;bottom:72px;height:16px;border-radius:10px;
+      background:#222;
+    }
+    .handle{
+      position:absolute;right:84px;bottom:98px;width:64px;height:10px;border-radius:6px;background:#1e5aa8;
+      transform-origin:left center;transform:rotate(-15deg);
+    }
+    .headlight{
+      position:absolute;right:6px;bottom:84px;width:24px;height:24px;border-radius:50%;
+      background:#ffd166;box-shadow:0 0 16px #ffd166aa, 0 0 36px #ffd16655;
     }
 
-    .house {
-      position: absolute;
-      right: 0;
-      bottom: 25px;
-      width: 100px;
-      height: 100px;
-      background: #ffd966;
-      border: 3px solid #b58c00;
-      border-radius: 6px;
+    /* monyet */
+    .monkey{
+      position:absolute;left:90px;bottom:106px;width:96px;height:96px;
     }
+    .monkey .head{
+      width:64px;height:64px;border-radius:50%;background:#8d5524;position:absolute;left:8px;top:6px;
+      box-shadow:inset -4px -6px 0 rgba(0,0,0,.15);
+    }
+    .monkey .face{
+      position:absolute;left:18px;top:22px;width:58px;height:42px;border-radius:26px;background:#f2c199;
+    }
+    .eye{
+      position:absolute;top:10px;width:8px;height:8px;background:#1a1a1a;border-radius:50%;
+      animation:blink 4s infinite;
+    }
+    .eye.left{left:16px}
+    .eye.right{left:36px}
+    @keyframes blink{
+      0%,98%,100%{transform:scaleY(1)}
+      99%{transform:scaleY(.1)}
+    }
+    .mouth{
+      position:absolute;left:24px;top:24px;width:18px;height:10px;border-bottom:3px solid #a25b3c;border-radius:0 0 30px 30px
+    }
+    .arm{
+      position:absolute;width:10px;height:44px;background:#8d5524;border-radius:8px;
+      transform-origin:top;animation:arm 1s ease-in-out infinite alternate;
+    }
+    .arm.left{left:-4px;top:32px;transform:rotate(22deg)}
+    .arm.right{left:54px;top:30px;transform:rotate(-24deg)}
+    @keyframes arm{to{transform:translateY(2px) rotate(0)}}
 
-    .roof {
-      position: absolute;
-      top: -40px;
-      left: -5px;
-      width: 110px;
-      height: 40px;
-      background: #d35400;
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    .msg{
+      position:absolute;bottom:26%;left:50%;transform:translateX(-50%);
+      background:#fff;border:1px solid #e5eefc;border-radius:12px;padding:10px 14px;
+      box-shadow:0 8px 26px rgba(44,123,217,.12);
+      font-size:14px;display:flex;align-items:center;gap:10px
     }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--aju)}
+    .breathe{animation:breathe 1.8s ease-in-out infinite}
+    @keyframes breathe{from{opacity:.6}50%{opacity:1}to{opacity:.6}}
 
-    .monkey {
-      position: absolute;
-      bottom: 40px;
-      left: -120px;
-      width: 80px;
-      animation: ride 4s linear forwards;
+    .skip{
+      position:absolute;right:16px;bottom:14px;font-size:12px;color:#6b7280
     }
-
-    @keyframes ride {
-      0% { left: -120px; }
-      80% { left: 300px; }
-      100% { left: 290px; transform: rotate(-5deg); }
-    }
-
-    .loading-text {
-      margin-top: 40px;
-      font-size: 1.1rem;
-      color: #1d3557;
-      text-align: center;
-    }
-
-    .dots::after {
-      content: '';
-      animation: dots 1.5s steps(3, end) infinite;
-    }
-
-    @keyframes dots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
-    }
+    .skip a{color:var(--aju-deep);text-decoration:none}
+    .skip a:hover{text-decoration:underline}
   </style>
 </head>
 <body>
   <div class="scene">
-    <div class="road"></div>
-    <div class="house">
-      <div class="roof"></div>
+    <div class="sky"></div>
+
+    <div class="road">
+      <div class="line"></div>
     </div>
 
-    <!-- SVG monyet naik motor -->
-    <svg class="monkey" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="100" cy="100" r="80" fill="#ffe0b2"/>
-      <ellipse cx="100" cy="120" rx="60" ry="35" fill="#a0522d"/>
-      <circle cx="75" cy="85" r="15" fill="#3e2723"/>
-      <circle cx="125" cy="85" r="15" fill="#3e2723"/>
-      <circle cx="75" cy="85" r="7" fill="#fff"/>
-      <circle cx="125" cy="85" r="7" fill="#fff"/>
-      <path d="M60 150 Q100 180 140 150" stroke="#4e342e" stroke-width="6" fill="none"/>
-      <circle cx="80" cy="170" r="15" fill="#444"/>
-      <circle cx="120" cy="170" r="15" fill="#444"/>
-      <rect x="70" y="130" width="60" height="20" rx="5" fill="#1976d2"/>
-      <rect x="90" y="115" width="20" height="15" rx="5" fill="#1565c0"/>
-      <circle cx="85" cy="110" r="8" fill="#3e2723"/>
-      <circle cx="115" cy="110" r="8" fill="#3e2723"/>
-    </svg>
-  </div>
+    <!-- motor & monyet -->
+    <div class="bike" aria-hidden="true">
+      <div class="wheel left"></div>
+      <div class="wheel right"></div>
+      <div class="body"></div>
+      <div class="seat"></div>
+      <div class="handle"></div>
+      <div class="headlight"></div>
 
-  <div class="loading-text">
-    🐒 Monyet lagi otw ke kantor Roy<span class="dots"></span><br>
-    🚦 Mesin lagi dipanasin, bentar lagi siap!
+      <div class="monkey">
+        <div class="head"></div>
+        <div class="face">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
+        </div>
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+      </div>
+    </div>
+
+    <div class="msg">
+      <div class="dot breathe"></div>
+      Menyiapkan data & menghubungkan ke server…
+    </div>
+
+    <div class="skip">Tidak sabar? <a href="dashboard.html">Masuk sekarang</a></div>
   </div>
 
   <script>
-    // Auto redirect ke dashboard setelah 4 detik
-    setTimeout(() => {
-      window.location.href = "dashboard.html";
-    }, 4000);
+    // Auto-redirect ke dashboard
+    setTimeout(()=>{ window.location.replace("dashboard.html"); }, 2600);
   </script>
 </body>
 </html>
