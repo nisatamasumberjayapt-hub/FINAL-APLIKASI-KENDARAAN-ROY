@@ -4,14 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - PT ANISA JAYA UTAMA</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
   body {
-    background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #f0f4ff 0%, #e7eefc 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,18 +15,20 @@
     margin: 0;
   }
 
-  /* === CARD LOGIN === */
+  /* ====== CARD LOGIN ====== */
   .card {
-    background: rgba(255,255,255,0.9);
+    background: #ffffffc9;
     border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1), 0 0 15px rgba(0,100,255,0.1);
-    padding: 35px 30px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 140, 255, 0.15);
+    padding: 35px 28px;
     width: min(90vw, 370px);
     text-align: center;
     position: relative;
     backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     animation: fadeIn 0.6s ease;
   }
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
@@ -38,128 +36,120 @@
 
   h2 {
     font-size: 22px;
-    margin-bottom: 6px;
-    color: #1b1b1b;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
+
   h2::before {
     content: "❤️";
-    display: inline-block;
-    animation: beat 1.3s infinite;
-    margin-right: 6px;
-  }
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    font-size: 20px;
+    animation: pulse 1.5s infinite ease-in-out;
   }
 
-  .subtitle {
-    color: #444;
-    margin-bottom: 25px;
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
   }
 
-  .input-group {
-    position: relative;
-    margin-bottom: 15px;
-  }
   input {
     width: 100%;
-    padding: 12px 14px;
+    padding: 11px 12px;
     border: 1px solid #ccc;
     border-radius: 10px;
-    outline: none;
     font-size: 14px;
+    outline: none;
     transition: 0.2s;
+    background: rgba(255, 255, 255, 0.8);
   }
+
   input:focus {
     border-color: #2b7cff;
-    box-shadow: 0 0 8px rgba(43,124,255,0.3);
+    box-shadow: 0 0 8px rgba(43, 124, 255, 0.3);
   }
+
   .toggle-pass {
     position: absolute;
     right: 10px;
     top: 9px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
   }
 
   #btnLogin {
     width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
     background: #1b6e2a;
     color: white;
-    font-weight: bold;
+    border: none;
+    padding: 11px;
+    border-radius: 10px;
     cursor: pointer;
+    font-weight: bold;
     font-size: 15px;
-    transition: 0.25s;
-    box-shadow: 0 3px 8px rgba(27,110,42,0.3);
+    transition: 0.2s;
+    box-shadow: 0 3px 8px rgba(27, 110, 42, 0.3);
   }
+
   #btnLogin:hover {
-    background: #13561f;
+    background: #145520;
+    box-shadow: 0 4px 10px rgba(27, 110, 42, 0.4);
   }
-  a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
+
+  a {
+    color: #1b6e2a;
+    text-decoration: none;
+    font-weight: 500;
+  }
   a:hover { text-decoration: underline; }
 
-  /* === LOADING SCREEN === */
+  /* ====== LOADING SCREEN ====== */
   #loadingScreen {
     position: fixed;
     inset: 0;
-    background: #f8fbff;
+    background: #f7f9ff;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    transition: 0.4s;
+    animation: fadeIn 0.6s ease;
   }
 
-  /* === MONKEY SVG ANIMATION === */
-  .monkey {
-    width: 160px;
-    height: 160px;
-    position: relative;
-    animation: floaty 2s ease-in-out infinite;
-  }
-  @keyframes floaty {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-  .monkey svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .question {
+  .spinner {
+    width: 220px;
+    height: 220px;
+    border: 6px solid rgba(111, 168, 255, 0.2);
+    border-top: 6px solid #6fa8ff;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
     position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    animation: spin 2s linear infinite, fade 2s ease-in-out infinite;
   }
+
   @keyframes spin {
-    from { transform: translateX(-50%) rotate(0deg); }
-    to { transform: translateX(-50%) rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
-  @keyframes fade {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
+
+  .monkey {
+    width: 170px;
+    position: relative;
+    z-index: 10;
+    animation: think 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes think {
+    0% { transform: rotate(-2deg); }
+    100% { transform: rotate(2deg); }
   }
 
   .loading-text {
-    margin-top: 18px;
+    margin-top: 200px;
     font-size: 16px;
     color: #004aad;
     text-align: center;
-    animation: blink 2s ease-in-out infinite;
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
   }
 
   .error-msg {
@@ -172,6 +162,7 @@
     display: none;
     animation: pop 0.4s ease;
   }
+
   @keyframes pop {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -183,12 +174,13 @@
 <!-- FORM LOGIN -->
 <div class="card" id="loginCard">
   <h2>PT ANISA JAYA UTAMA</h2>
-  <div class="subtitle">Login Pengguna</div>
+  <h3 style="margin-top:-10px;margin-bottom:18px;color:#333;">Login Pengguna</h3>
 
-  <div class="input-group">
+  <div style="position:relative;margin-bottom:12px;">
     <input type="text" id="username" placeholder="Username" />
   </div>
-  <div class="input-group">
+
+  <div style="position:relative;margin-bottom:12px;">
     <input type="password" id="password" placeholder="Password" />
     <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
@@ -197,98 +189,77 @@
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- LOADING SCREEN -->
+<!-- ANIMASI LOADING -->
 <div id="loadingScreen">
-  <div class="monkey">
-    <!-- SVG MONYET THINKING -->
-    <svg viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="50" fill="#d9b07e"/>
-      <circle cx="45" cy="55" r="7" fill="#fff"/>
-      <circle cx="75" cy="55" r="7" fill="#fff"/>
-      <circle cx="45" cy="55" r="3" fill="#000"/>
-      <circle cx="75" cy="55" r="3" fill="#000"/>
-      <path d="M50 75 Q60 85 70 75" stroke="#000" stroke-width="3" fill="none" />
-      <circle cx="25" cy="60" r="15" fill="#c4956b"/>
-      <circle cx="95" cy="60" r="15" fill="#c4956b"/>
-      <rect x="55" y="80" width="10" height="12" fill="#8b5e3c" rx="3"/>
-    </svg>
-    <div class="question">❓</div>
+  <div class="spinner"></div>
+
+  <!-- SVG MONYET -->
+  <svg class="monkey" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="60" fill="#d9a674" />
+    <circle cx="70" cy="90" r="12" fill="#8b5a2b" />
+    <circle cx="130" cy="90" r="12" fill="#8b5a2b" />
+    <circle cx="70" cy="88" r="6" fill="#fff" />
+    <circle cx="130" cy="88" r="6" fill="#fff" />
+    <circle cx="70" cy="88" r="3" fill="#000" />
+    <circle cx="130" cy="88" r="3" fill="#000" />
+    <path d="M80 125 Q100 145 120 125" stroke="#5a3d1c" stroke-width="4" fill="none" />
+    <circle cx="100" cy="100" r="70" stroke="#a3784d" stroke-width="3" fill="none" />
+    <circle cx="45" cy="100" r="25" fill="#d9a674" />
+    <circle cx="155" cy="100" r="25" fill="#d9a674" />
+    <text x="100" y="35" text-anchor="middle" font-size="36" fill="#7a5b35">?</text>
+  </svg>
+
+  <div class="loading-text" id="loadingText">
+    🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔
   </div>
-  <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
-  <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
+  <div class="error-msg" id="errorMsg">
+    🙈 Username atau password salah! Monyet gak suka 😜
+  </div>
 </div>
 
 <script>
-  const btn = document.getElementById("btnLogin");
-  const toggle = document.getElementById("togglePass");
-  const pass = document.getElementById("password");
-  const loading = document.getElementById("loadingScreen");
-  const text = document.getElementById("loadingText");
-  const errorMsg = document.getElementById("errorMsg");
-  const card = document.getElementById("loginCard");
+const btn = document.getElementById("btnLogin");
+const toggle = document.getElementById("togglePass");
+const pass = document.getElementById("password");
+const loading = document.getElementById("loadingScreen");
+const card = document.getElementById("loginCard");
+const text = document.getElementById("loadingText");
+const errorMsg = document.getElementById("errorMsg");
 
-  // 👁️ Toggle password
-  toggle.addEventListener("click", () => {
-    if (pass.type === "password") {
-      pass.type = "text";
-      toggle.textContent = "🙈";
+toggle.addEventListener("click", () => {
+  if (pass.type === "password") {
+    pass.type = "text";
+    toggle.textContent = "🙈";
+  } else {
+    pass.type = "password";
+    toggle.textContent = "👁️";
+  }
+});
+
+btn.addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = pass.value.trim();
+  if (!username || !password) return alert("Isi username dan password!");
+
+  card.style.display = "none";
+  loading.style.display = "flex";
+  text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
+  errorMsg.style.display = "none";
+
+  setTimeout(() => {
+    if (username === "admin" && password === "admin123") {
+      text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
+      setTimeout(() => (window.location.href = "dashboard.html"), 1500);
     } else {
-      pass.type = "password";
-      toggle.textContent = "👁️";
-    }
-  });
-
-  // Tombol login
-  btn.addEventListener("click", async () => {
-    const username = document.getElementById("username").value.trim();
-    const password = pass.value.trim();
-    if (!username || !password) return alert("Isi username dan password!");
-
-    card.style.display = "none";
-    loading.style.display = "flex";
-    text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
-    errorMsg.style.display = "none";
-
-    try {
-      const res = await api("login", { username, password });
-      if (res.success) {
-        text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
-        setTimeout(() => {
-          setSession(res.user);
-          location.href = "dashboard.html";
-        }, 1500);
-      } else {
-        text.textContent = "🙈 Monyet berhenti mikir...";
-        errorMsg.style.display = "block";
-        setTimeout(() => {
-          loading.style.display = "none";
-          card.style.display = "block";
-        }, 2200);
-      }
-    } catch {
-      text.textContent = "⚠️ Server error, coba lagi nanti!";
+      text.textContent = "🙈 Monyet berhenti mikir...";
+      errorMsg.style.display = "block";
       setTimeout(() => {
         loading.style.display = "none";
         card.style.display = "block";
       }, 2000);
     }
-  });
-
-  // Fungsi dari main.js
-  function setSession(u){ localStorage.setItem("aj_user", JSON.stringify(u)); }
-  async function api(action, payload = {}) {
-    const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action, ...payload }),
-      });
-      return await res.json();
-    } catch {
-      return { success:false };
-    }
-  }
+  }, 2000);
+});
 </script>
 </body>
 </html>
