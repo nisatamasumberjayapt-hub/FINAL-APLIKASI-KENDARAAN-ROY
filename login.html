@@ -7,234 +7,112 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
 *{box-sizing:border-box;font-family:'Poppins',sans-serif}
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#f1f6ff 0%,#dbe7ff 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#f2f6ff 0%,#dbe6ff 100%);
+display:flex;align-items:center;justify-content:center;overflow:hidden}
 
-/* === Card login === */
-.card{
-  background:rgba(255,255,255,0.95);
-  border-radius:18px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08),0 0 12px rgba(0,100,255,0.06);
-  padding:36px 30px;width:min(92vw,380px);
-  text-align:center;position:relative;z-index:10;
-}
+/* --- LOGIN CARD --- */
+.card{background:rgba(255,255,255,0.95);border-radius:18px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08),0 0 12px rgba(0,100,255,0.06);
+padding:36px 30px;width:min(92vw,380px);text-align:center;z-index:10;}
 h2{font-size:22px;margin:0 0 6px;color:#1b1b1b;text-transform:uppercase;font-weight:600;letter-spacing:1px}
-h2::before{content:"❤️";margin-right:6px;display:inline-block;animation:beat 1.3s infinite}
-@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
 .subtitle{color:#444;margin-bottom:18px}
 .input-group{position:relative;margin-bottom:14px}
 input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #ccd6ee;font-size:14px}
 input:focus{outline:none;box-shadow:0 0 8px rgba(43,124,255,0.16);border-color:#2b7cff}
 .toggle-pass{position:absolute;right:10px;top:10px;cursor:pointer}
-#btnLogin{width:100%;padding:12px;border-radius:10px;border:0;background:#1b6e2a;color:#fff;font-weight:700;box-shadow:0 3px 8px rgba(27,110,42,0.25);cursor:pointer}
+#btnLogin{width:100%;padding:12px;border-radius:10px;border:0;background:#1b6e2a;color:#fff;font-weight:700;
+box-shadow:0 3px 8px rgba(27,110,42,0.25);cursor:pointer}
 #btnLogin:hover{background:#13561f}
 p a{color:#1b6e2a;text-decoration:none}
 
-/* === Overlay Scene === */
+/* --- OVERLAY SCENE --- */
 #loadingOverlay{
-  position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,#fdfdff,#eef3ff);
-  z-index:999;overflow:hidden;
+ position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+ background:linear-gradient(180deg,#ffffff 0%,#f1f4ff 100%);z-index:999;overflow:hidden;
 }
 
-/* Monyet besar */
-#monkeyBig{
-  width:300px;animation:breath 3s ease-in-out infinite;z-index:50;
-}
+/* --- MONYET BESAR --- */
+#monkeyBig{width:300px;animation:breath 3s ease-in-out infinite;}
 @keyframes breath{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6px) scale(1.03)}}
 
-/* Text utama di bawah monyet */
+/* --- TEKS UTAMA --- */
 .loading-text{
-  margin-top:10px;text-align:center;color:#003a8c;font-size:18px;line-height:1.4;z-index:51;
+  margin-top:12px;text-align:center;color:#003a8c;font-size:18px;line-height:1.4;
 }
 
-/* Jalur motor */
+/* --- ROAD --- */
 .road{
-  position:absolute;bottom:22vh;left:6%;right:6%;
-  height:8px;background:linear-gradient(90deg,#f1f3f8,#e5e9f8);
-  border-radius:6px;box-shadow:inset 0 -2px 6px rgba(0,0,0,0.05);
-  z-index:20;
+ position:absolute;bottom:22vh;left:6%;right:6%;height:8px;
+ background:linear-gradient(90deg,#f3f5fb,#e5e8f7);
+ border-radius:6px;box-shadow:inset 0 -2px 6px rgba(0,0,0,0.04);
+ z-index:10;
 }
 
-/* Motor group */
-.motor-group{
-  position:absolute;bottom:calc(22vh - 15px);left:6%;
-  display:flex;align-items:center;gap:8px;z-index:40;
+/* --- PORTAL GEAR --- */
+.portal{
+ position:absolute;bottom:calc(22vh + 40px);right:8%;
+ width:160px;height:160px;border-radius:50%;
+ background:conic-gradient(from 0deg,#3c00ff 0deg,#8b00ff 90deg,#3c00ff 180deg,#8b00ff 270deg,#3c00ff 360deg);
+ animation:spinGear 5s linear infinite, pulseGlow 2s ease-in-out infinite;
+ box-shadow:0 0 25px rgba(110,0,255,0.4),inset 0 0 25px rgba(255,255,255,0.3);
+ filter:blur(0.3px);
+ z-index:20;
 }
-.motor-group img{width:95px;height:auto;filter:drop-shadow(0 6px 8px rgba(0,0,0,0.15))}
+@keyframes spinGear{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes pulseGlow{
+ 0%,100%{box-shadow:0 0 25px rgba(110,0,255,0.35),inset 0 0 25px rgba(255,255,255,0.25)}
+ 50%{box-shadow:0 0 45px rgba(130,30,255,0.55),inset 0 0 35px rgba(255,255,255,0.35)}
+}
+
+/* --- MOTOR GROUP --- */
+.motor-group{
+ position:absolute;bottom:calc(22vh - 18px);left:6%;
+ display:flex;align-items:center;gap:8px;z-index:30;
+}
+.motor-group img{width:95px;filter:drop-shadow(0 6px 8px rgba(0,0,0,0.15))}
 .motor-label{font-weight:600;color:#004aad;font-size:15px;}
 
-/* Portal spiral (muter terus) */
-.portal{
-  position:absolute;bottom:calc(22vh - 90px);right:8%;
-  width:150px;height:150px;border-radius:50%;
-  background:radial-gradient(circle at center,#5a6bff 0%,#7345ff 35%,#1d005f 75%,transparent 90%);
-  filter:blur(0.5px) brightness(1.05);
-  animation:spinPortal 5s linear infinite;
-  box-shadow:0 0 25px rgba(96,0,255,0.4),inset 0 0 30px rgba(255,255,255,0.3);
-  z-index:30;
-}
-@keyframes spinPortal{
-  0%{transform:rotate(0deg);}
-  100%{transform:rotate(360deg);}
+/* --- ANIMASI GERAK MOTOR --- */
+.driving{animation:driveTwoPhase 4.5s ease-in-out forwards;}
+@keyframes driveTwoPhase{
+ 0%{transform:translateX(0)}
+ 40%{transform:translateX(25vw)}   /* pelan di awal */
+ 100%{transform:translateX(62vw)}  /* ngebut ke portal */
 }
 
-/* Animasi jalan motor */
-.driving{animation:driveToPortal 4.5s ease-in-out forwards}
-@keyframes driveToPortal{
-  0%{transform:translateX(0)}
-  100%{transform:translateX(62vw)}
-}
-
-/* Masuk portal */
-.enter-portal{animation:enterPortal 1.2s ease forwards}
+/* --- MASUK PORTAL --- */
+.enter-portal{animation:enterPortal 1.3s ease forwards;}
 @keyframes enterPortal{
-  0%{transform:translateX(62vw) scale(1);opacity:1}
-  100%{transform:translateX(65vw) scale(0.3);opacity:0}
+ 0%{transform:translateX(62vw) scale(1);opacity:1}
+ 100%{transform:translateX(66vw) scale(0.25);opacity:0}
 }
 
-/* Efek mogok */
-.broken{animation:shake .9s ease-in-out 0s 2}
-@keyframes shake{
-  0%{transform:translateX(62vw) rotate(0deg)}
-  25%{transform:translateX(62vw) rotate(-6deg)}
-  50%{transform:translateX(62vw) rotate(6deg)}
-  75%{transform:translateX(62vw) rotate(-4deg)}
-  100%{transform:translateX(62vw) rotate(0deg)}
-}
+/* --- GAGAL: MUTER DI TEMPAT --- */
+.spin-fail{animation:spinFail 1.2s linear infinite;}
+@keyframes spinFail{0%{transform:translateX(62vw) rotate(0deg)}100%{transform:translateX(62vw) rotate(360deg)}}
 
-/* Asap */
+/* --- ASAP --- */
 .smoke{
-  position:absolute;bottom:calc(22vh + 8px);left:calc(62vw + 20px);
-  width:16px;height:16px;border-radius:50%;
-  background:rgba(130,130,130,0.25);filter:blur(2px);
-  opacity:0;
+ position:absolute;bottom:calc(22vh + 8px);left:calc(62vw + 20px);
+ width:16px;height:16px;border-radius:50%;
+ background:rgba(130,130,130,0.25);filter:blur(2px);
+ opacity:0;
 }
 .smoke.s1{animation:smoke1 1.3s ease forwards}
 .smoke.s2{animation:smoke2 1.6s ease forwards}
 @keyframes smoke1{0%{opacity:0;transform:translateY(0) scale(0.6)}30%{opacity:1}100%{opacity:0;transform:translateY(-45px) scale(1.2)}}
 @keyframes smoke2{0%{opacity:0;transform:translateY(0) scale(0.7)}20%{opacity:0.9}100%{opacity:0;transform:translateY(-55px) scale(1.4)}}
 
-/* Fade overlay */
+/* --- FADE OUT --- */
 .overlay-fade{animation:fadeOut 1s ease forwards}
 @keyframes fadeOut{from{opacity:1}to{opacity:0}}
-
 </style>
 </head>
 <body>
 
-<!-- FORM LOGIN -->
 <div class="card" id="loginCard">
   <h2>PT ANISA JAYA UTAMA</h2>
   <div class="subtitle">Login Pengguna</div>
-
   <div class="input-group"><input type="text" id="username" placeholder="Username" /></div>
   <div class="input-group">
-    <input type="password" id="password" placeholder="Password" />
-    <span class="toggle-pass" id="togglePass">👁️</span>
-  </div>
-
-  <button id="btnLogin">Masuk</button>
-  <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
-</div>
-
-<!-- LOADING SCENE -->
-<div id="loadingOverlay">
-  <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir">
-  <div class="loading-text" id="loadingText">🐵 Monyet lagi mikir...<br>Apakah kamu orang yang tepat...?</div>
-
-  <div class="road"></div>
-  <div class="motor-group" id="motorGroup">
-    <img src="assets/monyet_motor.png" alt="monyet motor">
-    <div class="motor-label">kamu otw 👉</div>
-  </div>
-
-  <div class="portal" id="portal"></div>
-  <div class="smoke" id="smoke1"></div>
-  <div class="smoke" id="smoke2"></div>
-</div>
-
-<script>
-const btn = document.getElementById('btnLogin');
-const toggle = document.getElementById('togglePass');
-const pass = document.getElementById('password');
-const card = document.getElementById('loginCard');
-const overlay = document.getElementById('loadingOverlay');
-const monkeyBig = document.getElementById('monkeyBig');
-const loadingText = document.getElementById('loadingText');
-const motorGroup = document.getElementById('motorGroup');
-const smoke1 = document.getElementById('smoke1');
-const smoke2 = document.getElementById('smoke2');
-
-toggle.addEventListener('click',()=>{
-  pass.type=pass.type==='password'?'text':'password';
-  toggle.textContent=pass.type==='password'?'👁️':'🙈';
-});
-
-async function api(action,payload={}){
-  const url="https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-  try{
-    const res=await fetch(url,{
-      method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({action,...payload})
-    });
-    return await res.json();
-  }catch{return{success:false}}
-}
-
-function setSession(u){localStorage.setItem('aj_user',JSON.stringify(u));}
-
-function showOverlay(){
-  card.style.display='none';
-  overlay.style.display='flex';
-  overlay.classList.remove('overlay-fade');
-  monkeyBig.src='assets/monyet_mikir.png';
-  loadingText.innerHTML='🐵 Monyet lagi mikir...<br>Apakah kamu orang yang tepat...?';
-  motorGroup.style.transform='translateX(0)';
-  motorGroup.classList.add('driving');
-}
-
-function handleSuccess(user){
-  monkeyBig.src='assets/monyet_senang.png';
-  loadingText.innerHTML='✅ Monyet yakin kamu orang yang benar!';
-  motorGroup.classList.remove('driving');
-  motorGroup.classList.add('enter-portal');
-  setTimeout(()=>overlay.classList.add('overlay-fade'),1200);
-  setTimeout(()=>{
-    setSession(user);
-    window.location.href='dashboard.html';
-  },2000);
-}
-
-function handleFail(){
-  monkeyBig.src='assets/monyet_salah.png';
-  loadingText.innerHTML='🙈 Monyet berhenti mikir... salah orang!';
-  motorGroup.classList.remove('driving');
-  motorGroup.classList.add('broken');
-  smoke1.classList.add('s1');smoke2.classList.add('s2');
-  setTimeout(()=>{
-    smoke1.classList.remove('s1');smoke2.classList.remove('s2');
-    overlay.style.display='none';
-    card.style.display='block';
-  },2200);
-}
-
-btn.addEventListener('click',async()=>{
-  const username=document.getElementById('username').value.trim();
-  const password=pass.value.trim();
-  if(!username||!password)return alert('Isi username dan password!');
-  showOverlay();
-  try{
-    const res=await api('login',{username,password});
-    if(res.success)setTimeout(()=>handleSuccess(res.user),1000);
-    else setTimeout(()=>handleFail(),1500);
-  }catch{
-    setTimeout(()=>{
-      monkeyBig.src='assets/monyet_salah.png';
-      loadingText.innerHTML='⚠️ Server error, coba lagi nanti!';
-      setTimeout(()=>{overlay.style.display='none';card.style.display='block';},2000);
-    },800);
-  }
-});
-</script>
-</body>
-</html>
+    <input type="password" id="password" placeholder
