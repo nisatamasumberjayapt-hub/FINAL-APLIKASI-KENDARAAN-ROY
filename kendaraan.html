@@ -3,251 +3,114 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dashboard - PT Anisa Jaya Utama</title>
+<title>Data Kendaraan - PT Anisa Jaya Utama</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
 * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body {
   margin: 0;
-  background: #f6f8ff;
+  background: #f4f7ff;
   color: #222;
 }
-
-/* ===== NAVBAR ===== */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #1763c5;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  z-index: 100;
-}
-.navbar h1 {
-  font-size: 17px;
-  margin: 0;
-  font-weight: 600;
-}
-.navbar h1 span {
-  font-weight: 400;
-  font-size: 14px;
-  opacity: 0.9;
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.nav-links a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: 0.2s;
-}
-.nav-links a:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
-}
-
-/* ===== PAGE WRAPPER ===== */
 .container {
   padding: 90px 20px 20px;
   max-width: 1200px;
   margin: auto;
 }
-
-/* ===== HEADER SECTION ===== */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-.header h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 20px;
+h2 {
   color: #14376b;
-  margin: 0;
 }
-.search-box {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 8px;
-  padding: 5px 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-.search-box input {
-  border: none;
-  outline: none;
-  padding: 6px 8px;
-  width: 240px;
-  font-size: 14px;
-}
-.search-box button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: #c0392b;
-}
-
-/* ===== TOTAL INFO ===== */
-.total-info {
-  font-size: 15px;
-  font-weight: 500;
-  color: #14376b;
-  margin-bottom: 8px;
-}
-.total-info span {
+button {
   background: #1763c5;
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 6px;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
   font-weight: 600;
+  margin-bottom: 15px;
 }
-
-/* ===== TABLE WRAPPER (scroll area) ===== */
+button:hover {
+  background: #114d9d;
+}
 .table-wrapper {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 3px 12px rgba(0,0,0,0.05);
   overflow-y: auto;
-  overflow-x: auto;
   max-height: 70vh;
-  scroll-behavior: smooth;
 }
-.table-wrapper::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(100,100,255,0.3);
-  border-radius: 8px;
-}
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(100,100,255,0.5);
-}
-
-/* ===== TABLE STYLE ===== */
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 900px;
 }
 thead {
   background: #1763c5;
   color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 thead th {
-  padding: 10px 12px;
+  padding: 10px;
   text-align: left;
-  font-size: 14px;
-  white-space: nowrap;
 }
 tbody td {
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 8px 10px;
   border-bottom: 1px solid #eee;
-  white-space: nowrap;
 }
-tbody tr:nth-child(even) {
-  background: #f9fbff;
-}
-
-/* ===== STATUS COLORS ===== */
-.status-red { color: #e74c3c; font-weight: 600; }
 .status-green { color: #27ae60; font-weight: 600; }
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .navbar h1 { font-size: 15px; }
-  .nav-links a { font-size: 13px; }
-  .search-box input { width: 160px; }
-  .table-wrapper { max-height: 60vh; }
-}
+.status-red { color: #e74c3c; font-weight: 600; }
 </style>
 </head>
 <body>
-
-<!-- NAVBAR -->
-<div class="navbar">
-  <h1>PT Anisa Jaya Utama <span>— by Roy</span></h1>
-  <div class="nav-links">
-    <a href="#"><span>🏠</span>Dashboard</a>
-    <a href="#"><span>🚗</span>Kendaraan</a>
-    <a href="#"><span>👤</span>User</a>
-    <a href="login.html"><span>🚪</span>Logout</a>
-  </div>
-</div>
-
-<!-- MAIN -->
 <div class="container">
-  <div class="header">
-    <h2>🚘 Daftar Kendaraan</h2>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Cari kendaraan (Plat / Letak)" />
-      <button id="clearBtn">❌</button>
-    </div>
-  </div>
-
-  <div class="total-info">
-    Total kendaraan: <span id="totalCount">0</span>
-  </div>
+  <h2>🚘 Data Kendaraan</h2>
+  <button id="btnTambah">+ Tambah Kendaraan</button>
 
   <div class="table-wrapper">
     <table id="kendaraanTable">
       <thead>
         <tr>
-          <th>📋 Plat Nomor</th>
-          <th>📍 Letak</th>
-          <th>🧾 STNK</th>
-          <th>🧰 KIR</th>
-          <th>🔧 Servis Terakhir</th>
-          <th>💰 Pajak 5 Tahunan</th>
+          <th>Plat Nomor</th>
+          <th>Letak</th>
+          <th>STNK</th>
+          <th>KIR</th>
+          <th>Servis Terakhir</th>
+          <th>Pajak 5 Tahunan</th>
         </tr>
       </thead>
-      <tbody id="tableBody">
-        <!-- Data via JS -->
-      </tbody>
+      <tbody id="tableBody"></tbody>
     </table>
   </div>
 </div>
 
 <script>
-// === DATA CONTOH (bisa diganti dinamis) ===
-const dataKendaraan = [
-  { plat:"B4321CD", lokasi:"Jakarta", stnk:"2025-08-06", kir:"2025-06-10", servis:"2024-11-19", pajak:"2024-11-26" },
-  { plat:"B432HJB", lokasi:"Jakarta", stnk:"2025-09-01", kir:"2025-06-15", servis:"2024-12-01", pajak:"2024-12-02" },
-  { plat:"B777ZZ", lokasi:"Bandung", stnk:"2025-08-01", kir:"2025-06-15", servis:"2024-12-01", pajak:"2024-12-02" },
-  { plat:"T9072DF", lokasi:"Majalengka", stnk:"2026-04-21", kir:"2025-09-10", servis:"2025-10-21", pajak:"2027-04-21" },
-  { plat:"B9876XYZ", lokasi:"Depok", stnk:"2025-09-10", kir:"2025-06-15", servis:"2024-11-30", pajak:"2030-09-10" },
-];
+const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
 
-// === RENDER DATA ===
+// === AMBIL DATA DARI DATABASE ===
+async function getDataKendaraan() {
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "getKendaraan" })
+    });
+    const data = await res.json();
+    if (data.success && data.records) {
+      renderTable(data.records);
+    }
+  } catch (e) {
+    console.error("Gagal ambil data kendaraan:", e);
+  }
+}
+
+// === RENDER KE TABEL ===
 function renderTable(data) {
   const tbody = document.getElementById("tableBody");
-  const total = document.getElementById("totalCount");
   tbody.innerHTML = "";
   data.forEach(item => {
     tbody.innerHTML += `
       <tr>
-        <td>${item.plat}</td>
-        <td>${item.lokasi}</td>
+        <td>${item.plat || "-"}</td>
+        <td>${item.lokasi || "-"}</td>
         <td class="${status(item.stnk)}">${format(item.stnk)}</td>
         <td class="${status(item.kir)}">${format(item.kir)}</td>
         <td class="${status(item.servis)}">${format(item.servis)}</td>
@@ -255,10 +118,9 @@ function renderTable(data) {
       </tr>
     `;
   });
-  total.textContent = data.length;
 }
 
-// === STATUS ===
+// === STATUS (HIDUP / MATI) ===
 function status(date) {
   const today = new Date();
   const d = new Date(date);
@@ -271,21 +133,13 @@ function format(dateStr) {
   return isNaN(d) ? "-" : d.toISOString().split("T")[0];
 }
 
-// === SEARCH ===
-document.getElementById("searchInput").addEventListener("input", (e)=>{
-  const val = e.target.value.toLowerCase();
-  const filtered = dataKendaraan.filter(x =>
-    x.plat.toLowerCase().includes(val) || x.lokasi.toLowerCase().includes(val)
-  );
-  renderTable(filtered);
-});
-document.getElementById("clearBtn").addEventListener("click", ()=>{
-  document.getElementById("searchInput").value="";
-  renderTable(dataKendaraan);
+// === EVENT TAMBAH (sementara belum aktif) ===
+document.getElementById("btnTambah").addEventListener("click", () => {
+  alert("Form tambah kendaraan akan diaktifkan nanti (versi elegan popup).");
 });
 
 // === INIT ===
-renderTable(dataKendaraan);
+getDataKendaraan();
 </script>
 </body>
 </html>
