@@ -50,6 +50,18 @@
     .btn-neutral:hover{background:linear-gradient(135deg,#e8e8e8,#ffffff)}
     .btn-neutral:disabled{background:#f0f0f0;color:#999}
 
+    .search-wrap{position:relative;margin-bottom:14px}
+    #searchInput{
+      width:100%;padding:11px 13px;
+      border-radius:8px;border:1.5px solid #dbe5dc;font-size:14px;
+    }
+    #clearSearch{
+      position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      background:#c0392b;color:#fff;border:none;border-radius:6px;
+      padding:3px 7px;cursor:pointer;font-size:13px;display:none;
+    }
+    #clearSearch:hover{background:#e74c3c}
+
     table{width:100%;border-collapse:collapse;font-size:14px}
     th,td{padding:12px 14px;border-bottom:1px solid #e0ebe0;vertical-align:top;text-align:left}
     thead th{background:var(--accent);color:#fff;font-size:14px;text-transform:uppercase;position:sticky;top:0;z-index:2;}
@@ -64,10 +76,6 @@
     .table-wrap{
       max-height:640px;overflow:auto;border-radius:10px;border:1px solid #e3eee3;
       box-shadow:inset 0 0 8px rgba(0,0,0,0.05);
-    }
-    #searchInput{
-      width:100%;margin-bottom:14px;padding:11px 13px;
-      border-radius:8px;border:1.5px solid #dbe5dc;font-size:14px;
     }
 
     #toast-container{
@@ -121,7 +129,10 @@
       <!-- TABLE -->
       <section class="card">
         <h2><span>📋</span>DAFTAR KENDARAAN</h2>
-        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)">
+        <div class="search-wrap">
+          <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)">
+          <button id="clearSearch" title="Hapus pencarian">❌</button>
+        </div>
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
@@ -170,6 +181,9 @@
     async function initKendaraanPage(){
       const u=getSession(); if(!u) return location.href="login.html";
       $("searchInput").addEventListener("input",filter);
+      $("clearSearch").addEventListener("click",()=>{
+        $("searchInput").value="";filter();
+      });
       setForm(true);syncBtn();await loadData();
     }
 
@@ -199,9 +213,11 @@
 
     function filter(){
       const q=$("searchInput").value.toLowerCase();
+      const clear=$("clearSearch");
       document.querySelectorAll("#tblKendaraan tbody tr").forEach(r=>{
         r.style.display=r.innerText.toLowerCase().includes(q)?"":"none";
       });
+      clear.style.display=q?"block":"none";
     }
 
     function handleCancel(){MODE="view";setForm(true);clearForm();syncBtn();}
