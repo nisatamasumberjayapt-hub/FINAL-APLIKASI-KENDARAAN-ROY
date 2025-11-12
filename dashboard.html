@@ -2,155 +2,123 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DASHBOARD | PT ANISA JAYA UTAMA — BY ROY</title>
+
   <style>
+    :root {
+      --accent: #0c5d27;
+      --accent-strong: #0b4d1b;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', system-ui, Arial, sans-serif;
+    }
     body {
-      font-family: 'Poppins', system-ui, sans-serif;
-      background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
       margin: 0;
+      background: linear-gradient(180deg, #f6f9ff 0%, #edf4ff 100%);
       color: #123;
     }
 
+    /* HEADER */
     header {
-      background: rgba(12, 93, 39, 0.9);
+      background: var(--accent);
       color: #fff;
       padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-
     header nav a {
       color: #fff;
       text-decoration: none;
       margin-left: 18px;
       font-weight: 500;
-      transition: 0.2s;
     }
-
-    header nav a:hover { color: #aef1c0; }
 
     main {
-      max-width: 1300px;
-      margin: 45px auto;
-      padding: 0 18px;
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 0 16px;
+      animation: fadeSlide 0.4s ease;
     }
 
+    /* CARD */
     .card {
-      background: rgba(255,255,255,0.8);
-      border-radius: 16px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.08);
-      padding: 25px 22px 30px;
-      backdrop-filter: blur(10px);
-      transition: 0.3s;
-      animation: fadeIn 0.6s ease;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(12, 59, 27, 0.06);
+      padding: 20px;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
 
     h2 {
-      text-align: center;
       margin-top: 0;
-      color: #0c5d27;
-      font-size: 1.6rem;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      color: var(--accent-strong);
+      text-align: center;
+      font-weight: 700;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    h2::before {
-      content: "📋";
-      font-size: 1.5rem;
-    }
-
+    /* TOOLBAR */
     .toolbar {
       display: flex;
-      justify-content: center;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 14px;
     }
-
     #searchInput {
-      width: 60%;
-      padding: 10px 14px;
+      flex: 1;
+      padding: 10px 12px;
       border: 1.5px solid #cdd9cd;
-      border-radius: 10px;
-      font-size: 14px;
-      outline: none;
-      transition: 0.25s;
-      background: rgba(255,255,255,0.95);
-      text-align: center;
+      border-radius: 8px;
     }
 
-    #searchInput:focus {
-      border-color: #0c5d27;
-      box-shadow: 0 0 8px rgba(12, 93, 39, 0.25);
-    }
-
-    .table-container {
+    /* TABLE */
+    .table-wrap {
+      max-height: 70vh;
       overflow-y: auto;
-      max-height: 65vh;
-      border-radius: 10px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
     }
-
     th, td {
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      border-bottom: 1px solid #e0ebe0;
       vertical-align: top;
     }
-
     thead th {
-      background: #0c5d27;
+      background: var(--accent);
       color: #fff;
       text-align: left;
-      text-transform: uppercase;
       position: sticky;
       top: 0;
       z-index: 10;
-      letter-spacing: 0.3px;
     }
-
-    thead th:nth-child(1)::before { content: "🚘 "; }
-    thead th:nth-child(2)::before { content: "📍 "; }
-    thead th:nth-child(3)::before { content: "📋 "; }
-    thead th:nth-child(4)::before { content: "🧾 "; }
-    thead th:nth-child(5)::before { content: "🛠 "; }
-    thead th:nth-child(6)::before { content: "💰 "; }
-
     tbody tr:hover {
-      background: rgba(12, 93, 39, 0.05);
+      background: rgba(12,93,39,0.05);
+      transition: 0.2s;
     }
 
+    /* STATUS LEGEND */
     .legend {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 14px;
-      margin-top: 15px;
+      gap: 16px;
+      margin-top: 12px;
       font-size: 13px;
       color: #333;
-      padding-top: 10px;
-      border-top: 1px solid rgba(0,0,0,0.08);
-      justify-content: center;
+      flex-wrap: wrap;
     }
-
     .dot {
       width: 12px;
       height: 12px;
@@ -158,16 +126,49 @@
       display: inline-block;
       margin-right: 6px;
     }
-
-    .dot.green { background: #27ae60; }
+    .dot.green { background: #2ecc71; }
     .dot.yellow { background: #f1c40f; }
     .dot.red { background: #e74c3c; }
 
+    /* TOAST */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .toast {
+      background: rgba(255, 255, 255, 0.95);
+      border-left: 5px solid var(--accent);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 12px 18px;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeInRight 0.4s ease;
+    }
+    .toast.success { border-left-color: #2ecc71; }
+    .toast.error { border-left-color: #e74c3c; }
+    .toast.warning { border-left-color: #f1c40f; }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 800px) {
-      #searchInput { width: 85%; font-size: 13px; }
-      table { font-size: 12px; }
-      h2 { font-size: 1.2rem; }
-      .card { padding: 18px; }
+      table { font-size: 13px; }
+      th, td { padding: 8px; }
     }
   </style>
 </head>
@@ -176,7 +177,6 @@
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
     <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
       <a href="kendaraan.html">🚘 Kendaraan</a>
       <a href="user.html">👤 User</a>
       <a href="login.html">🔒 Logout</a>
@@ -185,13 +185,13 @@
 
   <main>
     <section class="card">
-      <h2>Daftar Kendaraan</h2>
+      <h2>📊 DAFTAR KENDARAAN</h2>
 
       <div class="toolbar">
-        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
+        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
       </div>
 
-      <div class="table-container">
+      <div class="table-wrap">
         <table id="tblKendaraan">
           <thead>
             <tr>
@@ -201,9 +201,12 @@
               <th>KIR</th>
               <th>Servis Terakhir</th>
               <th>Pajak 5 Tahunan</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <tr><td colspan="7" align="center">Memuat data...</td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -215,6 +218,28 @@
     </section>
   </main>
 
-  <script src="main.js?v=7.5"></script>
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="main.js?v=7.4"></script>
+  <script>
+    // Override alert() untuk tampil toast elegan
+    function toast(msg, type = "success") {
+      const container = document.getElementById("toastContainer");
+      const el = document.createElement("div");
+      el.className = "toast " + type;
+      el.innerHTML = `
+        <span>${msg}</span>
+        <button style="border:none;background:transparent;font-weight:bold;cursor:pointer;">✖</button>`;
+      el.querySelector("button").onclick = () => el.remove();
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    // Cari dari main.js
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = getSession();
+      if (!user) return (location.href = "login.html");
+    });
+  </script>
 </body>
 </html>
