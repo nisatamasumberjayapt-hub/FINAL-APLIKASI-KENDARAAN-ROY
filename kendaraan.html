@@ -1,145 +1,309 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Data Kendaraan - PT Anisa Jaya Utama</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<style>
-* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body {
-  margin: 0;
-  background: #f4f7ff;
-  color: #222;
-}
-.container {
-  padding: 90px 20px 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-h2 {
-  color: #14376b;
-}
-button {
-  background: #1763c5;
-  border: none;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-button:hover {
-  background: #114d9d;
-}
-.table-wrapper {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-  overflow-y: auto;
-  max-height: 70vh;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-thead {
-  background: #1763c5;
-  color: #fff;
-}
-thead th {
-  padding: 10px;
-  text-align: left;
-}
-tbody td {
-  padding: 8px 10px;
-  border-bottom: 1px solid #eee;
-}
-.status-green { color: #27ae60; font-weight: 600; }
-.status-red { color: #e74c3c; font-weight: 600; }
-</style>
-</head>
-<body>
-<div class="container">
-  <h2>🚘 Data Kendaraan</h2>
-  <button id="btnTambah">+ Tambah Kendaraan</button>
-
-  <div class="table-wrapper">
-    <table id="kendaraanTable">
-      <thead>
-        <tr>
-          <th>Plat Nomor</th>
-          <th>Letak</th>
-          <th>STNK</th>
-          <th>KIR</th>
-          <th>Servis Terakhir</th>
-          <th>Pajak 5 Tahunan</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-
-// === AMBIL DATA DARI DATABASE ===
-async function getDataKendaraan() {
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ action: "getKendaraan" })
-    });
-    const data = await res.json();
-    if (data.success && data.records) {
-      renderTable(data.records);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
+  <style>
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
+      margin: 0;
+      color: #123;
     }
-  } catch (e) {
-    console.error("Gagal ambil data kendaraan:", e);
-  }
-}
 
-// === RENDER KE TABEL ===
-function renderTable(data) {
-  const tbody = document.getElementById("tableBody");
-  tbody.innerHTML = "";
-  data.forEach(item => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.plat || "-"}</td>
-        <td>${item.lokasi || "-"}</td>
-        <td class="${status(item.stnk)}">${format(item.stnk)}</td>
-        <td class="${status(item.kir)}">${format(item.kir)}</td>
-        <td class="${status(item.servis)}">${format(item.servis)}</td>
-        <td class="${status(item.pajak)}">${format(item.pajak)}</td>
-      </tr>
-    `;
-  });
-}
+    header {
+      background: rgba(12, 93, 39, 0.9);
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
 
-// === STATUS (HIDUP / MATI) ===
-function status(date) {
-  const today = new Date();
-  const d = new Date(date);
-  return d >= today ? "status-green" : "status-red";
-}
+    header nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 16px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+    header nav a:hover { color: #aef1c0; }
 
-// === FORMAT TANGGAL ===
-function format(dateStr) {
-  const d = new Date(dateStr);
-  return isNaN(d) ? "-" : d.toISOString().split("T")[0];
-}
+    main {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
 
-// === EVENT TAMBAH (sementara belum aktif) ===
-document.getElementById("btnTambah").addEventListener("click", () => {
-  alert("Form tambah kendaraan akan diaktifkan nanti (versi elegan popup).");
-});
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+    }
 
-// === INIT ===
-getDataKendaraan();
-</script>
+    .card {
+      background: rgba(255,255,255,0.8);
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
+      transition: 0.3s;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+
+    .pad { padding: 24px; }
+
+    h2 {
+      margin-top: 0;
+      color: #0b4d1b;
+      text-align: center;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    h2::before {
+      content: attr(data-icon);
+      font-size: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 10px 0 5px;
+      color: #0c5d27;
+    }
+
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #cdd9cd;
+      border-radius: 10px;
+      transition: 0.25s;
+      background: rgba(255,255,255,0.9);
+    }
+    input[type="text"]:focus, input[type="date"]:focus {
+      border-color: #0c5d27;
+      box-shadow: 0 0 8px rgba(12, 93, 39, 0.25);
+      outline: none;
+    }
+
+    .row-btn {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-primary { background: #0c5d27; color: #fff; }
+    .btn-dark { background: #555; color: #fff; }
+    .btn-primary:hover { background: #137a35; }
+    .btn-dark:hover { background: #333; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    #searchInput {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1.5px solid #cdd9cd;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.9);
+      transition: 0.25s;
+    }
+    #searchInput:focus {
+      border-color: #0c5d27;
+      box-shadow: 0 0 8px rgba(12, 93, 39, 0.2);
+    }
+
+    #refreshBtn {
+      width: 36px; height: 36px;
+      border: none; border-radius: 8px;
+      background: #0c5d27; color: #fff;
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.2s;
+    }
+    #refreshBtn:hover { background: #148e41; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: auto;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      vertical-align: top;
+    }
+
+    thead th {
+      background: #0c5d27;
+      color: #fff;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    tbody tr:hover { background: rgba(12, 93, 39, 0.05); }
+
+    .btn-edit {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #f1c40f;
+      color: #000;
+    }
+    .btn-edit:hover { background: #d4ac0d; }
+    .btn-delete {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #c0392b;
+      color: #fff;
+    }
+    .btn-delete:hover { background: #992d22; }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: #333;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .dot.green { background: #27ae60; }
+    .dot.yellow { background: #f1c40f; }
+    .dot.red { background: #e74c3c; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: 1fr; }
+      h2 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+
+<body onload="initKendaraanPage()">
+  <header>
+    <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
+    <nav>
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="user.html">👤 User</a>
+      <a href="login.html">🔒 Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- FORM -->
+      <section class="card">
+        <div class="pad">
+          <h2 data-icon="📝">Form Kendaraan</h2>
+
+          <label for="plat">Plat Nomor</label>
+          <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled />
+
+          <label for="letak">Letak / Garasi</label>
+          <input id="letak" type="text" placeholder="Contoh: Jakarta" disabled />
+
+          <label for="stnk">STNK</label>
+          <input id="stnk" type="date" disabled />
+
+          <label for="kir">KIR</label>
+          <input id="kir" type="date" disabled />
+
+          <label for="servis">Servis Terakhir</label>
+          <input id="servis" type="date" disabled />
+
+          <label for="pajak5">Pajak 5 Tahunan</label>
+          <input id="pajak5" type="date" disabled />
+
+          <div class="row-btn">
+            <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">Tambah</button>
+            <button id="btnCancel" class="btn btn-dark" onclick="handleCancel()" disabled>Batal</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABEL -->
+      <section class="card">
+        <div class="pad">
+          <h2 data-icon="📋">Daftar Kendaraan</h2>
+          <div class="toolbar">
+            <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
+            <button id="refreshBtn" title="Segarkan" onclick="reloadKendaraanList()">⟳</button>
+          </div>
+
+          <div style="overflow-y:auto; max-height:60vh;">
+            <table id="tblKendaraan">
+              <thead>
+                <tr>
+                  <th>Plat Nomor</th>
+                  <th>Letak</th>
+                  <th>STNK</th>
+                  <th>KIR</th>
+                  <th>Servis Terakhir</th>
+                  <th>Pajak 5 Tahunan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="legend">
+            <span><span class="dot green"></span> Aman</span>
+            <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span>
+            <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="main.js?v=7.5"></script>
 </body>
 </html>
