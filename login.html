@@ -6,146 +6,362 @@
 <title>Login - PT ANISA JAYA UTAMA</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-/* === LOGIN CARD (TIDAK DIUBAH) === */
-*{box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:linear-gradient(180deg,#f1f6ff 0%,#dbe7ff 100%);display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
-.card{background:rgba(255,255,255,0.9);border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,0.1),0 0 15px rgba(0,100,255,0.1);padding:35px 30px;width:min(90vw,370px);text-align:center;position:relative;backdrop-filter:blur(10px);animation:fadeIn .6s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-h2{font-size:22px;margin-bottom:6px;color:#1b1b1b;text-transform:uppercase;font-weight:600;letter-spacing:1px}
-h2::before{content:"❤️";display:inline-block;animation:beat 1.3s infinite;margin-right:6px}
-@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-.subtitle{color:#444;margin-bottom:25px}
-.input-group{position:relative;margin-bottom:15px}
-input{width:100%;padding:12px 14px;border:1px solid #ccc;border-radius:10px;outline:none;font-size:14px;transition:.2s}
-input:focus{border-color:#2b7cff;box-shadow:0 0 8px rgba(43,124,255,0.3)}
-.toggle-pass{position:absolute;right:10px;top:9px;cursor:pointer;font-size:18px}
-#btnLogin{width:100%;padding:12px;border:none;border-radius:10px;background:#1b6e2a;color:#fff;font-weight:bold;cursor:pointer;font-size:15px;transition:.25s;box-shadow:0 3px 8px rgba(27,110,42,0.3)}
-#btnLogin:hover{background:#13561f}
-a{color:#1b6e2a;text-decoration:none;font-weight:500}
-a:hover{text-decoration:underline}
+/* === LOGIN CARD (tidak diubah) === */
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body {
+  background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.card {
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1), 0 0 15px rgba(0,100,255,0.1);
+  padding: 35px 30px;
+  width: min(90vw, 370px);
+  text-align: center;
+  position: relative;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 6px;
+  color: #1b1b1b;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+h2::before {
+  content: "❤️";
+  display: inline-block;
+  animation: beat 1.3s infinite;
+  margin-right: 6px;
+}
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.subtitle { color: #444; margin-bottom: 25px; }
+
+.input-group { position: relative; margin-bottom: 15px; }
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+input:focus {
+  border-color: #2b7cff;
+  box-shadow: 0 0 8px rgba(43,124,255,0.3);
+}
+.toggle-pass {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#btnLogin {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #1b6e2a;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.25s;
+  box-shadow: 0 3px 8px rgba(27,110,42,0.3);
+}
+#btnLogin:hover { background: #13561f; }
+a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; }
 
 /* === LOADING OVERLAY === */
-#loadingOverlay{position:fixed;inset:0;background:linear-gradient(180deg,#fff 0%,#f3f7ff 100%);display:none;align-items:center;justify-content:center;z-index:999;overflow:hidden}
-.scene-wrap{width:100%;max-width:1100px;height:70vh;display:flex;align-items:center;justify-content:center;position:relative}
-
-/* Monyet besar */
-#monkeyBig{width:300px;max-width:40vw;animation:breath 3s ease-in-out infinite;z-index:40;position:relative;top:-20px;}
-@keyframes breath{0%,100%{transform:translateY(0)scale(1)}50%{transform:translateY(-8px)scale(1.03)}}
-
-/* Jalan dan motor — DITURUNKAN 30px */
-.road{
-  position:absolute;
-  bottom:calc(18vh - 25px);
-  left:6%;right:6%;
-  height:8px;
-  background:linear-gradient(90deg,#f1f3f8,#e9eef8);
-  border-radius:6px;
-  box-shadow:inset 0 -2px 6px rgba(0,0,0,0.03);
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg,#ffffff 0%,#f1f6ff 100%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  overflow: hidden;
 }
 
-.motor-group{
-  position:absolute;
-  bottom:calc(18vh - 40px);
-  left:8%;
-  display:flex;align-items:center;gap:8px;z-index:35;
-}
-.motor-group img{width:90px;filter:drop-shadow(0 5px 8px rgba(0,0,0,0.12))}
-.motor-label{font-weight:600;color:#004aad;font-size:15px;position:relative;top:-4px}
-
-/* Motor gerak */
-.driving{animation:driveClean 4.5s ease-in-out forwards}
-@keyframes driveClean{
-  0%{transform:translateX(0)}
-  45%{transform:translateX(26vw)}
-  100%{transform:translateX(50vw)}
+/* Scene container */
+.scene-wrap {
+  width: 100%;
+  max-width: 1100px;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-/* Fade-out motor kalau sukses */
-.fade-out{animation:fadeOutMotor 1.2s ease forwards}
-@keyframes fadeOutMotor{0%{opacity:1;transform:translateX(50vw)}100%{opacity:0;transform:translateX(55vw)}}
+/* BIG MONKEY */
+#monkeyBig {
+  width: 300px;
+  max-width: 40vw;
+  animation: monkeyBreath 3s ease-in-out infinite;
+  z-index: 40;
+}
+@keyframes monkeyBreath {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
 
-/* Gagal muter */
-.spin-fail{animation:spinFail 1s linear infinite}
-@keyframes spinFail{0%{transform:translateX(50vw)rotate(0)}100%{transform:translateX(50vw)rotate(360deg)}}
+/* NEW: Soft ground shadow under monkey */
+.monkey-shadow {
+  position: absolute;
+  width: 160px;
+  height: 28px;
+  border-radius: 50%;
+  bottom: calc(22vh + 130px);
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 70%);
+  filter: blur(6px);
+  opacity: 0.35;
+  animation: shadowPulse 3s ease-in-out infinite;
+  z-index: 25;
+}
+@keyframes shadowPulse {
+  0%, 100% { transform: scaleX(1); opacity: 0.35; }
+  50% { transform: scaleX(1.1); opacity: 0.45; }
+}
 
-/* Asap */
-.smoke{position:absolute;bottom:calc(18vh - 15px);left:calc(50vw + 20px);width:16px;height:16px;border-radius:50%;background:rgba(120,120,120,0.25);filter:blur(2px);opacity:0;z-index:36}
-.smoke.s1{animation:smoke1 1.3s ease forwards}
-.smoke.s2{animation:smoke2 1.6s ease forwards}
-@keyframes smoke1{0%{opacity:0;transform:translateY(0)scale(.6)}30%{opacity:1}100%{opacity:0;transform:translateY(-45px)scale(1.2)}}
-@keyframes smoke2{0%{opacity:0;transform:translateY(0)scale(.7)}20%{opacity:.9}100%{opacity:0;transform:translateY(-55px)scale(1.4)}}
+/* ROAD */
+.road {
+  position: absolute;
+  bottom: 17vh;
+  left: 6%;
+  right: 6%;
+  height: 8px;
+  background: linear-gradient(90deg,#f1f3f8,#e9eef8);
+  border-radius: 6px;
+  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.03);
+  z-index: 20;
+}
 
-/* Fade overlay */
-.overlay-fade{animation:fadeOut .9s ease forwards}
-@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+/* MOTOR GROUP */
+.motor-group {
+  position: absolute;
+  bottom: calc(17vh - 18px);
+  left: 8%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 35;
+}
+.motor-group img {
+  width: 95px;
+  height: auto;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+}
+.motor-label {
+  font-weight: 600;
+  color: #004aad;
+  font-size: 15px;
+}
+
+/* DRIVE two-phase */
+.driving {
+  animation: driveTwoPhase var(--drive-time, 4.5s) ease-in-out forwards;
+}
+@keyframes driveTwoPhase {
+  0%   { transform: translateX(0) }
+  45%  { transform: translateX(26vw) }
+  100% { transform: translateX(50vw) }
+}
+
+/* ENTER PORTAL (now fade out only) */
+.enter-portal {
+  animation: enterPortal 1.2s ease forwards;
+}
+@keyframes enterPortal {
+  0% { opacity: 1; transform: translateX(50vw) scale(1); }
+  100% { opacity: 0; transform: translateX(55vw) scale(.8); }
+}
+
+/* FAIL spin */
+.spin-fail {
+  animation: spinFail 1s linear infinite;
+}
+@keyframes spinFail {
+  0% { transform: translateX(50vw) rotate(0deg); }
+  100% { transform: translateX(50vw) rotate(360deg); }
+}
+
+/* Smoke */
+.smoke {
+  position: absolute;
+  bottom: calc(17vh + 8px);
+  left: calc(50vw + 20px);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(120,120,120,0.25);
+  filter: blur(2px);
+  opacity: 0;
+  z-index: 36;
+}
+.smoke.s1 { animation: smoke1 1.3s ease forwards; }
+.smoke.s2 { animation: smoke2 1.6s ease forwards; }
+@keyframes smoke1 {
+  0% { opacity: 0; transform: translateY(0) scale(.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-45px) scale(1.2); }
+}
+@keyframes smoke2 {
+  0% { opacity: 0; transform: translateY(0) scale(.7); }
+  20% { opacity: .9; }
+  100% { opacity: 0; transform: translateY(-55px) scale(1.4); }
+}
+
+.overlay-fade { animation: overlayFade 0.9s ease forwards; }
+@keyframes overlayFade { 0% { opacity: 1; } 100% { opacity: 0; } }
 </style>
 </head>
 <body>
 
-<!-- LOGIN CARD -->
+<!-- LOGIN FORM -->
 <div class="card" id="loginCard">
   <h2>PT ANISA JAYA UTAMA</h2>
   <div class="subtitle">Login Pengguna</div>
-  <div class="input-group"><input type="text" id="username" placeholder="Username"></div>
-  <div class="input-group"><input type="password" id="password" placeholder="Password"><span class="toggle-pass" id="togglePass">👁️</span></div>
+
+  <div class="input-group">
+    <input type="text" id="username" placeholder="Username" />
+  </div>
+  <div class="input-group">
+    <input type="password" id="password" placeholder="Password" />
+    <span class="toggle-pass" id="togglePass">👁️</span>
+  </div>
+
   <button id="btnLogin">Masuk</button>
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- OVERLAY -->
-<div id="loadingOverlay">
-  <div class="scene-wrap">
-    <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir">
-    <div class="road"></div>
-    <div class="motor-group" id="motorGroup">
-      <img src="assets/monyet_motor.png" alt="monyet naik motor">
-      <div class="motor-label">kamu otw 👉</div>
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" aria-hidden="true">
+  <div class="scene-wrap" id="sceneWrap">
+    <div class="monkey-shadow"></div>
+    <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir" />
+
+    <div class="road" aria-hidden="true"></div>
+
+    <div class="motor-group" id="motorGroup" aria-hidden="true">
+      <img id="motorImg" src="assets/monyet_motor.png" alt="monyet naik motor" />
+      <div class="motor-label" id="motorLabel">kamu otw 👉</div>
     </div>
+
     <div class="smoke" id="smoke1"></div>
     <div class="smoke" id="smoke2"></div>
   </div>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-const btn=document.getElementById('btnLogin'),toggle=document.getElementById('togglePass'),pass=document.getElementById('password'),card=document.getElementById('loginCard');
-const overlay=document.getElementById('loadingOverlay'),monkeyBig=document.getElementById('monkeyBig'),motorGroup=document.getElementById('motorGroup'),smoke1=document.getElementById('smoke1'),smoke2=document.getElementById('smoke2');
+const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
 
-toggle.addEventListener('click',()=>{pass.type=pass.type==='password'?'text':'password';toggle.textContent=pass.type==='password'?'👁️':'🙈';});
-function setSession(u){try{localStorage.setItem('aj_user',JSON.stringify(u));}catch(e){}}
-async function api(action,payload={}){try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})});return await r.json()}catch{return{success:false}}}
+const btn = document.getElementById('btnLogin');
+const toggle = document.getElementById('togglePass');
+const pass = document.getElementById('password');
+const card = document.getElementById('loginCard');
+const overlay = document.getElementById('loadingOverlay');
+const monkeyBig = document.getElementById('monkeyBig');
+const motorGroup = document.getElementById('motorGroup');
+const smoke1 = document.getElementById('smoke1');
+const smoke2 = document.getElementById('smoke2');
 
-function showOverlay(){
-  card.style.display='none';overlay.style.display='flex';overlay.classList.remove('overlay-fade');
-  monkeyBig.src='assets/monyet_mikir.png';
-  motorGroup.classList.remove('spin-fail','fade-out');motorGroup.style.transform='translateX(0)';smoke1.className='smoke';smoke2.className='smoke';
-  motorGroup.classList.add('driving');
+toggle.addEventListener('click', () => {
+  if (pass.type === 'password') {
+    pass.type = 'text';
+    toggle.textContent = '🙈';
+  } else {
+    pass.type = 'password';
+    toggle.textContent = '👁️';
+  }
+});
+
+function setSession(u){ try{ localStorage.setItem('aj_user', JSON.stringify(u)); }catch(e){} }
+
+async function api(action, payload = {}) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, ...payload }),
+    });
+    return await res.json();
+  } catch (err) {
+    return { success: false };
+  }
 }
 
-function handleSuccess(user){
-  monkeyBig.src='assets/monyet_senang.png';
-  motorGroup.classList.remove('driving');motorGroup.classList.add('fade-out');
-  setTimeout(()=>overlay.classList.add('overlay-fade'),1200);
-  setTimeout(()=>{setSession(user);window.location.href='dashboard.html';},1700);
+function showOverlay() {
+  card.style.display = 'none';
+  overlay.style.display = 'flex';
+  overlay.classList.remove('overlay-fade');
+  monkeyBig.src = 'assets/monyet_mikir.png';
+  motorGroup.classList.remove('driving','enter-portal','spin-fail');
+  motorGroup.style.transform = 'translateX(0)';
+  smoke1.className = 'smoke';
+  smoke2.className = 'smoke';
+  motorGroup.style.setProperty('--drive-time','4.5s');
+  setTimeout(()=> { motorGroup.classList.add('driving'); }, 120);
 }
 
-function handleFail(){
-  monkeyBig.src='assets/monyet_salah.png';
-  motorGroup.classList.remove('driving');motorGroup.classList.add('spin-fail');
-  smoke1.classList.add('s1');smoke2.classList.add('s2');
-  setTimeout(()=>{smoke1.classList.remove('s1');smoke2.classList.remove('s2');motorGroup.classList.remove('spin-fail');overlay.style.display='none';card.style.display='block';},2600);
+function handleSuccess(user) {
+  monkeyBig.src = 'assets/monyet_senang.png';
+  motorGroup.classList.remove('driving','spin-fail');
+  setTimeout(()=> { motorGroup.classList.add('enter-portal'); }, 140);
+  setTimeout(()=> { overlay.classList.add('overlay-fade'); }, 1100);
+  setTimeout(()=> { setSession(user); window.location.href='dashboard.html'; }, 1500);
 }
 
-btn.addEventListener('click',async()=>{
-  const username=document.getElementById('username').value.trim(),password=pass.value.trim();
-  if(!username||!password)return alert('Isi username dan password!');
+function handleFail() {
+  monkeyBig.src = 'assets/monyet_salah.png';
+  motorGroup.classList.remove('driving');
+  motorGroup.classList.add('spin-fail');
+  smoke1.classList.add('s1');
+  smoke2.classList.add('s2');
+  setTimeout(()=> {
+    smoke1.classList.remove('s1'); smoke2.classList.remove('s2');
+    motorGroup.classList.remove('spin-fail','driving');
+    overlay.style.display='none'; card.style.display='block';
+  }, 2500);
+}
+
+btn.addEventListener('click', async () => {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if (!username || !password) return alert('Isi username dan password!');
   showOverlay();
-  try{
-    const res=await api('login',{username,password});
-    if(res.success)setTimeout(()=>handleSuccess(res.user),1000);
-    else setTimeout(()=>handleFail(),1400);
-  }catch{
-    setTimeout(()=>{monkeyBig.src='assets/monyet_salah.png';setTimeout(()=>{overlay.style.display='none';card.style.display='block';},1400);},700);
+  try {
+    const res = await api('login', { username, password });
+    if (res && res.success) setTimeout(()=>handleSuccess(res.user), 1000);
+    else setTimeout(()=>handleFail(), 1400);
+  } catch {
+    setTimeout(()=> {
+      monkeyBig.src='assets/monyet_salah.png';
+      setTimeout(()=>{ overlay.style.display='none'; card.style.display='block'; }, 1400);
+    }, 700);
   }
 });
 </script>
