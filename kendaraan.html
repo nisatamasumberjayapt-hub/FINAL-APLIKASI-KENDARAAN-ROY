@@ -2,53 +2,78 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
   <style>
     :root {
-      --accent:#0c5d27; --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
+      --accent:#0c5d27; --accent2:#128b45;
+      --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
+      --gray:#ddd; --soft:#f6faf7;
     }
     *{box-sizing:border-box;font-family:"Poppins",sans-serif}
-    body{background:#f6faf7;margin:0;color:#123}
+    body{background:var(--soft);margin:0;color:#123}
     header{background:var(--accent);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
-    header a{color:#fff;text-decoration:none;margin-left:14px;font-weight:500}
+    header a{color:#fff;text-decoration:none;margin-left:16px;font-weight:500}
+    main{max-width:1400px;margin:32px auto;padding:0 18px}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:28px;align-items:start}
 
-    main{max-width:1200px;margin:28px auto;padding:0 16px}
-    .grid{display:grid;grid-template-columns:340px 1fr;gap:24px}
+    .card{background:#fff;border-radius:14px;box-shadow:0 5px 15px rgba(0,0,0,.08);padding:24px;transition:.2s}
+    .card:hover{transform:translateY(-2px)}
 
-    .card{background:#fff;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.08);padding:20px}
+    h2{margin-top:0;margin-bottom:16px;text-align:center;color:var(--accent);font-size:19px}
+    h2 span{font-size:21px;margin-right:5px}
 
-    h2{margin:0 0 12px;color:var(--accent);font-size:18px;text-align:center}
+    label{display:block;margin:8px 0 4px;font-weight:600;font-size:13.5px;color:#234}
+    input[type="text"],input[type="date"]{
+      width:100%;padding:10px 12px;border:1.5px solid #cdd9cd;border-radius:8px;font-size:14px;
+      transition:.2s;
+    }
+    input:disabled{background:#f9f9f9;opacity:.7}
+    input:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(12,93,39,.1)}
 
-    label{display:block;margin:8px 0 4px;font-weight:600;font-size:13px;color:#234}
-    input[type="text"],input[type="date"]{width:100%;padding:9px 10px;border:1.3px solid #ccd7cc;border-radius:8px;font-size:14px}
-    input:disabled{background:#f7f7f7;opacity:.7}
-
-    .row-btn{display:flex;gap:10px;margin-top:14px}
-    .btn{padding:10px 14px;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:.2s}
-    .btn-primary{background:linear-gradient(135deg,#0c5d27,#118b3f);color:#fff}
+    .row-btn{display:flex;gap:12px;margin-top:18px;justify-content:center}
+    .btn{
+      border:none;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;transition:.2s;
+      box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    }
+    .btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;
+    }
     .btn-primary:hover{filter:brightness(1.1)}
-    .btn-neutral{background:#bbb;color:#fff}
-    .btn-neutral:disabled{background:#ddd;color:#888;cursor:not-allowed}
+    .btn-neutral{
+      background:linear-gradient(135deg,#e0e0e0,#f9f9f9);
+      color:#222;
+    }
+    .btn-neutral:hover{background:linear-gradient(135deg,#e5e5e5,#ffffff)}
+    .btn-neutral:disabled{background:#f0f0f0;color:#999}
 
     table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:10px;border-bottom:1px solid #e6efe6;text-align:left;vertical-align:top}
+    th,td{padding:10px;border-bottom:1px solid #e0ebe0;vertical-align:top;text-align:left}
     thead th{background:var(--accent);color:#fff;position:sticky;top:0}
-    tbody tr:hover{background:#f9fbf9}
+    tbody tr:hover{background:#f8fbf8}
     .dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px}
-    .action-btn{border:none;border-radius:6px;padding:6px 9px;font-size:13px;font-weight:600;cursor:pointer}
+    .action-btn{
+      border:none;border-radius:6px;padding:7px 10px;font-size:13px;font-weight:600;cursor:pointer;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    }
     .edit{background:#f1c40f;color:#000;margin-right:6px}
     .del{background:var(--danger);color:#fff}
-    .table-wrap{max-height:500px;overflow:auto;border:1px solid #e3eee3;border-radius:8px}
+    .table-wrap{max-height:560px;overflow:auto;border-radius:10px;border:1px solid #e3eee3}
+    #searchInput{
+      width:100%;margin-bottom:10px;padding:10px 12px;
+      border-radius:8px;border:1.5px solid #dbe5dc;font-size:14px;
+    }
 
     #toast-container{
       position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
       display:flex;flex-direction:column;align-items:center;z-index:9999;pointer-events:none;
     }
     .toast{
-      background:#fff;padding:14px 18px;border-radius:10px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      font-weight:600;min-width:240px;text-align:center;
+      background:#fff;padding:14px 18px;border-radius:12px;
+      box-shadow:0 4px 18px rgba(0,0,0,0.15);
+      font-weight:600;min-width:250px;text-align:center;
       border-left:6px solid var(--accent);
       animation:fadeIn .4s ease;
       margin-top:8px;
@@ -58,7 +83,7 @@
     .toast.warn{border-color:var(--warn)}
     @keyframes fadeIn{from{opacity:0;transform:translate(-50%,-60%);}to{opacity:1;transform:translate(-50%,-50%);}}
 
-    @media(max-width:950px){.grid{grid-template-columns:1fr}}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body onload="initKendaraanPage()">
@@ -73,25 +98,26 @@
 
   <main>
     <div class="grid">
-      <!-- Form -->
+      <!-- FORM -->
       <section class="card">
-        <h2>🧾 FORM KENDARAAN</h2>
+        <h2><span>🧾</span>FORM KENDARAAN</h2>
         <label>Plat Nomor</label><input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled>
         <label>Letak / Garasi</label><input id="letak" type="text" placeholder="Contoh: Jakarta" disabled>
         <label>STNK</label><input id="stnk" type="date" disabled>
         <label>KIR</label><input id="kir" type="date" disabled>
         <label>Servis Terakhir</label><input id="servis" type="date" disabled>
         <label>Pajak 5 Tahunan</label><input id="pajak5" type="date" disabled>
+
         <div class="row-btn">
-          <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">Tambah</button>
-          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>Batal</button>
+          <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">➕ Tambah</button>
+          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>❌ Batal</button>
         </div>
       </section>
 
-      <!-- Table -->
+      <!-- TABLE -->
       <section class="card">
-        <h2>📋 DAFTAR KENDARAAN</h2>
-        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)" style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
+        <h2><span>📋</span>DAFTAR KENDARAAN</h2>
+        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)">
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
@@ -126,9 +152,9 @@
     function clearForm(){["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).value="");}
     function syncBtn(){
       const p=$("btnPrimary"),c=$("btnCancel");
-      if(MODE==="view"){p.textContent="Tambah";c.disabled=true;}
-      if(MODE==="add"){p.textContent="Simpan";c.disabled=false;}
-      if(MODE==="edit"){p.textContent="Update";c.disabled=false;}
+      if(MODE==="view"){p.textContent="➕ Tambah";c.disabled=true;}
+      if(MODE==="add"){p.textContent="💾 Simpan";c.disabled=false;}
+      if(MODE==="edit"){p.textContent="📝 Update";c.disabled=false;}
     }
 
     async function initKendaraanPage(){
@@ -201,7 +227,7 @@
 
     async function hapusData(str){
       const p=decodeURIComponent(str);
-      if(!confirm("Hapus kendaraan "+p+"?"))return;
+      if(!confirm("Yakin ingin menghapus "+p+" ?"))return;
       const r=await api("deleteKendaraan",{Platnomor:p});
       showToast(r.message||"Dihapus",r.success?"success":"error");
       if(r.success)await loadData();
