@@ -9,13 +9,17 @@
     :root {
       --accent: #0c5d27;
       --accent-strong: #0b4d1b;
+      --hover: #f3f8f4;
+      --shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
+
     * {
       box-sizing: border-box;
       font-family: 'Poppins', system-ui, sans-serif;
     }
+
     body {
-      background: linear-gradient(180deg, #f6f9ff 0%, #edf4ff 100%);
+      background: linear-gradient(180deg, #f7faf9 0%, #edf5f0 100%);
       margin: 0;
       color: #123;
     }
@@ -28,7 +32,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -41,8 +45,8 @@
     }
 
     main {
-      max-width: 1200px;
-      margin: 28px auto;
+      max-width: 1250px;
+      margin: 30px auto;
       padding: 0 16px;
       animation: fadeSlide 0.4s ease;
     }
@@ -51,7 +55,7 @@
     .grid {
       display: grid;
       grid-template-columns: 340px 1fr;
-      gap: 24px;
+      gap: 28px;
       align-items: start;
     }
 
@@ -59,8 +63,8 @@
     .card {
       background: #fff;
       border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(12, 59, 27, 0.06);
-      padding: 20px;
+      box-shadow: var(--shadow);
+      padding: 22px;
       animation: fadeSlide 0.4s ease;
     }
 
@@ -87,7 +91,7 @@
     input[type="text"], input[type="date"] {
       width: 100%;
       padding: 10px 12px;
-      border: 1.3px solid #cdd9cd;
+      border: 1.4px solid #cdd9cd;
       border-radius: 8px;
       font-size: 14px;
       outline: none;
@@ -101,7 +105,7 @@
     .row-btn {
       display: flex;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
     .btn {
       border: none;
@@ -116,7 +120,7 @@
     .btn-danger { background: #e74c3c; color: #fff; }
     .btn:hover { opacity: 0.9; }
 
-    /* TABEL */
+    /* TABLE */
     .toolbar {
       display: flex;
       align-items: center;
@@ -133,6 +137,7 @@
     .table-wrap {
       max-height: 65vh;
       overflow-y: auto;
+      border-radius: 10px;
     }
 
     table {
@@ -142,23 +147,28 @@
     }
     th, td {
       padding: 10px 14px;
-      border-bottom: 1px solid #e0ebe0;
+      border-bottom: 1px solid #e4ede4;
       vertical-align: top;
     }
     thead th {
       background: var(--accent);
       color: #fff;
       text-align: left;
+      font-weight: 600;
+      font-size: 13px;
       position: sticky;
       top: 0;
       z-index: 10;
     }
     tbody tr:hover {
-      background: rgba(12,93,39,0.05);
-      transition: 0.2s;
+      background: var(--hover);
+      transition: background 0.25s;
+    }
+    tbody td {
+      background: #fff;
+      transition: background 0.25s;
     }
 
-    /* STATUS */
     .dot {
       width: 12px;
       height: 12px;
@@ -170,64 +180,17 @@
     .dot.yellow { background: #f1c40f; }
     .dot.red { background: #e74c3c; }
 
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-    .modal-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      width: 320px;
+    /* LOADING */
+    .loading {
       text-align: center;
-      animation: scaleIn 0.25s ease;
+      padding: 18px;
+      color: #555;
+      font-style: italic;
     }
-
-    /* TOAST */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-    }
-    .toast {
-      background: rgba(255,255,255,0.95);
-      border-left: 5px solid var(--accent);
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      padding: 12px 18px;
-      min-width: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      animation: fadeInRight 0.4s ease;
-    }
-    .toast.success { border-left-color: #2ecc71; }
-    .toast.error { border-left-color: #e74c3c; }
-    .toast.warning { border-left-color: #f1c40f; }
 
     @keyframes fadeSlide {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInRight {
-      from { opacity: 0; transform: translateX(40px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes scaleIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
 
     @media (max-width: 900px) {
@@ -296,7 +259,9 @@
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <tr><td colspan="7" class="loading">🔄 Memuat data kendaraan...</td></tr>
+            </tbody>
           </table>
         </div>
 
@@ -309,56 +274,24 @@
     </div>
   </main>
 
-  <!-- Modal hapus -->
-  <div id="modalConfirm" class="modal-overlay">
-    <div class="modal-box">
-      <h3>Konfirmasi Hapus</h3>
-      <p id="modalMessage">Apakah Anda yakin ingin menghapus kendaraan ini?</p>
-      <div style="display:flex;justify-content:space-around;margin-top:18px;">
-        <button id="btnTidak" class="btn btn-secondary">Batal</button>
-        <button id="btnYa" class="btn btn-danger">Ya, Hapus</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="toastContainer" class="toast-container"></div>
-
   <script src="main.js?v=7.4"></script>
   <script>
-    let PLAT_HAPUS = "";
-    const modal = document.getElementById("modalConfirm");
-    document.getElementById("btnTidak").onclick = () => modal.style.display = "none";
-    document.getElementById("btnYa").onclick = async () => {
-      modal.style.display = "none";
-      const res = await api("deleteKendaraan", { Platnomor: PLAT_HAPUS });
-      if (res.success) {
-        showToast("🗑️ Kendaraan berhasil dihapus!", "success");
-        reloadKendaraanList();
-      } else showToast("❌ Gagal menghapus!", "error");
-    };
-
-    function showModalHapus(plat) {
-      PLAT_HAPUS = plat;
-      document.getElementById("modalMessage").textContent =
-        `Apakah Anda yakin ingin menghapus kendaraan dengan plat ${plat}?`;
-      modal.style.display = "flex";
-    }
-
-    // Toast elegan
-    function showToast(msg, type = "success", dur = 3000) {
-      const c = document.getElementById("toastContainer");
-      const t = document.createElement("div");
-      t.className = "toast " + type;
-      t.innerHTML = `<span>${msg}</span><button style="border:none;background:none;cursor:pointer;">✖</button>`;
-      c.appendChild(t);
-      t.querySelector("button").onclick = () => t.remove();
-      setTimeout(() => t.remove(), dur);
-    }
-
     async function initKendaraanPage() {
       const u = getSession();
       if (!u) return (location.href = "login.html");
-      await reloadKendaraanList();
+
+      const tbl = document.querySelector("#tblKendaraan tbody");
+      tbl.innerHTML = `<tr><td colspan="7" class="loading">🔄 Memuat data kendaraan...</td></tr>`;
+
+      const res = await api("getKendaraan");
+      if (!res.success || !Array.isArray(res.data)) {
+        tbl.innerHTML = `<tr><td colspan="7" class="loading">⚠️ Gagal memuat data kendaraan</td></tr>`;
+        return;
+      }
+
+      DATA = res.data;
+      renderTabelKendaraan(DATA, true);
+
       const s = document.getElementById("searchInput");
       s.addEventListener("input", () => {
         const val = s.value.toLowerCase();
