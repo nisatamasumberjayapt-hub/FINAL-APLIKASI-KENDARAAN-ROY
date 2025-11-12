@@ -2,200 +2,107 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KENDARAAN | PT ANISA JAYA UTAMA — BY ROY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
 
   <style>
     :root {
       --accent: #0c5d27;
-      --accent-strong: #0b4d1b;
-      --hover: #f3f8f4;
-      --shadow: 0 4px 15px rgba(0,0,0,0.08);
+      --accent-dark: #093c19;
+      --bg: #f6faf7;
+      --danger: #c0392b;
+      --warn: #f1c40f;
+      --ok: #2ecc71;
+      --shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: 'Poppins', system-ui, sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Poppins', system-ui, sans-serif; }
+    body { background: var(--bg); margin: 0; color: #123; }
 
-    body {
-      background: linear-gradient(180deg, #f7faf9 0%, #edf5f0 100%);
-      margin: 0;
-      color: #123;
-    }
-
-    /* HEADER */
     header {
       background: var(--accent);
       color: #fff;
       padding: 14px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,.1);
     }
     header nav a {
-      color: #fff;
-      text-decoration: none;
-      margin-left: 18px;
-      font-weight: 500;
+      color: #fff; text-decoration: none; margin-left: 16px; font-weight: 500;
     }
 
-    main {
-      max-width: 1250px;
-      margin: 30px auto;
-      padding: 0 16px;
-      animation: fadeSlide 0.4s ease;
-    }
+    main { max-width: 1200px; margin: 28px auto; padding: 0 16px; }
+    .grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
 
-    /* GRID */
-    .grid {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-
-    /* CARD */
     .card {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 22px;
+      background: #fff; border-radius: 14px; box-shadow: var(--shadow); padding: 20px;
       animation: fadeSlide 0.4s ease;
     }
 
     h2 {
-      margin: 0 0 16px;
-      color: var(--accent-strong);
-      text-align: center;
-      font-weight: 700;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 18px;
+      display: flex; align-items: center; gap: 8px; justify-content: center;
     }
 
-    /* FORM */
-    label {
-      display: block;
-      font-weight: 600;
-      font-size: 13px;
-      margin: 10px 0 6px;
-      color: var(--accent-strong);
-    }
+    label { display: block; margin: 8px 0 4px; font-weight: 600; color: #234; font-size: 13px; }
     input[type="text"], input[type="date"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1.4px solid #cdd9cd;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      transition: 0.2s;
+      width: 100%; padding: 10px 12px; border: 1.4px solid #dbe5dc; border-radius: 8px;
+      font-size: 14px; outline: none; transition: 0.2s;
     }
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 6px rgba(12,93,39,0.2);
-    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 4px rgba(12,93,39,0.2); }
+    input:disabled { background: #f7f7f7; opacity: .7; }
 
-    .row-btn {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
+    .row-btn { display: flex; gap: 10px; margin-top: 16px; }
     .btn {
-      border: none;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
+      border: none; border-radius: 8px; padding: 10px 14px; font-weight: 600; cursor: pointer; transition: .2s;
     }
     .btn-primary { background: var(--accent); color: #fff; }
-    .btn-secondary { background: #777; color: #fff; }
-    .btn-danger { background: #e74c3c; color: #fff; }
-    .btn:hover { opacity: 0.9; }
+    .btn-neutral { background: #777; color: #fff; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* TABLE */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
+    .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     #searchInput {
-      flex: 1;
-      padding: 10px 12px;
-      border: 1.5px solid #cdd9cd;
-      border-radius: 8px;
+      flex: 1; padding: 10px 12px; border: 1.4px solid #dbe5dc; border-radius: 8px;
     }
 
-    .table-wrap {
-      max-height: 65vh;
-      overflow-y: auto;
-      border-radius: 10px;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 10px 14px; border-bottom: 1px solid #ebf1eb; vertical-align: top; }
+    thead th { background: var(--accent); color: #fff; text-align: left; position: sticky; top: 0; }
+    tbody tr:hover { background: #f9fbf9; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    th, td {
-      padding: 10px 14px;
-      border-bottom: 1px solid #e4ede4;
-      vertical-align: top;
-    }
-    thead th {
-      background: var(--accent);
-      color: #fff;
-      text-align: left;
-      font-weight: 600;
-      font-size: 13px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    tbody tr:hover {
-      background: var(--hover);
-      transition: background 0.25s;
-    }
-    tbody td {
-      background: #fff;
-      transition: background 0.25s;
-    }
+    .legend { display: flex; gap: 14px; font-size: 13px; margin-top: 10px; align-items: center; }
+    .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 5px; }
+    .dot.green { background: var(--ok); } .dot.yellow { background: var(--warn); } .dot.red { background: var(--danger); }
 
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      display: inline-block;
-      margin-right: 6px;
-    }
-    .dot.green { background: #2ecc71; }
-    .dot.yellow { background: #f1c40f; }
-    .dot.red { background: #e74c3c; }
+    .action-btn { padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; }
+    .edit { background: var(--warn); color: #000; margin-right: 5px; }
+    .del { background: var(--danger); color: #fff; }
 
-    /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 18px;
-      color: #555;
-      font-style: italic;
-    }
+    @keyframes fadeSlide { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:none;} }
 
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Toast */
+    #toast {
+      position: fixed; top: 20px; right: 20px;
+      z-index: 9999; display: flex; flex-direction: column; gap: 10px;
     }
+    .toast-msg {
+      background: #fff; border-left: 6px solid var(--accent);
+      padding: 12px 16px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,.1);
+      min-width: 240px; animation: fadeSlide 0.4s;
+    }
+    .toast-msg.error { border-color: var(--danger); }
+    .toast-msg.success { border-color: var(--ok); }
+    .toast-msg.warn { border-color: var(--warn); }
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
+    .spinner {
+      border: 3px solid #fff; border-top: 3px solid transparent;
+      border-radius: 50%; width: 16px; height: 16px;
+      animation: spin 0.9s linear infinite; display: inline-block; vertical-align: middle;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 
@@ -214,58 +121,39 @@
       <!-- FORM -->
       <section class="card">
         <h2>🧾 FORM KENDARAAN</h2>
-        <label for="plat">Plat Nomor</label>
-        <input id="plat" type="text" placeholder="Contoh: B1234XYZ" />
 
-        <label for="letak">Letak / Garasi</label>
-        <input id="letak" type="text" placeholder="Contoh: Jakarta" />
+        <label>Plat Nomor</label>
+        <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled>
 
-        <label for="stnk">STNK</label>
-        <input id="stnk" type="date" />
+        <label>Letak / Garasi</label>
+        <input id="letak" type="text" placeholder="Contoh: Jakarta" disabled>
 
-        <label for="kir">KIR</label>
-        <input id="kir" type="date" />
-
-        <label for="servis">Servis Terakhir</label>
-        <input id="servis" type="date" />
-
-        <label for="pajak5">Pajak 5 Tahunan</label>
-        <input id="pajak5" type="date" />
+        <label>STNK</label><input id="stnk" type="date" disabled>
+        <label>KIR</label><input id="kir" type="date" disabled>
+        <label>Servis Terakhir</label><input id="servis" type="date" disabled>
+        <label>Pajak 5 Tahunan</label><input id="pajak5" type="date" disabled>
 
         <div class="row-btn">
           <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">Tambah</button>
-          <button id="btnCancel" class="btn btn-secondary" onclick="handleCancel()" disabled>Batal</button>
+          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>Batal</button>
         </div>
       </section>
 
       <!-- TABLE -->
       <section class="card">
         <h2>📋 DAFTAR KENDARAAN</h2>
-
         <div class="toolbar">
-          <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)" />
+          <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)">
         </div>
-
-        <div class="table-wrap">
-          <table id="tblKendaraan">
-            <thead>
-              <tr>
-                <th>Plat Nomor</th>
-                <th>Letak</th>
-                <th>STNK</th>
-                <th>KIR</th>
-                <th>Servis Terakhir</th>
-                <th>Pajak 5 Tahunan</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td colspan="7" class="loading">🔄 Memuat data kendaraan...</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top:10px;font-size:13px;">
+        <table id="tblKendaraan">
+          <thead>
+            <tr>
+              <th>Plat</th><th>Letak</th><th>STNK</th><th>KIR</th><th>Servis</th><th>Pajak 5 Th</th><th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="7" align="center">Memuat data...</td></tr></tbody>
+        </table>
+        <div class="legend">
           <span><span class="dot green"></span> Aman</span>
           <span><span class="dot yellow"></span> Peringatan (≤10 hari / Servis ≥3 bulan)</span>
           <span><span class="dot red"></span> Lewat (STNK/KIR/Pajak habis)</span>
@@ -274,34 +162,138 @@
     </div>
   </main>
 
-  <script src="main.js?v=7.4"></script>
+  <div id="toast"></div>
+
+  <script src="main.js?v=7.5"></script>
   <script>
-    async function initKendaraanPage() {
-      const u = getSession();
-      if (!u) return (location.href = "login.html");
+    let MODE = "view", DATA = [], EDIT_PLAT = null, undoTimer = null, undoData = null;
 
-      const tbl = document.querySelector("#tblKendaraan tbody");
-      tbl.innerHTML = `<tr><td colspan="7" class="loading">🔄 Memuat data kendaraan...</td></tr>`;
+    const $ = id => document.getElementById(id);
+    function showToast(msg, type="info", time=3000) {
+      const div = document.createElement("div");
+      div.className = `toast-msg ${type}`;
+      div.textContent = msg;
+      $("toast").appendChild(div);
+      setTimeout(()=>div.remove(), time);
+    }
 
-      const res = await api("getKendaraan");
-      if (!res.success || !Array.isArray(res.data)) {
-        tbl.innerHTML = `<tr><td colspan="7" class="loading">⚠️ Gagal memuat data kendaraan</td></tr>`;
-        return;
-      }
+    function setForm(disabled){
+      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>{
+        const el=$(id); el.disabled=disabled;
+      });
+      if(MODE==="edit") $("plat").setAttribute("readonly","readonly");
+      else $("plat").removeAttribute("readonly");
+    }
+    function clearForm(){
+      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).value="");
+      EDIT_PLAT=null;
+    }
+    function syncBtn(){
+      const p=$("btnPrimary"), c=$("btnCancel");
+      if(MODE==="view"){p.textContent="Tambah"; c.disabled=true;}
+      if(MODE==="add"){p.textContent="Simpan"; c.disabled=false;}
+      if(MODE==="edit"){p.textContent="Update"; c.disabled=false;}
+    }
 
-      DATA = res.data;
-      renderTabelKendaraan(DATA, true);
+    async function initKendaraanPage(){
+      const u=getSession(); if(!u) return location.href="login.html";
+      setForm(true); syncBtn();
+      $("searchInput").addEventListener("input", filterTable);
+      await loadTable();
+    }
 
-      const s = document.getElementById("searchInput");
-      s.addEventListener("input", () => {
-        const val = s.value.toLowerCase();
-        const filtered = DATA.filter(k =>
-          k.Platnomor.toLowerCase().includes(val) ||
-          k.Letak.toLowerCase().includes(val)
-        );
-        renderTabelKendaraan(filtered, true);
+    async function loadTable(){
+      const tb=document.querySelector("#tblKendaraan tbody");
+      tb.innerHTML=`<tr><td colspan="7" align="center">Memuat data...</td></tr>`;
+      const res=await api("getKendaraan");
+      if(!res.success){tb.innerHTML=`<tr><td colspan="7" align="center">Gagal memuat data</td></tr>`;return;}
+      DATA=res.data;
+      renderTable(DATA);
+    }
+
+    function renderTable(list){
+      const tb=document.querySelector("#tblKendaraan tbody");
+      tb.innerHTML=list.length?list.map(k=>{
+        const s1=getStatusTanggal(k.STNK), s2=getStatusTanggal(k.KIR), s3=getStatusServis(k.ServisTerakhir), s4=getStatusTanggal(k.pajak5tahun);
+        return `<tr>
+          <td><b>${k.Platnomor}</b></td><td>${k.Letak}</td>
+          <td><span class="dot" style="background:${s1.color}"></span>${fmtDate(k.STNK)}<br><small>${s1.text}</small></td>
+          <td><span class="dot" style="background:${s2.color}"></span>${fmtDate(k.KIR)}<br><small>${s2.text}</small></td>
+          <td><span class="dot" style="background:${s3.color}"></span>${fmtDate(k.ServisTerakhir)}<br><small>${s3.text}</small></td>
+          <td><span class="dot" style="background:${s4.color}"></span>${fmtDate(k.pajak5tahun)}<br><small>${s4.text}</small></td>
+          <td><button class="action-btn edit" onclick="editData('${encodeURIComponent(k.Platnomor)}')">✏️ Edit</button>
+              <button class="action-btn del" onclick="deleteData('${encodeURIComponent(k.Platnomor)}')">🗑 Hapus</button></td></tr>`;
+      }).join(""):`<tr><td colspan="7" align="center">Tidak ada data</td></tr>`;
+      filterTable();
+    }
+
+    function filterTable(){
+      const val=$("searchInput").value.toLowerCase();
+      document.querySelectorAll("#tblKendaraan tbody tr").forEach(r=>{
+        const t=r.innerText.toLowerCase();
+        r.style.display=t.includes(val)?"":"none";
       });
     }
+
+    function handleCancel(){MODE="view";setForm(true);clearForm();setForm(true);syncBtn();}
+
+    function enterAdd(){MODE="add";setForm(false);clearForm();syncBtn();$("plat").focus();}
+
+    function editData(str){
+      const p=decodeURIComponent(str), d=DATA.find(x=>x.Platnomor===p);
+      if(!d)return showToast("Data tidak ditemukan","error");
+      MODE="edit";setForm(false);
+      $("plat").value=d.Platnomor;$("letak").value=d.Letak;
+      $("stnk").value=d.STNK;$("kir").value=d.KIR;$("servis").value=d.ServisTerakhir;$("pajak5").value=d.pajak5tahun;
+      EDIT_PLAT=d.Platnomor;syncBtn();
+    }
+
+    async function handlePrimaryClick(){
+      if(MODE==="view")return enterAdd();
+      const btn=$("btnPrimary");btn.innerHTML=`<span class='spinner'></span>`;
+      const p=$("plat").value.trim(),l=$("letak").value.trim(),s1=$("stnk").value,s2=$("kir").value,s3=$("servis").value,s4=$("pajak5").value;
+      if(!p||!l){showToast("Plat & Letak wajib diisi","error");btn.textContent=MODE==="add"?"Simpan":"Update";return;}
+
+      if(MODE==="add"){
+        if(DATA.some(x=>x.Platnomor.toLowerCase()===p.toLowerCase())){
+          showToast("Plat sudah ada, gunakan Edit","warn");btn.textContent="Simpan";return;
+        }
+        const r=await api("addKendaraan",{Platnomor:p,Letak:l,STNK:s1,KIR:s2,ServisTerakhir:s3,pajak5tahun:s4});
+        showToast(r.message||"Disimpan",r.success?"success":"error");
+      }
+      if(MODE==="edit"){
+        const r=await api("updateKendaraan",{PlatnomorLama:EDIT_PLAT,Platnomor:p,Letak:l,STNK:s1,KIR:s2,ServisTerakhir:s3,pajak5tahun:s4});
+        showToast(r.message||"Terupdate",r.success?"success":"error");
+      }
+      btn.textContent=MODE==="add"?"Simpan":"Update";
+      MODE="view";setForm(true);clearForm();syncBtn();await loadTable();
+    }
+
+    async function deleteData(str){
+      const p=decodeURIComponent(str);
+      if(!confirm("Yakin hapus "+p+"?"))return;
+      const old=DATA.find(x=>x.Platnomor===p);undoData=old;
+      const r=await api("deleteKendaraan",{Platnomor:p});
+      if(!r.success)return showToast("Gagal hapus","error");
+      showToast("Data dihapus. Klik Undo untuk mengembalikan.","warn",10000);
+      const btn=document.createElement("button");btn.textContent="Undo";btn.style="padding:5px 10px;border-radius:6px;border:none;background:#0c5d27;color:#fff;cursor:pointer;margin-left:8px;";
+      btn.onclick=()=>undoDelete();
+      $("toast").lastElementChild.appendChild(btn);
+      undoTimer=setTimeout(()=>{undoData=null;},10000);
+      await loadTable();
+    }
+
+    async function undoDelete(){
+      if(!undoData)return showToast("Tidak ada yang bisa di-undo","warn");
+      clearTimeout(undoTimer);
+      const d=undoData;undoData=null;
+      const r=await api("addKendaraan",d);
+      showToast(r.message||"Dikembalikan",r.success?"success":"error");
+      await loadTable();
+    }
+
+    window.editData=editData;
+    window.deleteData=deleteData;
   </script>
 </body>
 </html>
