@@ -2,193 +2,66 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    :root {
-      --accent:#0c5d27; --accent2:#13904a;
-      --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
-      --gray:#ddd; --soft:#f6faf7;
-    }
-    *{box-sizing:border-box;font-family:"Poppins",sans-serif}
-    body{background:var(--soft);margin:0;color:#123}
-    header{background:var(--accent);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
-    header a{color:#fff;text-decoration:none;margin-left:16px;font-weight:500}
-    main{max-width:1600px;margin:38px auto;padding:0 20px}
-    .grid{display:grid;grid-template-columns:420px 1fr;gap:32px;align-items:start}
-
-    .card{background:#fff;border-radius:14px;box-shadow:0 5px 15px rgba(0,0,0,.08);padding:26px;transition:.2s}
-    .card:hover{transform:translateY(-2px)}
-    h2{margin-top:0;margin-bottom:22px;text-align:center;color:var(--accent);font-size:20px}
-    h2 span{font-size:22px;margin-right:6px}
-
-    label{display:block;margin:12px 0 6px;font-weight:600;font-size:13.5px;color:#244}
-    input[type="text"],input[type="date"]{
-      width:100%;padding:11px 13px;border:1.6px solid #cdd9cd;border-radius:8px;font-size:14px;
-      transition:.2s;
-    }
-    input:disabled{background:#f9f9f9;opacity:.7}
-    input:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(12,93,39,.1)}
-    #plat,#letak{text-transform:uppercase}
-
-    .row-btn{display:flex;gap:12px;margin-top:20px;justify-content:center}
-    .btn{
-      border:none;border-radius:8px;padding:11px 20px;font-weight:600;cursor:pointer;transition:.2s;
-      box-shadow:0 3px 10px rgba(0,0,0,0.1);
-    }
-    .btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
-    .btn-primary{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff;
-    }
-    .btn-primary:hover{filter:brightness(1.1)}
-    .btn-neutral{
-      background:linear-gradient(135deg,#e0e0e0,#fafafa);
-      color:#333;
-    }
-    .btn-neutral:hover{background:linear-gradient(135deg,#e8e8e8,#ffffff)}
-    .btn-neutral:disabled{background:#f0f0f0;color:#999}
-
-    .search-wrap{position:relative;margin-bottom:14px}
-    #searchInput{
-      width:100%;padding:11px 13px;
-      border-radius:8px;border:1.5px solid #dbe5dc;font-size:14px;
-    }
-    #clearSearch{
-      position:absolute;right:8px;top:50%;transform:translateY(-50%);
-      background:#c0392b;color:#fff;border:none;border-radius:6px;
-      padding:3px 7px;cursor:pointer;font-size:13px;display:none;
-    }
-    #clearSearch:hover{background:#e74c3c}
-
-    /* === TABLE STYLING REVISED === */
-    .table-wrap{
-      max-height:640px;
-      overflow:auto;
-      border-radius:10px;
-      border:1px solid #e3eee3;
-      box-shadow:inset 0 0 8px rgba(0,0,0,0.05);
-      overflow-x:auto;
-      scroll-behavior:smooth;
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:14px;
-      table-layout:auto;
-    }
-    th,td{
-      padding:14px 18px;
-      border-bottom:1px solid #e0ebe0;
-      vertical-align:middle;
-      text-align:left;
-      white-space:nowrap;
-    }
-    thead th{
-      background:var(--accent);
-      color:#fff;
-      text-transform:uppercase;
-      font-size:14px;
-      position:sticky;
-      top:0;
-      z-index:2;
-    }
-    thead th:nth-child(1){min-width:120px;}  /* PLAT */
-    thead th:nth-child(2){min-width:140px;}  /* LETAK */
-    thead th:nth-child(3){min-width:160px;}  /* STNK */
-    thead th:nth-child(4){min-width:160px;}  /* KIR */
-    thead th:nth-child(5){min-width:200px;}  /* SERVIS */
-    thead th:nth-child(6){min-width:200px;}  /* PAJAK */
-    thead th:nth-child(7){min-width:130px;}  /* AKSI */
-
-    tbody td small{
-      display:block;
-      font-size:12px;
-      color:#555;
-      margin-top:2px;
-    }
-    tbody tr:hover{background:#f9fcf9;}
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:3px;
-      display:inline-block;
-      margin-right:6px;
-    }
-    .action-btn{
-      border:none;border-radius:6px;padding:7px 11px;font-size:13px;font-weight:600;cursor:pointer;
-      box-shadow:0 2px 6px rgba(0,0,0,0.08);
-    }
-    .edit{background:#f1c40f;color:#000;margin-right:6px}
-    .del{background:var(--danger);color:#fff}
-
-    #toast-container{
-      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-      display:flex;flex-direction:column;align-items:center;z-index:9999;pointer-events:none;
-    }
-    .toast{
-      background:#fff;padding:14px 18px;border-radius:12px;
-      box-shadow:0 4px 18px rgba(0,0,0,0.15);
-      font-weight:600;min-width:250px;text-align:center;
-      border-left:6px solid var(--accent);
-      animation:fadeIn .4s ease;
-      margin-top:8px;
-    }
-    .toast.success{border-color:var(--ok)}
-    .toast.error{border-color:var(--danger)}
-    .toast.warn{border-color:var(--warn)}
-    @keyframes fadeIn{from{opacity:0;transform:translate(-50%,-60%);}to{opacity:1;transform:translate(-50%,-50%);}}
-
-    @media(max-width:1000px){.grid{grid-template-columns:1fr}}
+    body{font-family:'Poppins',sans-serif;background:#f6f9f6;margin:0;color:#123}
+    header{background:#0c5d27;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+    header nav a{color:#fff;text-decoration:none;margin-left:16px}
+    main{max-width:1400px;margin:28px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:24px}
+    .card{background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.08);padding:18px}
+    h2{margin:0 0 12px;color:#0b4d1b}
+    label{display:block;margin:10px 0 6px;font-weight:600}
+    input[type="text"],input[type="date"]{width:100%;padding:9px 12px;border:1.4px solid #cdd9cd;border-radius:8px}
+    .row-btn{display:flex;gap:10px;margin-top:14px}
+    .btn{border:none;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer}
+    .btn-primary{background:#0c5d27;color:#fff}
+    .btn-cancel{background:#e0e0e0;color:#333}
+    .table-wrap{overflow:auto;border-radius:8px;border:1px solid #e6efe6;padding:6px;background:#fff}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+    thead th{text-transform:uppercase;background:#0c5d27;color:#fff}
   </style>
 </head>
-<body onload="initKendaraanPage()">
+<body onload="initKendaraan()">
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
     <nav>
       <a href="dashboard.html">🏠 Dashboard</a>
       <a href="user.html">👤 User</a>
-      <a href="login.html">🔒 Logout</a>
+      <a href="#" onclick="logout()">🔒 Logout</a>
     </nav>
   </header>
 
   <main>
     <div class="grid">
-      <!-- FORM -->
       <section class="card">
-        <h2><span>🧾</span>FORM KENDARAAN</h2>
-        <label>Plat Nomor</label><input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled>
-        <label>Letak / Garasi</label><input id="letak" type="text" placeholder="Contoh: JAKARTA" disabled>
-        <label>STNK</label><input id="stnk" type="date" disabled>
-        <label>KIR</label><input id="kir" type="date" disabled>
-        <label>Servis Terakhir</label><input id="servis" type="date" disabled>
-        <label>Pajak 5 Tahunan</label><input id="pajak5" type="date" disabled>
-
+        <h2>🧾 FORM KENDARAAN</h2>
+        <label>Plat Nomor</label><input id="plat" type="text" disabled />
+        <label>Letak / Garasi</label><input id="letak" type="text" disabled />
+        <label>STNK</label><input id="stnk" type="date" disabled />
+        <label>KIR</label><input id="kir" type="date" disabled />
+        <label>Servis Terakhir</label><input id="servis" type="date" disabled />
+        <label>Pajak 5 Tahunan</label><input id="pajak5" type="date" disabled />
         <div class="row-btn">
-          <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">➕ Tambah</button>
-          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>❌ Batal</button>
+          <button id="btnPrimary" class="btn btn-primary" onclick="toggleTambah()">➕ Tambah</button>
+          <button id="btnCancel" class="btn btn-cancel" onclick="batalEdit()" disabled>❌ Batal</button>
         </div>
       </section>
 
-      <!-- TABLE -->
       <section class="card">
-        <h2><span>📋</span>DAFTAR KENDARAAN</h2>
-        <div class="search-wrap">
-          <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)">
-          <button id="clearSearch" title="Hapus pencarian">❌</button>
+        <h2>📋 DAFTAR KENDARAAN</h2>
+        <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+          <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)" style="flex:1;padding:9px;border:1.4px solid #cdd9cd;border-radius:8px">
+          <button id="clearSearch" style="display:none;padding:8px;border-radius:6px;background:#c0392b;color:white;border:none">❌</button>
         </div>
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
               <tr>
-                <th>🔠 PLAT NOMOR</th>
-                <th>📍 LETAK</th>
-                <th>🧾 STNK</th>
-                <th>🛞 KIR</th>
-                <th>🔧 SERVIS</th>
-                <th>💰 PAJAK 5 TAHUNAN</th>
-                <th>⚙️ AKSI</th>
+                <th>Plat Nomor</th><th>Letak</th><th>STNK</th><th>KIR</th><th>Servis Terakhir</th><th>Pajak 5 Tahun</th><th>Aksi</th>
               </tr>
             </thead>
             <tbody><tr><td colspan="7" align="center">Memuat data...</td></tr></tbody>
@@ -198,114 +71,46 @@
     </div>
   </main>
 
-  <div id="toast-container"></div>
   <script src="main.js?v=7.5"></script>
   <script>
-    let MODE="view",DATA=[],EDIT_PLAT=null;
-    const $=id=>document.getElementById(id);
-
-    function showToast(msg,type="info",dur=3000){
-      const box=document.createElement("div");
-      box.className="toast "+type; box.textContent=msg;
-      $("toast-container").appendChild(box);
-      setTimeout(()=>box.remove(),dur);
+    // Admin check (preserve main.js behavior)
+    const u = getSession();
+    if (!u) location.href = "login.html";
+    if (u.role !== "admin") {
+      toast("🚫 Hanya admin yang bisa mengakses halaman ini!");
+      setTimeout(()=>location.href="dashboard.html",1500);
     }
 
-    function setForm(disabled){
-      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).disabled=disabled);
-      if(MODE==="edit")$("plat").setAttribute("readonly","readonly"); else $("plat").removeAttribute("readonly");
-    }
-    function clearForm(){["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>$(id).value="");}
-    function syncBtn(){
-      const p=$("btnPrimary"),c=$("btnCancel");
-      if(MODE==="view"){p.textContent="➕ Tambah";c.disabled=true;}
-      if(MODE==="add"){p.textContent="💾 Simpan";c.disabled=false;}
-      if(MODE==="edit"){p.textContent="📝 Update";c.disabled=false;}
-    }
-
-    async function initKendaraanPage(){
-      const u=getSession(); if(!u) return location.href="login.html";
-      $("searchInput").addEventListener("input",filter);
-      $("clearSearch").addEventListener("click",()=>{
-        $("searchInput").value="";filter();
-      });
-      setForm(true);syncBtn();await loadData();
-    }
-
-    async function loadData(){
-      const tb=document.querySelector("#tblKendaraan tbody");
-      tb.innerHTML=`<tr><td colspan=7 align=center>Memuat data...</td></tr>`;
-      const res=await api("getKendaraan");
-      if(!res.success){tb.innerHTML=`<tr><td colspan=7 align=center>Gagal memuat data</td></tr>`;return;}
-      DATA=res.data; render(DATA);
-    }
-
-    function render(list){
-      const tb=document.querySelector("#tblKendaraan tbody");
-      tb.innerHTML=list.map(k=>{
-        const stnk=getStatusTanggal(k.STNK),kir=getStatusTanggal(k.KIR),srv=getStatusServis(k.ServisTerakhir),pjk=getStatusTanggal(k.pajak5tahun);
-        return `<tr>
-        <td><b>${k.Platnomor}</b></td><td>${k.Letak}</td>
-        <td><span class=dot style="background:${stnk.color}"></span>${fmtDate(k.STNK)}<br><small>${stnk.text}</small></td>
-        <td><span class=dot style="background:${kir.color}"></span>${fmtDate(k.KIR)}<br><small>${kir.text}</small></td>
-        <td><span class=dot style="background:${srv.color}"></span>${fmtDate(k.ServisTerakhir)}<br><small>${srv.text}</small></td>
-        <td><span class=dot style="background:${pjk.color}"></span>${fmtDate(k.pajak5tahun)}<br><small>${pjk.text}</small></td>
-        <td><button class="action-btn edit" onclick="editData('${encodeURIComponent(k.Platnomor)}')">✏️ Edit</button>
-            <button class="action-btn del" onclick="hapusData('${encodeURIComponent(k.Platnomor)}')">🗑 Hapus</button></td></tr>`;
-      }).join("")||`<tr><td colspan=7 align=center>Tidak ada data</td></tr>`;
-      filter();
-    }
-
-    function filter(){
-      const q=$("searchInput").value.toLowerCase();
-      const clear=$("clearSearch");
-      document.querySelectorAll("#tblKendaraan tbody tr").forEach(r=>{
-        r.style.display=r.innerText.toLowerCase().includes(q)?"":"none";
-      });
-      clear.style.display=q?"block":"none";
-    }
-
-    function handleCancel(){MODE="view";setForm(true);clearForm();syncBtn();}
-    function enterAdd(){MODE="add";setForm(false);clearForm();syncBtn();$("plat").focus();}
-
-    function editData(str){
-      const plat=decodeURIComponent(str),k=DATA.find(x=>x.Platnomor===plat);
-      if(!k)return showToast("Data tidak ditemukan","error");
-      MODE="edit";setForm(false);EDIT_PLAT=k.Platnomor;
-      $("plat").value=k.Platnomor||"";$("letak").value=k.Letak||"";
-      $("stnk").value=(k.STNK||"").slice(0,10);
-      $("kir").value=(k.KIR||"").slice(0,10);
-      $("servis").value=(k.ServisTerakhir||"").slice(0,10);
-      $("pajak5").value=(k.pajak5tahun||"").slice(0,10);
-      syncBtn();
-    }
-
-    async function handlePrimaryClick(){
-      if(MODE==="view")return enterAdd();
-      const p=$("plat").value.trim(),l=$("letak").value.trim(),s1=$("stnk").value,s2=$("kir").value,s3=$("servis").value,s4=$("pajak5").value;
-      if(!p||!l)return showToast("Plat & Letak wajib diisi","error");
-      if(MODE==="add"){
-        if(DATA.some(x=>x.Platnomor.toLowerCase()===p.toLowerCase()))return showToast("Plat sudah ada, gunakan Edit","warn");
-        const r=await api("addKendaraan",{Platnomor:p,Letak:l,STNK:s1,KIR:s2,ServisTerakhir:s3,pajak5tahun:s4});
-        showToast(r.message||"Disimpan",r.success?"success":"error");
+    // Small helpers to reuse functions in main.js without modifying it heavily
+    function toggleTambah(){
+      const btn = document.getElementById('btnPrimary');
+      if (btn.dataset.mode === 'add') { // currently add -> perform save
+        simpanKendaraan();
+      } else {
+        // enable form fields for adding
+        ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>document.getElementById(id).removeAttribute('disabled'));
+        btn.textContent = '💾 Simpan';
+        btn.dataset.mode = 'add';
+        document.getElementById('btnCancel').disabled = false;
       }
-      if(MODE==="edit"){
-        const r=await api("updateKendaraan",{PlatnomorLama:EDIT_PLAT,Platnomor:p,Letak:l,STNK:s1,KIR:s2,ServisTerakhir:s3,pajak5tahun:s4});
-        showToast(r.message||"Terupdate",r.success?"success":"error");
-      }
-      MODE="view";setForm(true);clearForm();syncBtn();await loadData();
+    }
+    function batalEdit(){
+      ["plat","letak","stnk","kir","servis","pajak5"].forEach(id=>{const el=document.getElementById(id);el.value='';el.setAttribute('disabled','disabled')});
+      const btn = document.getElementById('btnPrimary');
+      btn.textContent = '➕ Tambah'; btn.dataset.mode = '';
+      document.getElementById('btnCancel').disabled = true;
     }
 
-    async function hapusData(str){
-      const p=decodeURIComponent(str);
-      if(!confirm("Yakin ingin menghapus "+p+" ?"))return;
-      const r=await api("deleteKendaraan",{Platnomor:p});
-      showToast(r.message||"Dihapus",r.success?"success":"error");
-      if(r.success)await loadData();
-    }
+    // Wire up clear search & filter using initSearch from main.js
+    const s = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    s.addEventListener('input', ()=>{
+      clearBtn.style.display = s.value ? 'inline-block' : 'none';
+      try { initSearch(); } catch(e) {}
+    });
+    clearBtn.addEventListener('click', ()=>{ s.value=''; s.dispatchEvent(new Event('input')); });
 
-    window.editData=editData;
-    window.hapusData=hapusData;
+    // When page loads, main.js initKendaraan() will render table and call initSearch()
   </script>
 </body>
 </html>
