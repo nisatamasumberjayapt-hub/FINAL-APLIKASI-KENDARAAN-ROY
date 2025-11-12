@@ -115,44 +115,65 @@
     justify-content: center;
     z-index: 999;
     overflow: hidden;
+    animation: fadeInOverlay 0.6s ease forwards;
+  }
+
+  @keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   #monkeyBig {
-    width: 180px;
+    width: 220px;
     height: auto;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     transition: all 0.4s ease;
   }
 
   .loading-text {
     color: #004aad;
-    font-size: 16px;
+    font-size: 17px;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
-  .loading-subtext {
-    color: #006;
-    font-size: 13px;
-    margin-top: 10px;
-  }
-
-  /* Monyet kecil naik motor */
-  .monkey-drive {
+  /* monyet motor + teks otw */
+  .monkey-group {
     position: absolute;
-    bottom: 40px;
+    bottom: 120px;
     left: -120px;
-    width: 100px;
-    animation: driveRight 3s ease-in-out forwards;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: driveRight 4.5s ease-in-out forwards;
+  }
+
+  .monkey-group img {
+    width: 85px;
+    height: auto;
+  }
+
+  .monkey-group span {
+    font-size: 14px;
+    color: #004aad;
+    font-weight: 500;
   }
 
   @keyframes driveRight {
     0%   { transform: translateX(0); opacity: 1; }
-    90%  { transform: translateX(110vw); opacity: 1; }
-    100% { transform: translateX(110vw); opacity: 0; }
+    90%  { transform: translateX(70vw); opacity: 1; }
+    100% { transform: translateX(70vw); opacity: 0; }
   }
 
-  .hidden { display: none; }
+  .fade-out {
+    animation: fadeOutOverlay 1s ease forwards;
+  }
+
+  @keyframes fadeOutOverlay {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -178,8 +199,11 @@
 <div id="loadingOverlay">
   <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir">
   <div class="loading-text" id="loadingText">🐵 Monyet lagi mikir...<br>Apakah kamu orang yang tepat...?</div>
-  <div class="loading-subtext">Kamu otw 👉</div>
-  <img src="assets/monyet_motor.png" class="monkey-drive" alt="monyet naik motor">
+
+  <div class="monkey-group" id="motorGroup">
+    <img src="assets/monyet_motor.png" alt="monyet naik motor">
+    <span>kamu otw 👉</span>
+  </div>
 </div>
 
 <script>
@@ -190,6 +214,7 @@
   const overlay = document.getElementById("loadingOverlay");
   const monkeyBig = document.getElementById("monkeyBig");
   const loadingText = document.getElementById("loadingText");
+  const motorGroup = document.getElementById("motorGroup");
 
   // 👁️ Toggle password
   toggle.addEventListener("click", () => {
@@ -215,9 +240,12 @@
         monkeyBig.src = "assets/monyet_senang.png";
         loadingText.innerHTML = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
         setTimeout(() => {
+          overlay.classList.add("fade-out");
+        }, 2500);
+        setTimeout(() => {
           setSession(res.user);
           window.location.href = "dashboard.html";
-        }, 2800);
+        }, 3400);
       } else {
         monkeyBig.src = "assets/monyet_salah.png";
         loadingText.innerHTML = "🙈 Monyet berhenti mikir... salah orang!";
