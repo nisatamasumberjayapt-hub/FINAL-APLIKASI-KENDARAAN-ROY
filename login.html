@@ -6,7 +6,7 @@
 <title>Login - PT ANISA JAYA UTAMA</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-/* === LOGIN CARD (tidak diubah) === */
+/* === LOGIN CARD (TIDAK DIUBAH) === */
 *{box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{background:linear-gradient(180deg,#f1f6ff 0%,#dbe7ff 100%);display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
 .card{background:rgba(255,255,255,0.9);border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,0.1),0 0 15px rgba(0,100,255,0.1);padding:35px 30px;width:min(90vw,370px);text-align:center;position:relative;backdrop-filter:blur(10px);animation:fadeIn .6s ease}
@@ -25,91 +25,85 @@ a{color:#1b6e2a;text-decoration:none;font-weight:500}
 a:hover{text-decoration:underline}
 
 /* === LOADING OVERLAY === */
-#loadingOverlay{
-  position:fixed;inset:0;background:linear-gradient(180deg,#fff 0%,#f3f7ff 100%);
-  display:none;align-items:center;justify-content:center;z-index:999;overflow:hidden;
-}
-.scene-wrap{
-  width:100%;max-width:1100px;height:70vh;display:flex;align-items:center;justify-content:center;position:relative;
-}
+#loadingOverlay{position:fixed;inset:0;background:linear-gradient(180deg,#fff 0%,#f3f7ff 100%);display:none;align-items:center;justify-content:center;z-index:999;overflow:hidden}
+.scene-wrap{width:100%;max-width:1100px;height:70vh;display:flex;align-items:center;justify-content:center;position:relative}
 
-/* Monyet besar */
+/* Monyet besar (tetap di tengah) */
 #monkeyBig{width:300px;max-width:40vw;animation:breath 3s ease-in-out infinite;z-index:40;position:relative;top:-50px;}
 @keyframes breath{0%,100%{transform:translateY(0)scale(1)}50%{transform:translateY(-8px)scale(1.03)}}
 
 /* Teks bawah monyet */
 .loading-text{position:absolute;top:calc(50% + 100px);text-align:center;color:#003a8c;font-size:18px;line-height:1.3;z-index:41}
 
-/* Jalan */
+/* ==== Posisi Jalan DITURUNKAN 25px ==== */
 .road{
-  position:absolute;bottom:22vh;left:6%;right:6%;
-  height:8px;background:linear-gradient(90deg,#f1f3f8,#e9eef8);
-  border-radius:6px;box-shadow:inset 0 -2px 6px rgba(0,0,0,0.03);
+  position:absolute;
+  bottom:calc(22vh - 25px);
+  left:6%;right:6%;
+  height:8px;
+  background:linear-gradient(90deg,#f1f3f8,#e9eef8);
+  border-radius:6px;
+  box-shadow:inset 0 -2px 6px rgba(0,0,0,0.03);
 }
 
-/* Portal gear */
+/* ==== Portal juga diturunkan agar sejajar jalan ==== */
 .portal{
-  position:absolute;bottom:calc(22vh + 34px);right:8%;
+  position:absolute;
+  bottom:calc(22vh + 10px);
+  right:8%;
   width:170px;height:170px;border-radius:50%;
-  background:
-    conic-gradient(from 0deg,#4c00ff 0deg,#8f00ff 10deg,#4c00ff 20deg,#8f00ff 30deg,#4c00ff 40deg,#8f00ff 50deg,
-      #4c00ff 60deg,#8f00ff 70deg,#4c00ff 80deg,#8f00ff 90deg,#4c00ff 100deg,#8f00ff 110deg,#4c00ff 120deg,#8f00ff 130deg,
-      #4c00ff 140deg,#8f00ff 150deg,#4c00ff 160deg,#8f00ff 170deg,#4c00ff 180deg,#8f00ff 190deg,#4c00ff 200deg,#8f00ff 210deg,
-      #4c00ff 220deg,#8f00ff 230deg,#4c00ff 240deg,#8f00ff 250deg,#4c00ff 260deg,#8f00ff 270deg,#4c00ff 280deg,#8f00ff 290deg,#4c00ff 300deg,#8f00ff 310deg,#4c00ff 320deg,#8f00ff 330deg,#4c00ff 340deg,#8f00ff 350deg,#4c00ff 360deg);
+  background:conic-gradient(from 0deg,#4c00ff 0deg,#8f00ff 10deg,#4c00ff 20deg,#8f00ff 30deg,#4c00ff 40deg,#8f00ff 50deg,#4c00ff 60deg,#8f00ff 70deg,#4c00ff 80deg,#8f00ff 90deg,#4c00ff 100deg,#8f00ff 110deg,#4c00ff 120deg,#8f00ff 130deg,#4c00ff 140deg,#8f00ff 150deg,#4c00ff 160deg,#8f00ff 170deg,#4c00ff 180deg,#8f00ff 190deg,#4c00ff 200deg,#8f00ff 210deg,#4c00ff 220deg,#8f00ff 230deg,#4c00ff 240deg,#8f00ff 250deg,#4c00ff 260deg,#8f00ff 270deg,#4c00ff 280deg,#8f00ff 290deg,#4c00ff 300deg,#8f00ff 310deg,#4c00ff 320deg,#8f00ff 330deg,#4c00ff 340deg,#8f00ff 350deg,#4c00ff 360deg);
   mask:radial-gradient(circle at center,transparent 40%,black 60%);
   box-shadow:0 0 30px rgba(110,0,255,0.35),inset 0 0 25px rgba(255,255,255,0.25);
   animation:gearSpin 5s linear infinite,pulseGlow 2.8s ease-in-out infinite;
-  transform-origin:center;
-  z-index:30;
+  transform-origin:center;z-index:30;
 }
 @keyframes gearSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 @keyframes pulseGlow{0%,100%{filter:drop-shadow(0 0 20px rgba(120,0,255,0.4))}50%{filter:drop-shadow(0 0 35px rgba(160,40,255,0.6))}}
 
-/* Motor */
-.motor-group{position:absolute;bottom:calc(22vh - 12px);left:8%;display:flex;align-items:center;gap:8px;z-index:35}
+/* ==== Motor diturunkan juga ==== */
+.motor-group{
+  position:absolute;
+  bottom:calc(22vh - 40px);
+  left:8%;
+  display:flex;align-items:center;gap:8px;z-index:35;
+}
 .motor-group img{width:90px;filter:drop-shadow(0 5px 8px rgba(0,0,0,0.12))}
 .motor-label{font-weight:600;color:#004aad;font-size:15px;position:relative;top:-4px}
 
-/* Drive anim */
-.driving{animation:driveTwoPhase 4.5s ease-in-out forwards}
-@keyframes driveTwoPhase{
+/* Gerak motor */
+.driving{animation:driveBalanced 4.5s ease-in-out forwards}
+@keyframes driveBalanced{
   0%{transform:translateX(0)}
   45%{transform:translateX(26vw)}
-  100%{transform:translateX(62vw)}
+  100%{transform:translateX(50vw)} /* berhenti sebelum portal */
 }
 
-/* Enter portal */
+/* Masuk portal */
 .enter-portal{animation:enterPortal 1.2s ease forwards}
 @keyframes enterPortal{
-  0%{transform:translateX(62vw)scale(1);opacity:1}
+  0%{transform:translateX(50vw)scale(1);opacity:1}
   100%{transform:translateX(66vw)scale(0.25);opacity:0}
 }
 
-/* Gagal */
+/* Gagal muter */
 .spin-fail{animation:spinFail 1s linear infinite}
 @keyframes spinFail{0%{transform:translateX(50vw)rotate(0)}100%{transform:translateX(50vw)rotate(360deg)}}
 
 /* Asap */
-.smoke{position:absolute;bottom:calc(22vh + 8px);left:calc(50vw + 20px);width:16px;height:16px;border-radius:50%;background:rgba(120,120,120,0.25);filter:blur(2px);opacity:0;z-index:36}
+.smoke{position:absolute;bottom:calc(22vh - 15px);left:calc(50vw + 20px);width:16px;height:16px;border-radius:50%;background:rgba(120,120,120,0.25);filter:blur(2px);opacity:0;z-index:36}
 .smoke.s1{animation:smoke1 1.3s ease forwards}
 .smoke.s2{animation:smoke2 1.6s ease forwards}
 @keyframes smoke1{0%{opacity:0;transform:translateY(0)scale(.6)}30%{opacity:1}100%{opacity:0;transform:translateY(-45px)scale(1.2)}}
 @keyframes smoke2{0%{opacity:0;transform:translateY(0)scale(.7)}20%{opacity:.9}100%{opacity:0;transform:translateY(-55px)scale(1.4)}}
 
 /* Flash effect */
-.flash{
-  position:absolute;inset:0;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0)70%);
-  opacity:0;z-index:60;pointer-events:none;
-  animation:flashPortal .5s ease forwards;
-}
+.flash{position:absolute;inset:0;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0)70%);opacity:0;z-index:60;pointer-events:none;animation:flashPortal .5s ease forwards}
 @keyframes flashPortal{0%{opacity:0}30%{opacity:.9}100%{opacity:0}}
 
 /* Portal close swirl */
 .close-portal{animation:closePortal 1.2s ease forwards}
-@keyframes closePortal{
-  0%{transform:rotate(0deg)scale(1);opacity:1}
-  100%{transform:rotate(540deg)scale(0.2);opacity:0}
-}
+@keyframes closePortal{0%{transform:rotate(0deg)scale(1);opacity:1}100%{transform:rotate(540deg)scale(0.2);opacity:0}}
 
 /* Fade overlay */
 .overlay-fade{animation:fadeOut .9s ease forwards}
@@ -145,6 +139,7 @@ const API_URL="https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsX
 const btn=document.getElementById('btnLogin'),toggle=document.getElementById('togglePass'),pass=document.getElementById('password'),card=document.getElementById('loginCard');
 const overlay=document.getElementById('loadingOverlay'),monkeyBig=document.getElementById('monkeyBig'),loadingText=document.getElementById('loadingText');
 const motorGroup=document.getElementById('motorGroup'),smoke1=document.getElementById('smoke1'),smoke2=document.getElementById('smoke2'),portal=document.getElementById('portal');
+
 toggle.addEventListener('click',()=>{pass.type=pass.type==='password'?'text':'password';toggle.textContent=pass.type==='password'?'👁️':'🙈';});
 function setSession(u){try{localStorage.setItem('aj_user',JSON.stringify(u));}catch(e){}}
 async function api(action,payload={}){try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})});return await r.json()}catch{return{success:false}}}
