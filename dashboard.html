@@ -1,291 +1,183 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dashboard - PT Anisa Jaya Utama</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<style>
-* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body {
-  margin: 0;
-  background: #f6f8ff;
-  color: #222;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | PT Anisa Jaya Utama</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+    }
 
-/* ===== NAVBAR ===== */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #1763c5;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  z-index: 100;
-}
-.navbar h1 {
-  font-size: 17px;
-  margin: 0;
-  font-weight: 600;
-}
-.navbar h1 span {
-  font-weight: 400;
-  font-size: 14px;
-  opacity: 0.9;
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.nav-links a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: 0.2s;
-}
-.nav-links a:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
-}
+    header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
 
-/* ===== PAGE WRAPPER ===== */
-.container {
-  padding: 90px 20px 20px;
-  max-width: 1200px;
-  margin: auto;
-}
+    header .logo {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #004aad;
+    }
 
-/* ===== HEADER SECTION ===== */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-.header h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 20px;
-  color: #14376b;
-  margin: 0;
-}
-.search-box {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 8px;
-  padding: 5px 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-.search-box input {
-  border: none;
-  outline: none;
-  padding: 6px 8px;
-  width: 240px;
-  font-size: 14px;
-}
-.search-box button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: #c0392b;
-}
+    header nav a {
+      color: #004aad;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: 0.25s;
+    }
 
-/* ===== TOTAL INFO ===== */
-.total-info {
-  font-size: 15px;
-  font-weight: 500;
-  color: #14376b;
-  margin-bottom: 8px;
-}
-.total-info span {
-  background: #1763c5;
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 600;
-}
+    header nav a:hover {
+      color: #007bff;
+    }
 
-/* ===== TABLE WRAPPER (scroll area) ===== */
-.table-wrapper {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-  overflow-y: auto;
-  overflow-x: auto;
-  max-height: 70vh;
-  scroll-behavior: smooth;
-}
-.table-wrapper::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(100,100,255,0.3);
-  border-radius: 8px;
-}
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(100,100,255,0.5);
-}
+    main {
+      margin-top: 40px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 90%;
+      max-width: 1100px;
+      padding: 30px;
+      animation: fadeIn 0.8s ease;
+    }
 
-/* ===== TABLE STYLE ===== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 900px;
-}
-thead {
-  background: #1763c5;
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-thead th {
-  padding: 10px 12px;
-  text-align: left;
-  font-size: 14px;
-  white-space: nowrap;
-}
-tbody td {
-  padding: 8px 12px;
-  font-size: 14px;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
-}
-tbody tr:nth-child(even) {
-  background: #f9fbff;
-}
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-/* ===== STATUS COLORS ===== */
-.status-red { color: #e74c3c; font-weight: 600; }
-.status-green { color: #27ae60; font-weight: 600; }
+    h2 {
+      text-align: center;
+      color: #004aad;
+      margin-bottom: 20px;
+    }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .navbar h1 { font-size: 15px; }
-  .nav-links a { font-size: 13px; }
-  .search-box input { width: 160px; }
-  .table-wrapper { max-height: 60vh; }
-}
-</style>
+    .search-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .search-container input {
+      width: 100%;
+      max-width: 350px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      outline: none;
+      transition: 0.25s;
+    }
+
+    .search-container input:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+    .table-container {
+      overflow-y: auto;
+      max-height: 60vh;
+      border-radius: 10px;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #004aad;
+      color: white;
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: rgba(0, 74, 173, 0.06);
+    }
+
+    .legend {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .legend .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .green { background: #27ae60; }
+    .yellow { background: #f1c40f; }
+    .red { background: #e74c3c; }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 20px;
+        width: 95%;
+      }
+      table {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
-<body>
+<body onload="initDashboard()">
+  <header>
+    <div class="logo">🚙 PT Anisa Jaya Utama — <span>Dashboard</span></div>
+    <nav>
+      <a href="dashboard.html" class="active">🏠 Dashboard</a>
+      <a href="kendaraan.html">🚗 Kendaraan</a>
+      <a href="user.html">👤 User</a>
+      <a href="#" onclick="logout()">🔒 Logout</a>
+    </nav>
+  </header>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <h1>PT Anisa Jaya Utama <span>— by Roy</span></h1>
-  <div class="nav-links">
-    <a href="#"><span>🏠</span>Dashboard</a>
-    <a href="#"><span>🚗</span>Kendaraan</a>
-    <a href="#"><span>👤</span>User</a>
-    <a href="login.html"><span>🚪</span>Logout</a>
-  </div>
-</div>
+  <main>
+    <h2>📊 Daftar Kendaraan</h2>
 
-<!-- MAIN -->
-<div class="container">
-  <div class="header">
-    <h2>🚘 Daftar Kendaraan</h2>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Cari kendaraan (Plat / Letak)" />
-      <button id="clearBtn">❌</button>
-    </div>
-  </div>
-
-  <div class="total-info">
-    Total kendaraan: <span id="totalCount">0</span>
-  </div>
-
-  <div class="table-wrapper">
-    <table id="kendaraanTable">
-      <thead>
-        <tr>
-          <th>📋 Plat Nomor</th>
-          <th>📍 Letak</th>
-          <th>🧾 STNK</th>
-          <th>🧰 KIR</th>
-          <th>🔧 Servis Terakhir</th>
-          <th>💰 Pajak 5 Tahunan</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <!-- Data via JS -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-// === DATA CONTOH (bisa diganti dinamis) ===
-const dataKendaraan = [
-  { plat:"B4321CD", lokasi:"Jakarta", stnk:"2025-08-06", kir:"2025-06-10", servis:"2024-11-19", pajak:"2024-11-26" },
-  { plat:"B432HJB", lokasi:"Jakarta", stnk:"2025-09-01", kir:"2025-06-15", servis:"2024-12-01", pajak:"2024-12-02" },
-  { plat:"B777ZZ", lokasi:"Bandung", stnk:"2025-08-01", kir:"2025-06-15", servis:"2024-12-01", pajak:"2024-12-02" },
-  { plat:"T9072DF", lokasi:"Majalengka", stnk:"2026-04-21", kir:"2025-09-10", servis:"2025-10-21", pajak:"2027-04-21" },
-  { plat:"B9876XYZ", lokasi:"Depok", stnk:"2025-09-10", kir:"2025-06-15", servis:"2024-11-30", pajak:"2030-09-10" },
-];
-
-// === RENDER DATA ===
-function renderTable(data) {
-  const tbody = document.getElementById("tableBody");
-  const total = document.getElementById("totalCount");
-  tbody.innerHTML = "";
-  data.forEach(item => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.plat}</td>
-        <td>${item.lokasi}</td>
-        <td class="${status(item.stnk)}">${format(item.stnk)}</td>
-        <td class="${status(item.kir)}">${format(item.kir)}</td>
-        <td class="${status(item.servis)}">${format(item.servis)}</td>
-        <td class="${status(item.pajak)}">${format(item.pajak)}</td>
-      </tr>
-    `;
-  });
-  total.textContent = data.length;
-}
-
-// === STATUS ===
-function status(date) {
-  const today = new Date();
-  const d = new Date(date);
-  return d >= today ? "status-green" : "status-red";
-}
-
-// === FORMAT TANGGAL ===
-function format(dateStr) {
-  const d = new Date(dateStr);
-  return isNaN(d) ? "-" : d.toISOString().split("T")[0];
-}
-
-// === SEARCH ===
-document.getElementById("searchInput").addEventListener("input", (e)=>{
-  const val = e.target.value.toLowerCase();
-  const filtered = dataKendaraan.filter(x =>
-    x.plat.toLowerCase().includes(val) || x.lokasi.toLowerCase().includes(val)
-  );
-  renderTable(filtered);
-});
-document.getElementById("clearBtn").addEventListener("click", ()=>{
-  document.getElementById("searchInput").value="";
-  renderTable(dataKendaraan);
-});
-
-// === INIT ===
-renderTable(dataKendaraan);
-</script>
-</body>
-</html>
+    <div class="search-container">
+      <input type="text" id="searchInput"
