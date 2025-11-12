@@ -104,8 +104,8 @@
   a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
   a:hover { text-decoration: underline; }
 
-  /* === LOADING SCREEN === */
-  #loadingScreen {
+  /* === OVERLAY LOADING === */
+  #loadingOverlay {
     position: fixed;
     inset: 0;
     background: #f8fbff;
@@ -113,65 +113,46 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 999;
+    overflow: hidden;
   }
 
-  /* === MONKEY ANIMATION === */
-  .monkey {
-    width: 160px;
-    height: 160px;
-    position: relative;
-    animation: floaty 2s ease-in-out infinite;
-  }
-  @keyframes floaty {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-  .monkey svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  /* tangan mikir */
-  .monkey svg path.hand {
-    transform-origin: center;
-    animation: handmove 2s ease-in-out infinite;
-  }
-  @keyframes handmove {
-    0%,100% { transform: rotate(0deg); }
-    50% { transform: rotate(5deg); }
-  }
-
-  /* tanda tanya */
-  .question {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    animation: floatQ 1.8s ease-in-out infinite;
-  }
-  @keyframes floatQ {
-    0%,100% { transform: translate(-50%, 0); opacity: 0.6; }
-    50% { transform: translate(-50%, -6px); opacity: 1; }
+  #monkeyBig {
+    width: 180px;
+    height: auto;
+    margin-bottom: 15px;
+    transition: all 0.4s ease;
   }
 
   .loading-text {
-    margin-top: 18px;
-    font-size: 16px;
     color: #004aad;
+    font-size: 16px;
     text-align: center;
+    line-height: 1.5;
   }
 
-  .error-msg {
-    margin-top: 20px;
-    background: #ffe6e6;
-    border: 1px solid #ffb3b3;
-    color: #d32f2f;
-    border-radius: 8px;
-    padding: 10px 15px;
-    display: none;
+  .loading-subtext {
+    color: #006;
+    font-size: 13px;
+    margin-top: 10px;
   }
+
+  /* Monyet kecil naik motor */
+  .monkey-drive {
+    position: absolute;
+    bottom: 40px;
+    left: -120px;
+    width: 100px;
+    animation: driveRight 3s ease-in-out forwards;
+  }
+
+  @keyframes driveRight {
+    0%   { transform: translateX(0); opacity: 1; }
+    90%  { transform: translateX(110vw); opacity: 1; }
+    100% { transform: translateX(110vw); opacity: 0; }
+  }
+
+  .hidden { display: none; }
 </style>
 </head>
 <body>
@@ -193,83 +174,68 @@
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- LOADING SCREEN -->
-<div id="loadingScreen">
-  <div class="monkey">
-    <svg viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="50" fill="#d9b07e"/>
-      <circle cx="45" cy="55" r="8" fill="#fff"/>
-      <circle cx="75" cy="55" r="8" fill="#fff"/>
-      <circle cx="45" cy="55" r="4" fill="#000"/>
-      <circle cx="75" cy="55" r="4" fill="#000"/>
-      <path d="M48 78 Q60 90 72 78" stroke="#000" stroke-width="3" fill="none" />
-      <circle cx="25" cy="60" r="15" fill="#c4956b"/>
-      <circle cx="95" cy="60" r="15" fill="#c4956b"/>
-      <path class="hand" d="M58 82 Q60 85 62 82" stroke="#8b5e3c" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-    <div class="question">❓</div>
-  </div>
-  <div class="loading-text" id="loadingText">🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔</div>
-  <div class="error-msg" id="errorMsg">🙈 Username atau password salah! Monyet gak suka 😜</div>
+<!-- OVERLAY LOADING -->
+<div id="loadingOverlay">
+  <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir">
+  <div class="loading-text" id="loadingText">🐵 Monyet lagi mikir...<br>Apakah kamu orang yang tepat...?</div>
+  <div class="loading-subtext">Kamu otw 👉</div>
+  <img src="assets/monyet_motor.png" class="monkey-drive" alt="monyet naik motor">
 </div>
 
 <script>
   const btn = document.getElementById("btnLogin");
   const toggle = document.getElementById("togglePass");
   const pass = document.getElementById("password");
-  const loading = document.getElementById("loadingScreen");
-  const text = document.getElementById("loadingText");
-  const errorMsg = document.getElementById("errorMsg");
   const card = document.getElementById("loginCard");
+  const overlay = document.getElementById("loadingOverlay");
+  const monkeyBig = document.getElementById("monkeyBig");
+  const loadingText = document.getElementById("loadingText");
 
   // 👁️ Toggle password
   toggle.addEventListener("click", () => {
-    if (pass.type === "password") {
-      pass.type = "text";
-      toggle.textContent = "🙈";
-    } else {
-      pass.type = "password";
-      toggle.textContent = "👁️";
-    }
+    pass.type = pass.type === "password" ? "text" : "password";
+    toggle.textContent = pass.type === "password" ? "👁️" : "🙈";
   });
 
-  // Tombol login
+  // Tombol login ditekan
   btn.addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     const password = pass.value.trim();
     if (!username || !password) return alert("Isi username dan password!");
 
+    // tampilkan animasi loading
     card.style.display = "none";
-    loading.style.display = "flex";
-    text.textContent = "🐒 Monyet lagi mikir... apakah kamu orang yang benar? 🤔";
-    errorMsg.style.display = "none";
+    overlay.style.display = "flex";
+    monkeyBig.src = "assets/monyet_mikir.png";
+    loadingText.innerHTML = "🐵 Monyet lagi mikir...<br>Apakah kamu orang yang tepat...?";
 
     try {
       const res = await api("login", { username, password });
       if (res.success) {
-        text.textContent = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
+        monkeyBig.src = "assets/monyet_senang.png";
+        loadingText.innerHTML = "✅ Monyet yakin kamu orang yang benar! 🚗💨";
         setTimeout(() => {
           setSession(res.user);
-          location.href = "dashboard.html";
-        }, 1500);
+          window.location.href = "dashboard.html";
+        }, 2800);
       } else {
-        text.textContent = "🙈 Monyet berhenti mikir...";
-        errorMsg.style.display = "block";
+        monkeyBig.src = "assets/monyet_salah.png";
+        loadingText.innerHTML = "🙈 Monyet berhenti mikir... salah orang!";
         setTimeout(() => {
-          loading.style.display = "none";
+          overlay.style.display = "none";
           card.style.display = "block";
         }, 2200);
       }
     } catch {
-      text.textContent = "⚠️ Server error, coba lagi nanti!";
+      monkeyBig.src = "assets/monyet_salah.png";
+      loadingText.innerHTML = "⚠️ Server error, coba lagi nanti!";
       setTimeout(() => {
-        loading.style.display = "none";
+        overlay.style.display = "none";
         card.style.display = "block";
-      }, 2000);
+      }, 2500);
     }
   });
 
-  function setSession(u){ localStorage.setItem("aj_user", JSON.stringify(u)); }
   async function api(action, payload = {}) {
     const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
     try {
@@ -283,6 +249,8 @@
       return { success:false };
     }
   }
+
+  function setSession(u){ localStorage.setItem("aj_user", JSON.stringify(u)); }
 </script>
 </body>
 </html>
