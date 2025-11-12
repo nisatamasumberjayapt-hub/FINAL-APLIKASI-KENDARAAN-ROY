@@ -3,90 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | PT Anisa Jaya Utama</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Dashboard | PT Anisa Jaya Utama — BY ROY</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    /* minimal CSS specific untuk dashboard tweaks (agar tidak rubah styles.css global) */
-    header{background:#0c5d27;color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-    header .logo{font-weight:600}
-    header nav a{color:#fff;text-decoration:none;margin-left:16px}
-    main.container{padding:25px;max-width:1200px;margin:24px auto}
-    h2{text-align:center;text-transform:uppercase}
-    .search-container{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-    .table-container{overflow:auto;border-radius:8px;border:1px solid #e6efe6;padding:8px;background:#fff}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
-    thead th{text-transform:uppercase;background:#0c5d27;color:#fff}
-    .legend{margin-top:10px;display:flex;gap:10px;justify-content:center}
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f4f7f4;
+      margin: 0;
+      color: #123;
+    }
+    header {
+      background: #0c5d27;
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-weight: 600;
+    }
+    header nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 18px;
+      font-weight: 500;
+    }
+    main {
+      max-width: 1300px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0c5d27;
+      text-transform: uppercase;
+    }
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    #searchInput {
+      width: 70%;
+      max-width: 600px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #cdd9cd;
+      font-size: 14px;
+    }
+    #clearSearch {
+      display: none;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Table Section */
+    .table-container {
+      background: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.08);
+      overflow: hidden;
+    }
+    .table-scroll {
+      max-height: 520px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid #e0ebe0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: auto;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #0c5d27;
+      color: #fff;
+      text-align: left;
+      padding: 10px 14px;
+      text-transform: uppercase;
+    }
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e0ebe0;
+      vertical-align: top;
+    }
+    tbody tr:hover {
+      background: #f9fdf9;
+    }
+    .legend {
+      margin-top: 14px;
+      text-align: center;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .legend span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+    .green { background: #27ae60; }
+    .yellow { background: #f1c40f; }
+    .red { background: #e74c3c; }
   </style>
 </head>
 <body onload="initDashboard()">
+
   <header>
-    <div class="logo">🚙 PT Anisa Jaya Utama — <span style="font-weight:400">by Roy</span></div>
+    <div class="logo">🚙 PT Anisa Jaya Utama — <span style="font-weight:400;">by Roy</span></div>
     <nav id="navLinks"></nav>
   </header>
 
-  <main class="container">
+  <main>
     <h2>📊 DAFTAR KENDARAAN</h2>
+
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat / Letak)" />
-      <button id="clearSearch" style="display:none">❌</button>
+      <button id="clearSearch">❌</button>
     </div>
 
     <div class="table-container">
-      <table id="tblKendaraan">
-        <thead>
-          <tr>
-            <th>🚘 PLAT</th>
-            <th>📍 LETAK</th>
-            <th>📋 STNK</th>
-            <th>🔧 KIR</th>
-            <th>🛠 SERVIS</th>
-            <th>💰 PAJAK 5 TAHUN</th>
-          </tr>
-        </thead>
-        <tbody><tr><td colspan="6" align="center">Memuat data...</td></tr></tbody>
-      </table>
+      <div class="table-scroll">
+        <table id="tblKendaraan">
+          <thead>
+            <tr>
+              <th>🚘 PLAT</th>
+              <th>📍 LETAK</th>
+              <th>📋 STNK</th>
+              <th>🔧 KIR</th>
+              <th>🛠 SERVIS</th>
+              <th>💰 PAJAK 5 TAHUN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" align="center">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="legend">
-      <div><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#27ae60;margin-right:6px"></span>Aman</div>
-      <div><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#f1c40f;margin-right:6px"></span>Peringatan</div>
-      <div><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#e74c3c;margin-right:6px"></span>Lewat</div>
+      <div><span class="green"></span> Aman</div>
+      <div><span class="yellow"></span> Peringatan (≤10 hari / servis ≥3 bulan)</div>
+      <div><span class="red"></span> Lewat (STNK/KIR/Pajak habis)</div>
     </div>
   </main>
 
-  <script src="main.js?v=7.5"></script>
+  <script src="main.js?v=8.2"></script>
   <script>
     const user = getSession();
     if (!user) return location.href = "login.html";
-    const nav = document.getElementById('navLinks');
+    const nav = document.getElementById("navLinks");
 
     if (user.role === "admin") {
-      nav.innerHTML = `<a href="dashboard.html">🏠 Dashboard</a>
-                       <a href="kendaraan.html">🚘 Kendaraan</a>
-                       <a href="user.html">👤 User</a>
-                       <a href="#" onclick="logout()">🔒 Logout</a>`;
+      // admin: semua menu
+      nav.innerHTML = `
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="kendaraan.html">🚗 Kendaraan</a>
+        <a href="user.html">👤 User</a>
+        <a href="#" onclick="logout()">🔒 Logout</a>
+      `;
     } else {
-      nav.innerHTML = `<a href="dashboard.html">🏠 Dashboard</a>
-                       <a href="#" onclick="logout()">🔒 Logout</a>`;
-      // optional friendly note (small)
-      const note = document.createElement('div');
-      note.style.textAlign = 'center'; note.style.marginTop = '8px';
-      note.innerHTML = `👋 Halo ${user.nama}! Kamu hanya dapat melihat dashboard.`;
-      document.querySelector('main').prepend(note);
+      // user biasa: cuma logout
+      nav.innerHTML = `<a href="#" onclick="logout()">🔒 Logout</a>`;
     }
 
-    // initSearch hook already in main.js (initDashboard will call it)
-    // but ensure clearSearch shows/hides properly
-    const s = document.getElementById('searchInput');
-    const clearBtn = document.getElementById('clearSearch');
-    s.addEventListener('input', ()=> {
-      clearBtn.style.display = s.value ? 'inline-block' : 'none';
-      // reuse existing filter logic from main.js initSearch() by calling it
-      try { initSearch(); } catch(e) {}
+    // Tambahkan pesan sambutan di atas tabel untuk user biasa
+    if (user.role !== "admin") {
+      const note = document.createElement("div");
+      note.style.textAlign = "center";
+      note.style.fontWeight = "500";
+      note.style.margin = "10px 0 16px";
+      note.textContent = `👋 Halo ${user.nama}! Kamu hanya dapat melihat Dashboard.`;
+      document.querySelector("main").prepend(note);
+    }
+
+    // Handle pencarian dan tombol clear
+    const s = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearSearch");
+    s.addEventListener("input", () => {
+      clearBtn.style.display = s.value ? "inline-block" : "none";
+      try { initSearch(); } catch (e) {}
     });
-    clearBtn.addEventListener('click', ()=> { s.value=''; s.dispatchEvent(new Event('input')); });
+    clearBtn.addEventListener("click", () => {
+      s.value = "";
+      s.dispatchEvent(new Event("input"));
+    });
   </script>
+
 </body>
 </html>
