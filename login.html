@@ -6,7 +6,7 @@
 <title>Login - PT ANISA JAYA UTAMA</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-/* === LOGIN CARD (tidak diubah) === */
+/* ===== DASAR LOGIN ===== */
 * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body {
   background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
@@ -17,6 +17,7 @@ body {
   margin: 0;
 }
 
+/* ==== CARD LOGIN ==== */
 .card {
   background: rgba(255,255,255,0.9);
   border-radius: 18px;
@@ -93,7 +94,7 @@ input:focus {
 a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
 a:hover { text-decoration: underline; }
 
-/* === LOADING OVERLAY === */
+/* ===== LOADING SCENE ===== */
 #loadingOverlay {
   position: fixed;
   inset: 0;
@@ -105,7 +106,6 @@ a:hover { text-decoration: underline; }
   overflow: hidden;
 }
 
-/* Scene container */
 .scene-wrap {
   width: 100%;
   max-width: 1100px;
@@ -116,10 +116,12 @@ a:hover { text-decoration: underline; }
   position: relative;
 }
 
-/* BIG MONKEY */
+/* MONYET BESAR */
 #monkeyBig {
   width: 300px;
   max-width: 40vw;
+  position: relative;
+  top: -40px; /* dinaikkan sedikit agar motor terlihat */
   animation: monkeyBreath 3s ease-in-out infinite;
   z-index: 40;
 }
@@ -129,13 +131,13 @@ a:hover { text-decoration: underline; }
   100% { transform: translateY(0) scale(1); }
 }
 
-/* NEW: Soft ground shadow under monkey */
+/* BAYANGAN LEMBUT DI BAWAH MONYET */
 .monkey-shadow {
   position: absolute;
   width: 160px;
   height: 28px;
   border-radius: 50%;
-  bottom: calc(22vh + 130px);
+  bottom: calc(22vh + 95px);
   background: radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 70%);
   filter: blur(6px);
   opacity: 0.35;
@@ -147,10 +149,10 @@ a:hover { text-decoration: underline; }
   50% { transform: scaleX(1.1); opacity: 0.45; }
 }
 
-/* ROAD */
+/* JALAN */
 .road {
   position: absolute;
-  bottom: 17vh;
+  bottom: 15vh;
   left: 6%;
   right: 6%;
   height: 8px;
@@ -160,10 +162,10 @@ a:hover { text-decoration: underline; }
   z-index: 20;
 }
 
-/* MOTOR GROUP */
+/* MOTOR */
 .motor-group {
   position: absolute;
-  bottom: calc(17vh - 18px);
+  bottom: calc(15vh - 18px);
   left: 8%;
   display: flex;
   align-items: center;
@@ -181,7 +183,7 @@ a:hover { text-decoration: underline; }
   font-size: 15px;
 }
 
-/* DRIVE two-phase */
+/* GERAK MOTOR */
 .driving {
   animation: driveTwoPhase var(--drive-time, 4.5s) ease-in-out forwards;
 }
@@ -191,7 +193,7 @@ a:hover { text-decoration: underline; }
   100% { transform: translateX(50vw) }
 }
 
-/* ENTER PORTAL (now fade out only) */
+/* PORTAL MASUK (HILANG) */
 .enter-portal {
   animation: enterPortal 1.2s ease forwards;
 }
@@ -200,7 +202,7 @@ a:hover { text-decoration: underline; }
   100% { opacity: 0; transform: translateX(55vw) scale(.8); }
 }
 
-/* FAIL spin */
+/* PUTAR SAAT GAGAL */
 .spin-fail {
   animation: spinFail 1s linear infinite;
 }
@@ -209,10 +211,10 @@ a:hover { text-decoration: underline; }
   100% { transform: translateX(50vw) rotate(360deg); }
 }
 
-/* Smoke */
+/* ASAP MOTOR SAAT GAGAL */
 .smoke {
   position: absolute;
-  bottom: calc(17vh + 8px);
+  bottom: calc(15vh + 8px);
   left: calc(50vw + 20px);
   width: 16px;
   height: 16px;
@@ -235,17 +237,26 @@ a:hover { text-decoration: underline; }
   100% { opacity: 0; transform: translateY(-55px) scale(1.4); }
 }
 
+/* OVERLAY FADE */
 .overlay-fade { animation: overlayFade 0.9s ease forwards; }
 @keyframes overlayFade { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ==== RESPONSIVE MOBILE ==== */
+@media (max-width: 600px) {
+  #monkeyBig { width: 220px; top: -30px; }
+  .monkey-shadow { width: 120px; bottom: calc(15vh + 85px); }
+  .road { bottom: 12vh; }
+  .motor-group { bottom: calc(12vh - 15px); }
+  .motor-group img { width: 78px; }
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN FORM -->
+<!-- FORM LOGIN -->
 <div class="card" id="loginCard">
   <h2>PT ANISA JAYA UTAMA</h2>
   <div class="subtitle">Login Pengguna</div>
-
   <div class="input-group">
     <input type="text" id="username" placeholder="Username" />
   </div>
@@ -253,24 +264,20 @@ a:hover { text-decoration: underline; }
     <input type="password" id="password" placeholder="Password" />
     <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
-
   <button id="btnLogin">Masuk</button>
   <p style="margin-top:10px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- LOADING OVERLAY -->
+<!-- ANIMASI LOADING -->
 <div id="loadingOverlay" aria-hidden="true">
   <div class="scene-wrap" id="sceneWrap">
     <div class="monkey-shadow"></div>
     <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir" />
-
     <div class="road" aria-hidden="true"></div>
-
     <div class="motor-group" id="motorGroup" aria-hidden="true">
       <img id="motorImg" src="assets/monyet_motor.png" alt="monyet naik motor" />
       <div class="motor-label" id="motorLabel">kamu otw 👉</div>
     </div>
-
     <div class="smoke" id="smoke1"></div>
     <div class="smoke" id="smoke2"></div>
   </div>
@@ -278,7 +285,6 @@ a:hover { text-decoration: underline; }
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
-
 const btn = document.getElementById('btnLogin');
 const toggle = document.getElementById('togglePass');
 const pass = document.getElementById('password');
