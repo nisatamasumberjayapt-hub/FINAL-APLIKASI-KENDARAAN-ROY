@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard | PT ANISA JAYA UTAMA — BY ROY</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>DASHBOARD | PT ANISA JAYA UTAMA — BY ROY</title>
   <style>
     body {
       font-family: 'Poppins', system-ui, sans-serif;
@@ -32,28 +31,22 @@
       transition: 0.2s;
     }
 
-    header nav a:hover {
-      color: #aef1c0;
-    }
+    header nav a:hover { color: #aef1c0; }
 
     main {
       max-width: 1300px;
-      margin: 35px auto;
+      margin: 45px auto;
       padding: 0 18px;
     }
 
     .card {
-      background: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.8);
       border-radius: 16px;
       box-shadow: 0 6px 25px rgba(0,0,0,0.08);
-      padding: 25px 22px;
+      padding: 25px 22px 30px;
       backdrop-filter: blur(10px);
       transition: 0.3s;
       animation: fadeIn 0.6s ease;
-    }
-
-    .card:hover {
-      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
     }
 
     @keyframes fadeIn {
@@ -61,36 +54,47 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+
     h2 {
+      text-align: center;
       margin-top: 0;
       color: #0c5d27;
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      font-size: 1.4rem;
-      font-weight: 600;
+    }
+
+    h2::before {
+      content: "📋";
+      font-size: 1.5rem;
     }
 
     .toolbar {
       display: flex;
-      align-items: center;
+      justify-content: center;
       margin-bottom: 14px;
     }
 
     #searchInput {
-      flex: 1;
-      padding: 11px 14px;
+      width: 60%;
+      padding: 10px 14px;
       border: 1.5px solid #cdd9cd;
       border-radius: 10px;
       font-size: 14px;
       outline: none;
       transition: 0.25s;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.95);
+      text-align: center;
     }
 
     #searchInput:focus {
       border-color: #0c5d27;
-      box-shadow: 0 0 8px rgba(12, 93, 39, 0.2);
+      box-shadow: 0 0 8px rgba(12, 93, 39, 0.25);
     }
 
     .table-container {
@@ -104,7 +108,6 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
-      table-layout: auto;
     }
 
     th, td {
@@ -117,10 +120,19 @@
       background: #0c5d27;
       color: #fff;
       text-align: left;
+      text-transform: uppercase;
       position: sticky;
       top: 0;
       z-index: 10;
+      letter-spacing: 0.3px;
     }
+
+    thead th:nth-child(1)::before { content: "🚘 "; }
+    thead th:nth-child(2)::before { content: "📍 "; }
+    thead th:nth-child(3)::before { content: "📋 "; }
+    thead th:nth-child(4)::before { content: "🧾 "; }
+    thead th:nth-child(5)::before { content: "🛠 "; }
+    thead th:nth-child(6)::before { content: "💰 "; }
 
     tbody tr:hover {
       background: rgba(12, 93, 39, 0.05);
@@ -136,6 +148,7 @@
       color: #333;
       padding-top: 10px;
       border-top: 1px solid rgba(0,0,0,0.08);
+      justify-content: center;
     }
 
     .dot {
@@ -151,11 +164,10 @@
     .dot.red { background: #e74c3c; }
 
     @media (max-width: 800px) {
-      body { font-size: 13px; }
-      main { padding: 0 10px; }
-      .card { padding: 18px 14px; }
+      #searchInput { width: 85%; font-size: 13px; }
       table { font-size: 12px; }
-      h2 { font-size: 1.1rem; }
+      h2 { font-size: 1.2rem; }
+      .card { padding: 18px; }
     }
   </style>
 </head>
@@ -173,7 +185,7 @@
 
   <main>
     <section class="card">
-      <h2>📊 Daftar Kendaraan</h2>
+      <h2>Daftar Kendaraan</h2>
 
       <div class="toolbar">
         <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat Nomor / Letak)">
