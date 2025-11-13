@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KENDARAAN | PT ANISA JAYA UTAMA — BY ROY</title>
+  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
 
   <style>
     :root {
-      --accent:#0c5d27;
-      --danger:#c0392b;
-      --warn:#f1c40f;
+      --accent:#0c5d27; 
+      --danger:#c0392b; 
+      --warn:#f1c40f; 
       --ok:#2ecc71;
     }
 
-    *{ box-sizing:border-box;font-family:"Poppins",sans-serif }
+    *{
+      box-sizing:border-box;
+      font-family:"Poppins",sans-serif;
+    }
 
     body{
       background:#f6faf7;
@@ -29,7 +32,6 @@
       justify-content:space-between;
       align-items:center;
     }
-
     header a{
       color:#fff;
       text-decoration:none;
@@ -39,21 +41,20 @@
 
     /* ====== WRAPPER TENGAH ====== */
     main{
-      max-width:1350px;   /* LEBAR TOTAL DIBESARKAN */ 
-      margin:28px auto;
-      padding:0 16px;
+      max-width:1500px;
+      margin:30px auto;
+      padding:0 20px;
     }
 
-    /* ====== GRID: FORM KECIL + TABEL LEBAR ====== */
+    /* ====== GRID (FORM KECIL + TABEL BESAR) ====== */
     .grid{
       display:grid;
-      grid-template-columns:310px 1fr;  /* form dipersempit */
-      gap:26px;
+      grid-template-columns:280px auto;
+      gap:35px;
       justify-content:center;
       align-items:flex-start;
     }
 
-    /* ====== CARD ====== */
     .card{
       background:#fff;
       border-radius:12px;
@@ -61,14 +62,24 @@
       padding:20px;
     }
 
+    /* FORM DIPERKECIL */
+    .form-card{
+      width:100%;
+      max-width:260px;
+    }
+
+    /* TABEL DIBESARKAN */
+    .table-card{
+      width:100%;
+    }
+
     h2{
-      margin:0 0 12px;
+      margin:0 0 15px;
       color:var(--accent);
       font-size:18px;
       text-align:center;
     }
 
-    /* ====== FORM INPUT ====== */
     label{
       display:block;
       margin:8px 0 4px;
@@ -84,15 +95,14 @@
       border:1.3px solid #ccd7cc;
       border-radius:8px;
       font-size:14px;
-      text-transform:uppercase; /* otomatis kapital */
+      text-transform:uppercase;
     }
 
     input:disabled{
-      background:#f1f1f1;
+      background:#f0f0f0;
       opacity:.7;
     }
 
-    /* ===== BUTTON ===== */
     .row-btn{
       display:flex;
       gap:10px;
@@ -113,20 +123,17 @@
       color:#fff;
     }
 
-    .btn-primary:hover{ filter:brightness(1.1) }
-
     .btn-neutral{
-      background:#9e9e9e; /* bukan hitam */
+      background:#e0a0a0; /* merah muda biar beda */
       color:white;
     }
 
     .btn-neutral:disabled{
-      background:#d5d5d5;
+      background:#ddd;
       color:#888;
       cursor:not-allowed;
     }
 
-    /* ====== TABEL ====== */
     table{
       width:100%;
       border-collapse:collapse;
@@ -136,19 +143,20 @@
     th,td{
       padding:10px;
       border-bottom:1px solid #e6efe6;
-      vertical-align:top;
       text-align:left;
+      vertical-align:top;
     }
 
     thead th{
       background:var(--accent);
-      color:white;
+      color:#fff;
       position:sticky;
       top:0;
-      text-transform:uppercase;   /* judul kapital */
     }
 
-    tbody tr:hover{ background:#f9fbf9 }
+    tbody tr:hover{
+      background:#f9fbf9;
+    }
 
     .dot{
       width:10px;height:10px;
@@ -157,7 +165,6 @@
       margin-right:5px;
     }
 
-    /* tombol edit-hapus */
     .action-btn{
       border:none;
       border-radius:6px;
@@ -166,64 +173,37 @@
       font-weight:600;
       cursor:pointer;
     }
-    .edit{ background:#f1c40f; color:#000; margin-right:6px }
-    .del{ background:var(--danger); color:#fff }
 
-    /* ===== TABEL SCROLL PERPANJANG ===== */
+    .edit{ background:#f1c40f; color:#000; margin-right:6px; }
+    .del{ background:var(--danger); color:#fff; }
+
+    /* TABEL DIBESARKAN */
     .table-wrap{
-      max-height:620px;       /* lebih panjang */
+      max-height:650px;
       overflow:auto;
       border:1px solid #e3eee3;
       border-radius:8px;
     }
-
-    /* ===== TOAST ===== */
-    #toast-container{
-      position:fixed;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      z-index:9999;
-      pointer-events:none;
-    }
-
-    .toast{
-      background:#fff;
-      padding:14px 18px;
-      border-radius:10px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      font-weight:600;
-      min-width:240px;
-      text-align:center;
-      border-left:6px solid var(--accent);
-      animation:fadeIn .4s ease;
-      margin-top:8px;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:0;transform:translate(-50%,-60%);}
-      to{opacity:1;transform:translate(-50%,-50%);}
-    }
-
   </style>
 </head>
 
-<body onload="initKendaraanPage()">
+
+<body onload="initKendaraan()">
 
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
-
-    <nav id="navUser"></nav>
+    <nav>
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="user.html">👤 User</a>
+      <a href="logout.html" onclick="logout()">🔒 Logout</a>
+    </nav>
   </header>
 
   <main>
-
     <div class="grid">
 
       <!-- ================= FORM ================= -->
-      <section class="card">
+      <section class="card form-card">
         <h2>🧾 FORM KENDARAAN</h2>
 
         <label>PLAT NOMOR</label>
@@ -241,33 +221,39 @@
         <label>SERVIS TERAKHIR</label>
         <input id="servis" type="date" disabled>
 
-        <label>PAJAK 5 TAHUN</label>
+        <label>PAJAK 5 TAHUNAN</label>
         <input id="pajak5" type="date" disabled>
 
         <div class="row-btn">
           <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">➕ Tambah</button>
-          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>❌ Batal</button>
+          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>✖ Batal</button>
         </div>
       </section>
 
+
+
       <!-- ================= TABEL ================= -->
-      <section class="card">
+      <section class="card table-card">
         <h2>📋 DAFTAR KENDARAAN</h2>
 
-        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)"
-          style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
+        <input 
+          id="searchInput" 
+          type="text" 
+          placeholder="🔍 Cari kendaraan (PLAT / LETAK)"
+          style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc"
+        >
 
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
               <tr>
-                <th>🚘 PLAT</th>
-                <th>📍 LETAK</th>
-                <th>📋 STNK</th>
-                <th>🔧 KIR</th>
-                <th>🛠 SERVIS</th>
-                <th>💰 PAJAK 5 TH</th>
-                <th>⚙️ AKSI</th>
+                <th>PLAT</th>
+                <th>LETAK</th>
+                <th>STNK</th>
+                <th>KIR</th>
+                <th>SERVIS</th>
+                <th>PAJAK 5 TH</th>
+                <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
@@ -278,25 +264,11 @@
       </section>
 
     </div>
-
   </main>
 
-  <div id="toast-container"></div>
 
-  <script src="main.js?v=7.5"></script>
-
-  <script>
-    // ========== TAMPIL NAMA USER DI HEADER ==========
-    const user = getSession();
-    if (user) {
-      document.getElementById("navUser").innerHTML = `
-        <span style="margin-right:15px; font-weight:600;">👤 ${user.nama} (${user.role})</span>
-        <a href="dashboard.html">🏠 Dashboard</a>
-        <a href="user.html">👤 User</a>
-        <a href="#" onclick="logout()">🔒 Logout</a>
-      `;
-    }
-  </script>
+  <!-- JS UTAMA -->
+  <script src="main.js?v=7.4"></script>
 
 </body>
 </html>
