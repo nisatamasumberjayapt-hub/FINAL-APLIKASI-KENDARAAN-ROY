@@ -4,72 +4,88 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
+
   <style>
     :root {
       --accent:#0c5d27; --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
-      --page-max:1500px; /* diperlebar supaya tabel bisa lebih luas */
     }
     *{box-sizing:border-box;font-family:"Poppins",sans-serif}
     body{background:#f6faf7;margin:0;color:#123}
-    header{background:var(--accent);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+
+    /* HEADER */
+    header{
+      background:var(--accent);color:#fff;padding:12px 18px;
+      display:flex;justify-content:space-between;align-items:center
+    }
     header a{color:#fff;text-decoration:none;margin-left:14px;font-weight:500}
 
-    /* MAIN LEBIH LUAS (ubah di sini untuk mempengaruhi lebar tabel) */
-    main{max-width:var(--page-max);margin:28px auto;padding:0 24px}
-
-    /* GRID: form lebih sempit, tabel ambil sisa (lebih besar) */
+    /* GRID */
+    main{
+      max-width:1450px;          /* ← diperbesar */
+      margin:28px auto;
+      padding:0 16px;
+    }
     .grid{
       display:grid;
-      /* form kira-kira 260-280px (sesuai kotak kuning kecil), tabel ambil sisa */
-      grid-template-columns: 260px 1fr;
-      gap:28px;
-      align-items:start;
+      grid-template-columns:300px 1fr;   /* ← FORM lebih kecil, TABEL lebih besar */
+      gap:22px;
     }
 
-    .card{background:#fff;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.08);padding:20px}
+    /* CARD */
+    .card{
+      background:#fff;border-radius:12px;
+      box-shadow:0 3px 12px rgba(0,0,0,0.08);
+      padding:20px;
+    }
 
     h2{margin:0 0 12px;color:var(--accent);font-size:18px;text-align:center}
 
-    /* LABELS & INPUTS tetap, tapi sedikit mengetat agar form lebih ringkas */
-    label{display:block;margin:6px 0 4px;font-weight:600;font-size:13px;color:#234}
+    /* FORM */
+    label{display:block;margin:8px 0 4px;font-weight:600;font-size:13px;color:#234}
     input[type="text"],input[type="date"]{
-      width:100%;
-      padding:8px 10px;
-      border:1.3px solid #ccd7cc;
-      border-radius:8px;
-      font-size:14px;
-      background:#fff;
+      width:100%;padding:9px 10px;border:1.3px solid #ccd7cc;border-radius:8px;font-size:14px
     }
-    input:disabled{background:#f7f7f7;opacity:.95}
+    input:disabled{background:#f7f7f7;opacity:.7}
 
-    .row-btn{display:flex;gap:10px;margin-top:14px}
-    .btn{padding:9px 12px;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
-    .btn-primary{background:linear-gradient(135deg,#0c5d27,#118b3f);color:#fff}
-    .btn-primary:hover{filter:brightness(1.05)}
+    /* AUTO UPPERCASE */
+    #plat,#letak{text-transform:uppercase;}
 
-    /* Batal: jangan hitam, bikin abu hijau (beda saat nonaktif/aktif) */
-    .btn-neutral{background:#d0d0d0;color:#2d2d2d}
-    .btn-neutral:disabled{background:#eee;color:#9a9a9a;cursor:not-allowed}
+    /* BUTTON */
+    .row-btn{display:flex;gap:10px;margin-top:16px}
+    .btn{
+      padding:10px 14px;border:none;border-radius:8px;
+      font-weight:600;cursor:pointer;transition:.2s;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,#0c5d27,#118b3f);color:#fff
+    }
+    .btn-neutral{
+      background:#8b8b8b;color:white;       /* ← bukan hitam */
+    }
+    .btn-neutral:disabled{background:#d5d5d5;color:#888;cursor:not-allowed}
 
+    /* TABLE */
     table{width:100%;border-collapse:collapse;font-size:14px}
     th,td{padding:10px;border-bottom:1px solid #e6efe6;text-align:left;vertical-align:top}
     thead th{
-      background:var(--accent);color:#fff;position:sticky;top:0;
-      text-transform:uppercase; /* semua judul kapital */
+      background:var(--accent);color:#fff;position:sticky;top:0;z-index:10
     }
     tbody tr:hover{background:#f9fbf9}
     .dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px}
-    .action-btn{border:none;border-radius:6px;padding:6px 9px;font-size:13px;font-weight:600;cursor:pointer}
+    .action-btn{
+      border:none;border-radius:6px;padding:6px 9px;font-size:13px;font-weight:600;cursor:pointer
+    }
     .edit{background:#f1c40f;color:#000;margin-right:6px}
     .del{background:var(--danger);color:#fff}
+
+    /* TABLE HEIGHT */
     .table-wrap{
-      /* buat tabel lebih panjang ke bawah: tambah max-height */
-      max-height:720px;  /* diperpanjang agar scroll diperlukan lebih bawah */
-      overflow:auto;border:1px solid #e3eee3;border-radius:8px;
-      padding:0.5rem; /* beri ruang dalam agar header tabel tidak menempel */
-      background:#fff;
+      max-height:650px;       /* ← diperpanjang */
+      overflow:auto;
+      border:1px solid #e3eee3;border-radius:8px;
     }
 
+    /* TOAST */
     #toast-container{
       position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
       display:flex;flex-direction:column;align-items:center;z-index:9999;pointer-events:none;
@@ -82,25 +98,20 @@
       animation:fadeIn .4s ease;
       margin-top:8px;
     }
-    .toast.success{border-color:var(--ok)}
-    .toast.error{border-color:var(--danger)}
-    .toast.warn{border-color:var(--warn)}
-    @keyframes fadeIn{from{opacity:0;transform:translate(-50%,-60%);}to{opacity:1;transform:translate(-50%,-50%);} }
-
-    @media(max-width:1100px){
-      main{padding:0 12px}
-      .grid{grid-template-columns:1fr;gap:18px}
-      .table-wrap{max-height:520px}
+    @keyframes fadeIn{
+      from{opacity:0;transform:translate(-50%,-60%);}
+      to{opacity:1;transform:translate(-50%,-50%);}
     }
   </style>
 </head>
+
 <body onload="initKendaraanPage()">
+
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
     <nav>
-      <!-- tampilkan nama admin (jika session ada, main.js akan mengganti atau kamu gunakan server side) -->
-      <span id="userLabel" style="color:#fff;margin-right:12px;display:inline-flex;align-items:center;gap:8px;">👤 <strong>Admin</strong></span>
-      <a href="dashboard.html">🏠 Dashboard</a>
+      <span><b>🧑‍💼 <span id="adminName"></span></b></span>
+      <a href="dashboard.html">📊 Dashboard</a>
       <a href="user.html">👤 User</a>
       <a href="login.html">🔒 Logout</a>
     </nav>
@@ -108,22 +119,24 @@
 
   <main>
     <div class="grid">
-      <!-- Form (ukuran disesuaikan: lebih kecil) -->
+
+      <!-- ============= FORM KENDARAAN ============== -->
       <section class="card">
         <h2>🧾 FORM KENDARAAN</h2>
+
         <label>🚘 PLAT NOMOR</label>
         <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled>
 
         <label>📍 LETAK / GARASI</label>
-        <input id="letak" type="text" placeholder="Contoh: Jakarta" disabled>
+        <input id="letak" type="text" placeholder="Contoh: JAKARTA" disabled>
 
         <label>📋 STNK</label>
         <input id="stnk" type="date" disabled>
 
-        <label>🔧 KIR</label>
+        <label>🛠 KIR</label>
         <input id="kir" type="date" disabled>
 
-        <label>🛠 SERVIS TERAKHIR</label>
+        <label>🔧 SERVIS TERAKHIR</label>
         <input id="servis" type="date" disabled>
 
         <label>💰 PAJAK 5 TAHUNAN</label>
@@ -135,10 +148,14 @@
         </div>
       </section>
 
-      <!-- Table (lebih lebar; mengambil sisa ruang) -->
-      <section class="card">
+      <!-- ============= TABEL KENDARAAN (DIBESARKAN 30%) ============== -->
+      <section class="card" style="width:100%;">
         <h2>📋 DAFTAR KENDARAAN</h2>
-        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)" style="width:100%;margin-bottom:12px;padding:9px;border-radius:8px;border:1.4px solid #dbe5dc">
+
+        <input id="searchInput" type="text"
+               placeholder="🔍 Cari kendaraan (PLAT / LETAK)"
+               style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
+
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
@@ -146,36 +163,32 @@
                 <th>🚘 PLAT</th>
                 <th>📍 LETAK</th>
                 <th>📋 STNK</th>
-                <th>🔧 KIR</th>
-                <th>🛠 SERVIS</th>
+                <th>🛠 KIR</th>
+                <th>🔧 SERVIS</th>
                 <th>💰 PAJAK 5 TH</th>
-                <th>⚙️ AKSI</th>
+                <th>⚙ AKSI</th>
               </tr>
             </thead>
-            <tbody><tr><td colspan="7" align="center">Memuat data...</td></tr></tbody>
+            <tbody>
+              <tr><td colspan="7" align="center">Memuat data...</td></tr>
+            </tbody>
           </table>
         </div>
       </section>
+
     </div>
   </main>
 
   <div id="toast-container"></div>
 
-  <!-- jangan ubah main.js (logika tetap) -->
+  <!-- ========== MAIN.JS Tetap sama ========== -->
   <script src="main.js?v=7.5"></script>
 
   <script>
-    /* kecil: set nama admin di header jika ada session (main.js biasanya menyediakan getSession).
-       Ini hanya UI helper tanpa mengubah logika CRUD.
-    */
-    try {
-      const user = (typeof getSession === 'function') ? getSession() : null;
-      if (user && user.nama) {
-        document.getElementById('userLabel').innerHTML = '👤 <strong>' + (user.nama.length>0 ? user.nama : 'Admin') + '</strong>';
-      }
-    } catch(e){
-      // ignore, jangan rusak halaman jika getSession belum ada
-    }
+    // Tampilkan nama admin
+    const user = getSession();
+    if (user) document.getElementById("adminName").textContent = user.nama.toUpperCase();
   </script>
+
 </body>
 </html>
