@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
+  <title>KENDARAAN | PT ANISA JAYA UTAMA — BY ROY</title>
 
   <style>
     :root {
@@ -12,8 +12,14 @@
       --warn:#f1c40f;
       --ok:#2ecc71;
     }
-    *{box-sizing:border-box;font-family:"Poppins",sans-serif}
-    body{background:#f6faf7;margin:0;color:#123}
+
+    *{ box-sizing:border-box;font-family:"Poppins",sans-serif }
+
+    body{
+      background:#f6faf7;
+      margin:0;
+      color:#123;
+    }
 
     header{
       background:var(--accent);
@@ -21,136 +27,160 @@
       padding:12px 18px;
       display:flex;
       justify-content:space-between;
-      align-items:center
+      align-items:center;
     }
-    header a{color:#fff;text-decoration:none;margin-left:14px;font-weight:500}
 
-    /* =============================
-       PERUBAHAN SESUAI PERMINTAAN
-       ============================= */
+    header a{
+      color:#fff;
+      text-decoration:none;
+      margin-left:14px;
+      font-weight:500;
+    }
 
-    /* Form dikecilkan */
+    /* ====== WRAPPER TENGAH ====== */
+    main{
+      max-width:1350px;   /* LEBAR TOTAL DIBESARKAN */ 
+      margin:28px auto;
+      padding:0 16px;
+    }
+
+    /* ====== GRID: FORM KECIL + TABEL LEBAR ====== */
     .grid{
       display:grid;
-      grid-template-columns:300px 1fr !important;
-      gap:24px;
+      grid-template-columns:310px 1fr;  /* form dipersempit */
+      gap:26px;
+      justify-content:center;
+      align-items:flex-start;
     }
 
-    /* Tabel diperlebar */
-    .grid .card:nth-child(2){
-      width:100% !important;
-    }
-
-    /* Tinggi tabel diperbesar */
-    .table-wrap{
-      max-height:650px !important;
-      overflow:auto;
-      border:1px solid #e3eee3;
-      border-radius:8px;
-    }
-
-    /* Plat & Letak otomatis kapital */
-    #plat, #letak {
-      text-transform: uppercase;
-    }
-
-    /* Judul tabel kapital */
-    th { text-transform: uppercase; }
-
-    /* ================================= */
-
+    /* ====== CARD ====== */
     .card{
       background:#fff;
       border-radius:12px;
       box-shadow:0 3px 12px rgba(0,0,0,0.08);
-      padding:20px
+      padding:20px;
     }
 
     h2{
       margin:0 0 12px;
       color:var(--accent);
       font-size:18px;
-      text-align:center
+      text-align:center;
     }
 
+    /* ====== FORM INPUT ====== */
     label{
       display:block;
       margin:8px 0 4px;
       font-weight:600;
       font-size:13px;
-      color:#234
+      color:#234;
     }
-    input[type="text"],input[type="date"]{
+
+    input[type="text"],
+    input[type="date"]{
       width:100%;
       padding:9px 10px;
       border:1.3px solid #ccd7cc;
       border-radius:8px;
-      font-size:14px
+      font-size:14px;
+      text-transform:uppercase; /* otomatis kapital */
     }
-    input:disabled{background:#f7f7f7;opacity:.7}
 
-    .row-btn{display:flex;gap:10px;margin-top:14px}
+    input:disabled{
+      background:#f1f1f1;
+      opacity:.7;
+    }
+
+    /* ===== BUTTON ===== */
+    .row-btn{
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+    }
+
     .btn{
       padding:10px 14px;
       border:none;
       border-radius:8px;
       font-weight:600;
       cursor:pointer;
-      transition:.2s
-    }
-    .btn-primary{
-      background:linear-gradient(135deg,#0c5d27,#118b3f);
-      color:#fff
-    }
-    .btn-primary:hover{filter:brightness(1.1)}
-    .btn-neutral{
-      background:#8a8a8a;
-      color:#fff
-    }
-    .btn-neutral:disabled{
-      background:#ddd;
-      color:#888;
-      cursor:not-allowed
+      transition:.2s;
     }
 
-    table{width:100%;border-collapse:collapse;font-size:14px}
+    .btn-primary{
+      background:linear-gradient(135deg,#0c5d27,#118b3f);
+      color:#fff;
+    }
+
+    .btn-primary:hover{ filter:brightness(1.1) }
+
+    .btn-neutral{
+      background:#9e9e9e; /* bukan hitam */
+      color:white;
+    }
+
+    .btn-neutral:disabled{
+      background:#d5d5d5;
+      color:#888;
+      cursor:not-allowed;
+    }
+
+    /* ====== TABEL ====== */
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+
     th,td{
       padding:10px;
       border-bottom:1px solid #e6efe6;
+      vertical-align:top;
       text-align:left;
-      vertical-align:top
     }
+
     thead th{
       background:var(--accent);
-      color:#fff;
+      color:white;
       position:sticky;
-      top:0
+      top:0;
+      text-transform:uppercase;   /* judul kapital */
     }
-    tbody tr:hover{background:#f9fbf9}
+
+    tbody tr:hover{ background:#f9fbf9 }
 
     .dot{
-      width:10px;
-      height:10px;
+      width:10px;height:10px;
       border-radius:3px;
       display:inline-block;
-      margin-right:5px
+      margin-right:5px;
     }
 
+    /* tombol edit-hapus */
     .action-btn{
       border:none;
       border-radius:6px;
       padding:6px 9px;
       font-size:13px;
       font-weight:600;
-      cursor:pointer
+      cursor:pointer;
     }
-    .edit{background:#f1c40f;color:#000;margin-right:6px}
-    .del{background:var(--danger);color:#fff}
+    .edit{ background:#f1c40f; color:#000; margin-right:6px }
+    .del{ background:var(--danger); color:#fff }
 
+    /* ===== TABEL SCROLL PERPANJANG ===== */
+    .table-wrap{
+      max-height:620px;       /* lebih panjang */
+      overflow:auto;
+      border:1px solid #e3eee3;
+      border-radius:8px;
+    }
+
+    /* ===== TOAST ===== */
     #toast-container{
       position:fixed;
-      top:50%;
-      left:50%;
+      top:50%;left:50%;
       transform:translate(-50%,-50%);
       display:flex;
       flex-direction:column;
@@ -158,6 +188,7 @@
       z-index:9999;
       pointer-events:none;
     }
+
     .toast{
       background:#fff;
       padding:14px 18px;
@@ -170,9 +201,6 @@
       animation:fadeIn .4s ease;
       margin-top:8px;
     }
-    .toast.success{border-color:var(--ok)}
-    .toast.error{border-color:var(--danger)}
-    .toast.warn{border-color:var(--warn)}
 
     @keyframes fadeIn{
       from{opacity:0;transform:translate(-50%,-60%);}
@@ -186,36 +214,34 @@
 
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
-    <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="user.html">👤 User</a>
-      <a href="login.html">🔒 Logout</a>
-    </nav>
+
+    <nav id="navUser"></nav>
   </header>
 
   <main>
+
     <div class="grid">
 
-      <!-- FORM -->
+      <!-- ================= FORM ================= -->
       <section class="card">
         <h2>🧾 FORM KENDARAAN</h2>
 
-        <label>🚘 PLAT NOMOR</label>
+        <label>PLAT NOMOR</label>
         <input id="plat" type="text" placeholder="Contoh: B1234XYZ" disabled>
 
-        <label>📍 LETAK / GARASI</label>
+        <label>LETAK / GARASI</label>
         <input id="letak" type="text" placeholder="Contoh: JAKARTA" disabled>
 
-        <label>📋 STNK</label>
+        <label>STNK</label>
         <input id="stnk" type="date" disabled>
 
-        <label>🛠 KIR</label>
+        <label>KIR</label>
         <input id="kir" type="date" disabled>
 
-        <label>🔧 SERVIS TERAKHIR</label>
+        <label>SERVIS TERAKHIR</label>
         <input id="servis" type="date" disabled>
 
-        <label>💰 PAJAK 5 TAHUNAN</label>
+        <label>PAJAK 5 TAHUN</label>
         <input id="pajak5" type="date" disabled>
 
         <div class="row-btn">
@@ -224,25 +250,24 @@
         </div>
       </section>
 
-      <!-- TABLE -->
+      <!-- ================= TABEL ================= -->
       <section class="card">
         <h2>📋 DAFTAR KENDARAAN</h2>
 
-        <input id="searchInput" type="text"
-        placeholder="🔍 Cari kendaraan (PLAT / LETAK)"
-        style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
+        <input id="searchInput" type="text" placeholder="🔍 Cari kendaraan (Plat / Letak)"
+          style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
 
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
               <tr>
-                <th>PLAT</th>
-                <th>LETAK</th>
-                <th>STNK</th>
-                <th>KIR</th>
-                <th>SERVIS</th>
-                <th>PAJAK 5 TH</th>
-                <th>AKSI</th>
+                <th>🚘 PLAT</th>
+                <th>📍 LETAK</th>
+                <th>📋 STNK</th>
+                <th>🔧 KIR</th>
+                <th>🛠 SERVIS</th>
+                <th>💰 PAJAK 5 TH</th>
+                <th>⚙️ AKSI</th>
               </tr>
             </thead>
             <tbody>
@@ -250,15 +275,28 @@
             </tbody>
           </table>
         </div>
-
       </section>
 
     </div>
+
   </main>
 
   <div id="toast-container"></div>
 
   <script src="main.js?v=7.5"></script>
+
+  <script>
+    // ========== TAMPIL NAMA USER DI HEADER ==========
+    const user = getSession();
+    if (user) {
+      document.getElementById("navUser").innerHTML = `
+        <span style="margin-right:15px; font-weight:600;">👤 ${user.nama} (${user.role})</span>
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="user.html">👤 User</a>
+        <a href="#" onclick="logout()">🔒 Logout</a>
+      `;
+    }
+  </script>
 
 </body>
 </html>
