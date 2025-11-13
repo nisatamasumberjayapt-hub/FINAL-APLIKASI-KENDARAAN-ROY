@@ -1,277 +1,277 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kendaraan | PT ANISA JAYA UTAMA — BY ROY</title>
 
-  <style>
+<link rel="stylesheet" href="styles.css" />
+
+<style>
     body {
-      font-family: "Poppins", sans-serif;
-      background: #f4f7f4;
-      margin: 0;
-      color: #123;
+        font-family: "Poppins", sans-serif;
+        background: #f4f7f4;
+        margin: 0;
     }
 
+    /* HEADER */
     header {
-      background: #0c5d27;
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+        background: #0b6623;
+        padding: 12px 20px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     header nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 16px;
-      font-weight: 500;
+        text-decoration: none;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-left: 8px;
     }
 
-    .container {
-      display: flex;
-      margin: 25px auto;
-      width: 94%;
-      max-width: 1300px;
-      gap: 20px;
+    header nav a:hover {
+        background: rgba(255,255,255,0.18);
     }
 
-    /* FORM KENDARAAN */
-    .form-card {
-      flex: 0 0 330px;
-      background: #fff;
-      padding: 18px 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      max-height: 580px;
-      overflow-y: auto;
+    /* WRAPPER */
+    .page-wrap {
+        width: 95%;
+        max-width: 1300px;
+        margin: 25px auto;
+        display: flex;
+        gap: 20px;
     }
 
-    .form-card h2 {
-      margin-top: 0;
-      margin-bottom: 15px;
-      font-size: 18px;
-      color: #0c5d27;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-transform: uppercase;
+    /* FORM BOX */
+    .form-box {
+        flex: 0 0 30%;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        max-height: 82vh;
+        overflow-y: auto;
+    }
+
+    .form-box h2 {
+        margin-top: 0;
+        color: #0b6623;
+        margin-bottom: 14px;
     }
 
     label {
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: block;
-      font-size: 13px;
+        font-weight: 600;
+        margin-top: 12px;
+        display: block;
     }
 
-    .form-card input {
-      width: 100%;
-      padding: 9px 10px;
-      border-radius: 8px;
-      border: 1.5px solid #ccc;
-      margin-bottom: 12px;
-      font-size: 14px;
+    input {
+        width: 100%;
+        padding: 9px 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1.4px solid #ccc;
+        font-size: 14px;
     }
 
-    /* Tombol */
-    .btn-row {
-      display: flex;
-      gap: 10px;
+    .btn {
+        padding: 9px 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 12px;
+        font-weight: 600;
     }
 
-    .btn-main {
-      flex: 1;
-      background: #0c5d27;
-      color: white;
-      border: none;
-      padding: 9px 0;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
+    .btn-add { background: #0b6623; color: white; }
+    .btn-cancel { background: #7b7b7b; color: white; margin-left: 5px; }
+
+    /* TABLE AREA */
+    .table-box {
+        flex: 0 0 70%;
+        background: white;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.12);
     }
 
-    .btn-cancel {
-      flex: 1;
-      background: #c0392b;
-      color: white;
-      border: none;
-      padding: 9px 0;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      opacity: 0.8;
-    }
-    .btn-cancel:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    .table-box h2 {
+        margin-top: 0;
+        color: #0b6623;
+        text-align: left;
     }
 
-    /* RIGHT SIDE TABLE */
-    .right-card {
-      flex: 1;
-      background: #fff;
-      padding: 18px 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    .right-card h2 {
-      margin-top: 0;
-      margin-bottom: 14px;
-      font-size: 18px;
-      color: #0c5d27;
-      text-transform: uppercase;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    #searchKendaraan {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1.5px solid #ccc;
-      font-size: 14px;
+    #searchInput {
+        width: 70%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1.4px solid #ccc;
     }
 
     #clearSearch {
-      display: none;
-      background: #c0392b;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
+        padding: 10px 12px;
+        background: #c0392b;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        display: none;
     }
 
-    .table-wrap {
-      max-height: 460px;
-      overflow-y: auto;
-      border-radius: 8px;
+    .table-scroll {
+        max-height: 73vh;
+        overflow-y: auto;
+        margin-top: 10px;
     }
 
     table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
     }
 
     thead th {
-      background: #0c5d27;
-      color: white;
-      padding: 10px;
-      text-align: left;
-      position: sticky;
-      top: 0;
-      text-transform: uppercase;
+        background: #0b6623;
+        color: white;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        text-align: left;
+        font-weight: 600;
     }
 
     td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      vertical-align: top;
+        border-bottom: 1px solid #e4eee4;
+        padding: 10px;
+        vertical-align: top;
     }
 
     tr:hover {
-      background: #f9fdf9;
+        background: #f7fbf8;
     }
-  </style>
+
+    .btn-sm {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        border: none;
+        cursor: pointer;
+        margin-right: 4px;
+    }
+
+    .edit { background: #f1c40f; color: #000; }
+    .delete { background: #c0392b; color: white; }
+
+</style>
 </head>
 
 <body onload="initKendaraanPage()">
 
-  <header>
-    <div>🚙 PT ANISA JAYA UTAMA — <small>BY ROY</small></div>
-    <nav id="navLinks"></nav>
-  </header>
+<header>
+    <div>🚗 PT ANISA JAYA UTAMA — <small>BY ROY</small></div>
 
-  <main class="container">
+    <nav id="navHere"></nav>
+</header>
 
-    <!-- FORM KENDARAAN -->
-    <div class="form-card">
-      <h2>🗂 Form Kendaraan</h2>
+<div class="page-wrap">
 
-      <label>Plat Nomor</label>
-      <input type="text" id="plat" placeholder="Contoh: B1234XYZ">
+    <!-- FORM -->
+    <div class="form-box">
+        <h2>FORM KENDARAAN</h2>
 
-      <label>Letak / Garasi</label>
-      <input type="text" id="letak" placeholder="Contoh: Jakarta">
+        <label>Plat Nomor</label>
+        <input type="text" id="plat">
 
-      <label>STNK</label>
-      <input type="date" id="stnk">
+        <label>Letak / Garasi</label>
+        <input type="text" id="letak">
 
-      <label>KIR</label>
-      <input type="date" id="kir">
+        <label>STNK</label>
+        <input type="date" id="stnk">
 
-      <label>Servis Terakhir</label>
-      <input type="date" id="servis">
+        <label>KIR</label>
+        <input type="date" id="kir">
 
-      <label>Pajak 5 Tahunan</label>
-      <input type="date" id="pajak">
+        <label>Servis Terakhir</label>
+        <input type="date" id="servis">
 
-      <div class="btn-row">
-        <button class="btn-main" id="btnTambah">+ Tambah</button>
-        <button class="btn-cancel" id="btnBatal" disabled>✖ Batal</button>
-      </div>
+        <label>Pajak 5 Tahunan</label>
+        <input type="date" id="pajak5">
+
+        <button class="btn btn-add" id="btnSave">Tambah</button>
+        <button class="btn btn-cancel" id="btnCancel" disabled>Batal</button>
     </div>
 
-    <!-- TABEL KENDARAAN -->
-    <div class="right-card">
-      <h2>📋 Daftar Kendaraan</h2>
+    <!-- TABLE -->
+    <div class="table-box">
+        <h2>DAFTAR KENDARAAN</h2>
 
-      <div class="search-box">
-        <input type="text" id="searchKendaraan" placeholder="🔍 Cari kendaraan (Plat / Letak)">
+        <input type="text" id="searchInput" placeholder="🔍 Cari kendaraan (Plat / Letak)">
         <button id="clearSearch">❌</button>
-      </div>
 
-      <div class="table-wrap">
-        <table id="tblKendaraan">
-          <thead>
-            <tr>
-              <th>Plat Nomor</th>
-              <th>Letak</th>
-              <th>STNK</th>
-              <th>KIR</th>
-              <th>Servis Terakhir</th>
-              <th>Pajak 5 Tahunan</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="7" align="center">Memuat data...</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="table-scroll">
+            <table id="tblKendaraan">
+                <thead>
+                    <tr>
+                        <th>PLAT</th>
+                        <th>LETAK</th>
+                        <th>STNK</th>
+                        <th>KIR</th>
+                        <th>SERVIS</th>
+                        <th>PAJAK 5 TAHUN</th>
+                        <th>AKSI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="7" align="center">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-  </main>
+</div>
 
-  <script src="main.js?v=9.2"></script>
+<script src="main.js"></script>
 
-  <script>
-    function initKendaraanPage() {
-      const user = getSession();
-      if (!user) return location.href = "login.html";
+<script>
+function initKendaraanPage() {
+    const u = getSession();
+    if (!u) return location.href = "login.html";
 
-      // NAVIGASI USER
-      const nav = document.getElementById("navLinks");
-      nav.innerHTML = `
+    // === Nama User + Emoji di Header (Pilihan A) ===
+    const emoji = u.emoji || "🐵";
+    document.getElementById("navHere").innerHTML = `
+        <span style="margin-right:15px;">${emoji} ${u.nama}</span>
         <a href="dashboard.html">🏠 Dashboard</a>
-        ${user.role === 'admin' ? `<a href="kendaraan.html">🚗 Kendaraan</a>` : ``}
-        ${user.role === 'admin' ? `<a href="user.html">👤 User</a>` : ``}
-        <span style="margin-left:15px;">${user.emoji} ${user.nama}</span>
+        <a href="kendaraan.html">🚗 Kendaraan</a>
+        ${u.role === "admin" ? `<a href="user.html">👤 User</a>` : ""}
         <a href="#" onclick="logout()">🔒 Logout</a>
-      `;
+    `;
 
-      initKendaraan(); // fungsi aslinya dari main.js
-    }
-  </script>
+    // tombol
+    document.getElementById("btnSave").onclick = saveKendaraan;
+    document.getElementById("btnCancel").onclick = resetForm;
+
+    // search
+    const s = document.getElementById("searchInput");
+    const x = document.getElementById("clearSearch");
+
+    s.addEventListener("input", () => {
+        x.style.display = s.value ? "inline-block" : "none";
+        try { initSearch(); } catch(e){}
+    });
+
+    x.addEventListener("click", () => {
+        s.value = "";
+        s.dispatchEvent(new Event("input"));
+    });
+
+    // load data
+    loadKendaraan();
+}
+</script>
 
 </body>
 </html>
