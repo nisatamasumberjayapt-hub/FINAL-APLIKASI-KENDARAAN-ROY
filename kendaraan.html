@@ -7,101 +7,178 @@
 
   <style>
     :root {
-      --accent:#0c5d27; --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
+      --accent:#0c5d27;
+      --danger:#c0392b;
+      --warn:#f1c40f;
+      --ok:#2ecc71;
     }
     *{box-sizing:border-box;font-family:"Poppins",sans-serif}
     body{background:#f6faf7;margin:0;color:#123}
 
-    /* HEADER */
     header{
-      background:var(--accent);color:#fff;padding:12px 18px;
-      display:flex;justify-content:space-between;align-items:center
+      background:var(--accent);
+      color:#fff;
+      padding:12px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center
     }
     header a{color:#fff;text-decoration:none;margin-left:14px;font-weight:500}
 
-    /* GRID */
-    main{
-      max-width:1450px;          /* ← diperbesar */
-      margin:28px auto;
-      padding:0 16px;
-    }
+    /* =============================
+       PERUBAHAN SESUAI PERMINTAAN
+       ============================= */
+
+    /* Form dikecilkan */
     .grid{
       display:grid;
-      grid-template-columns:300px 1fr;   /* ← FORM lebih kecil, TABEL lebih besar */
-      gap:22px;
+      grid-template-columns:300px 1fr !important;
+      gap:24px;
     }
 
-    /* CARD */
+    /* Tabel diperlebar */
+    .grid .card:nth-child(2){
+      width:100% !important;
+    }
+
+    /* Tinggi tabel diperbesar */
+    .table-wrap{
+      max-height:650px !important;
+      overflow:auto;
+      border:1px solid #e3eee3;
+      border-radius:8px;
+    }
+
+    /* Plat & Letak otomatis kapital */
+    #plat, #letak {
+      text-transform: uppercase;
+    }
+
+    /* Judul tabel kapital */
+    th { text-transform: uppercase; }
+
+    /* ================================= */
+
     .card{
-      background:#fff;border-radius:12px;
+      background:#fff;
+      border-radius:12px;
       box-shadow:0 3px 12px rgba(0,0,0,0.08);
-      padding:20px;
+      padding:20px
     }
 
-    h2{margin:0 0 12px;color:var(--accent);font-size:18px;text-align:center}
+    h2{
+      margin:0 0 12px;
+      color:var(--accent);
+      font-size:18px;
+      text-align:center
+    }
 
-    /* FORM */
-    label{display:block;margin:8px 0 4px;font-weight:600;font-size:13px;color:#234}
+    label{
+      display:block;
+      margin:8px 0 4px;
+      font-weight:600;
+      font-size:13px;
+      color:#234
+    }
     input[type="text"],input[type="date"]{
-      width:100%;padding:9px 10px;border:1.3px solid #ccd7cc;border-radius:8px;font-size:14px
+      width:100%;
+      padding:9px 10px;
+      border:1.3px solid #ccd7cc;
+      border-radius:8px;
+      font-size:14px
     }
     input:disabled{background:#f7f7f7;opacity:.7}
 
-    /* AUTO UPPERCASE */
-    #plat,#letak{text-transform:uppercase;}
-
-    /* BUTTON */
-    .row-btn{display:flex;gap:10px;margin-top:16px}
+    .row-btn{display:flex;gap:10px;margin-top:14px}
     .btn{
-      padding:10px 14px;border:none;border-radius:8px;
-      font-weight:600;cursor:pointer;transition:.2s;
+      padding:10px 14px;
+      border:none;
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s
     }
     .btn-primary{
-      background:linear-gradient(135deg,#0c5d27,#118b3f);color:#fff
+      background:linear-gradient(135deg,#0c5d27,#118b3f);
+      color:#fff
     }
+    .btn-primary:hover{filter:brightness(1.1)}
     .btn-neutral{
-      background:#8b8b8b;color:white;       /* ← bukan hitam */
+      background:#8a8a8a;
+      color:#fff
     }
-    .btn-neutral:disabled{background:#d5d5d5;color:#888;cursor:not-allowed}
+    .btn-neutral:disabled{
+      background:#ddd;
+      color:#888;
+      cursor:not-allowed
+    }
 
-    /* TABLE */
     table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:10px;border-bottom:1px solid #e6efe6;text-align:left;vertical-align:top}
+    th,td{
+      padding:10px;
+      border-bottom:1px solid #e6efe6;
+      text-align:left;
+      vertical-align:top
+    }
     thead th{
-      background:var(--accent);color:#fff;position:sticky;top:0;z-index:10
+      background:var(--accent);
+      color:#fff;
+      position:sticky;
+      top:0
     }
     tbody tr:hover{background:#f9fbf9}
-    .dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px}
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:3px;
+      display:inline-block;
+      margin-right:5px
+    }
+
     .action-btn{
-      border:none;border-radius:6px;padding:6px 9px;font-size:13px;font-weight:600;cursor:pointer
+      border:none;
+      border-radius:6px;
+      padding:6px 9px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer
     }
     .edit{background:#f1c40f;color:#000;margin-right:6px}
     .del{background:var(--danger);color:#fff}
 
-    /* TABLE HEIGHT */
-    .table-wrap{
-      max-height:650px;       /* ← diperpanjang */
-      overflow:auto;
-      border:1px solid #e3eee3;border-radius:8px;
-    }
-
-    /* TOAST */
     #toast-container{
-      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-      display:flex;flex-direction:column;align-items:center;z-index:9999;pointer-events:none;
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      z-index:9999;
+      pointer-events:none;
     }
     .toast{
-      background:#fff;padding:14px 18px;border-radius:10px;
+      background:#fff;
+      padding:14px 18px;
+      border-radius:10px;
       box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      font-weight:600;min-width:240px;text-align:center;
+      font-weight:600;
+      min-width:240px;
+      text-align:center;
       border-left:6px solid var(--accent);
       animation:fadeIn .4s ease;
       margin-top:8px;
     }
+    .toast.success{border-color:var(--ok)}
+    .toast.error{border-color:var(--danger)}
+    .toast.warn{border-color:var(--warn)}
+
     @keyframes fadeIn{
       from{opacity:0;transform:translate(-50%,-60%);}
       to{opacity:1;transform:translate(-50%,-50%);}
     }
+
   </style>
 </head>
 
@@ -110,8 +187,7 @@
   <header>
     <div><strong>🚗 PT ANISA JAYA UTAMA — BY ROY</strong></div>
     <nav>
-      <span><b>🧑‍💼 <span id="adminName"></span></b></span>
-      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="dashboard.html">🏠 Dashboard</a>
       <a href="user.html">👤 User</a>
       <a href="login.html">🔒 Logout</a>
     </nav>
@@ -120,7 +196,7 @@
   <main>
     <div class="grid">
 
-      <!-- ============= FORM KENDARAAN ============== -->
+      <!-- FORM -->
       <section class="card">
         <h2>🧾 FORM KENDARAAN</h2>
 
@@ -148,25 +224,25 @@
         </div>
       </section>
 
-      <!-- ============= TABEL KENDARAAN (DIBESARKAN 30%) ============== -->
-      <section class="card" style="width:100%;">
+      <!-- TABLE -->
+      <section class="card">
         <h2>📋 DAFTAR KENDARAAN</h2>
 
         <input id="searchInput" type="text"
-               placeholder="🔍 Cari kendaraan (PLAT / LETAK)"
-               style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
+        placeholder="🔍 Cari kendaraan (PLAT / LETAK)"
+        style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1.4px solid #dbe5dc">
 
         <div class="table-wrap">
           <table id="tblKendaraan">
             <thead>
               <tr>
-                <th>🚘 PLAT</th>
-                <th>📍 LETAK</th>
-                <th>📋 STNK</th>
-                <th>🛠 KIR</th>
-                <th>🔧 SERVIS</th>
-                <th>💰 PAJAK 5 TH</th>
-                <th>⚙ AKSI</th>
+                <th>PLAT</th>
+                <th>LETAK</th>
+                <th>STNK</th>
+                <th>KIR</th>
+                <th>SERVIS</th>
+                <th>PAJAK 5 TH</th>
+                <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
@@ -174,6 +250,7 @@
             </tbody>
           </table>
         </div>
+
       </section>
 
     </div>
@@ -181,14 +258,7 @@
 
   <div id="toast-container"></div>
 
-  <!-- ========== MAIN.JS Tetap sama ========== -->
   <script src="main.js?v=7.5"></script>
-
-  <script>
-    // Tampilkan nama admin
-    const user = getSession();
-    if (user) document.getElementById("adminName").textContent = user.nama.toUpperCase();
-  </script>
 
 </body>
 </html>
