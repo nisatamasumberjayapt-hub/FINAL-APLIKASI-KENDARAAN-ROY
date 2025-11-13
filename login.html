@@ -26,40 +26,36 @@ body {
   padding: 35px 30px;
   width: min(90vw, 370px);
   text-align: center;
+  position: relative;
   backdrop-filter: blur(10px);
   animation: fadeIn 0.6s ease;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==== TITLE LOVE ==== */
-.title-love {
+h2 {
   font-size: 22px;
-  font-weight: 600;
+  margin-bottom: 6px;
+  color: #1b1b1b;
   text-transform: uppercase;
-  position: relative;
-  padding-left: 32px;
+  font-weight: 600;
   letter-spacing: 1px;
 }
-.title-love::before {
+h2::before {
   content: "❤️";
-  position: absolute;
-  left: 0;
-  top: -2px;
-  font-size: 20px;
-  animation: beatLove 1.3s infinite;
+  display: inline-block;
+  animation: beat 1.3s infinite;
+  margin-right: 6px;
 }
-@keyframes beatLove {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 .subtitle { color: #444; margin-bottom: 25px; }
 
-/* ==== INPUT ==== */
 .input-group { position: relative; margin-bottom: 15px; }
 input {
   width: 100%;
@@ -67,13 +63,13 @@ input {
   border: 1px solid #ccc;
   border-radius: 10px;
   outline: none;
+  font-size: 14px;
   transition: 0.2s;
 }
 input:focus {
   border-color: #2b7cff;
   box-shadow: 0 0 8px rgba(43,124,255,0.3);
 }
-
 .toggle-pass {
   position: absolute;
   right: 10px;
@@ -91,12 +87,15 @@ input:focus {
   color: white;
   font-weight: bold;
   cursor: pointer;
+  font-size: 15px;
   transition: 0.25s;
   box-shadow: 0 3px 8px rgba(27,110,42,0.3);
 }
 #btnLogin:hover { background: #13561f; }
+a { color: #1b6e2a; text-decoration: none; font-weight: 500; }
+a:hover { text-decoration: underline; }
 
-/* ===== LOADING ANIMATION ===== */
+/* ===== LOADING SCENE ===== */
 #loadingOverlay {
   position: fixed;
   inset: 0;
@@ -105,57 +104,61 @@ input:focus {
   align-items: center;
   justify-content: center;
   z-index: 999;
+  overflow: hidden;
 }
 
+/* WRAPPER */
 .scene-wrap {
   width: 100%;
-  max-width: 1100px;
   height: 70vh;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-/* MONYET BESAR – penjaga jalan */
+/* MONYET BESAR — penjaga jalan */
 #monkeyBig {
-  width: 310px;
+  width: 330px;
   position: absolute;
-  right: 11vw;
-  top: 20vh;
-  z-index: 30;
+  right: 7vw;
+  top: 19vh;
+  z-index: 20; /* belakang jalan dan motor */
   animation: monkeyBreath 3s ease-in-out infinite;
 }
 @keyframes monkeyBreath {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
 }
 
 /* JALAN */
 .road {
   position: absolute;
   bottom: 22vh;
-  left: 18%;
-  right: 18%;
-  height: 8px;
+  left: 9%;
+  width: 60%;
+  height: 10px;
   background: #eef3fb;
-  border-radius: 6px;
-  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.04);
+  border-radius: 14px;
+  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.05);
+  z-index: 30;
 }
 
 /* MOTOR */
 .motor-group {
   position: absolute;
-  bottom: calc(22vh - 15px);
-  left: 18%;
+  bottom: calc(22vh - 20px);
+  left: 9%;
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 40; /* paling depan */
 }
 .motor-group img {
-  width: 90px;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+  width: 95px;
+  height: auto;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
 }
 .motor-label {
   font-weight: 600;
@@ -164,73 +167,78 @@ input:focus {
 
 /* ANIMASI MOTOR */
 .driving {
-  animation: driveFull 4.3s ease-in-out forwards;
+  animation: driveFull 4s ease-in-out forwards;
 }
-
 @keyframes driveFull {
   0% { transform: translateX(0); }
-  50% { transform: translateX(42vw); }
-  100% { transform: translateX(53vw); }
+  60% { transform: translateX(45vw); }
+  100% { transform: translateX(47vw); } /* berhenti sebelum monyet besar */
 }
 
-/* MASUK PORTAL */
+/* PORTAL */
 .enter-portal {
-  animation: enterPortal 1.1s ease forwards;
+  animation: enterPortal 1.2s ease forwards;
 }
 @keyframes enterPortal {
-  to { opacity: 0; transform: translateX(58vw) scale(.8); }
+  0% { opacity: 1; transform: translateX(47vw) scale(1); }
+  100% { opacity: 0; transform: translateX(55vw) scale(.8); }
 }
 
 /* GAGAL LOGIN */
 .spin-fail {
-  animation: spinFail 1s linear infinite;
+  animation: spinFail 1.3s linear infinite;
 }
 @keyframes spinFail {
-  to { transform: translateX(50vw) rotate(360deg); }
+  0% { transform: translateX(47vw) rotate(0); }
+  100% { transform: translateX(47vw) rotate(360deg); }
 }
 
+/* ASEP */
 .smoke {
   position: absolute;
-  bottom: calc(22vh + 5px);
-  left: calc(50vw + 18px);
+  bottom: calc(22vh + 10px);
+  left: calc(47vw + 20px);
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgba(100,100,100,0.3);
-  filter: blur(3px);
+  background: rgba(120,120,120,0.25);
+  filter: blur(2px);
   opacity: 0;
+  z-index: 41;
 }
-.smoke.s1 { animation: smoke1 1.2s ease forwards; }
-.smoke.s2 { animation: smoke2 1.5s ease forwards 0.2s; }
-
+.smoke.s1 { animation: smoke1 1.3s ease forwards; }
+.smoke.s2 { animation: smoke2 1.6s ease forwards; }
 @keyframes smoke1 {
-  0% { opacity: 0; transform: translateY(0) scale(.6); }
-  20% { opacity: .8; }
+  0% { opacity: 0; transform: translateY(0) scale(.7); }
+  30% { opacity: 1; }
   100% { opacity: 0; transform: translateY(-40px) scale(1.4); }
 }
 @keyframes smoke2 {
-  0% { opacity: 0; transform: translateY(0) scale(.7); }
-  20% { opacity: .9; }
-  100% { opacity: 0; transform: translateY(-55px) scale(1.6); }
+  0% { opacity: 0; transform: translateY(0) scale(.6); }
+  40% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
 }
+
+.overlay-fade { animation: overlayFade 0.9s ease forwards; }
+@keyframes overlayFade { from { opacity:1; } to { opacity:0; } }
 
 </style>
 </head>
 
 <body>
 
-<!-- ===================== FORM LOGIN ===================== -->
+<!-- FORM LOGIN -->
 <div class="card" id="loginCard">
-  <h2 class="title-love">PT ANISA JAYA UTAMA</h2>
+  <h2>PT ANISA JAYA UTAMA</h2>
   <div class="subtitle">Login Pengguna</div>
 
   <div class="input-group">
     <input type="text" id="username" placeholder="Username" />
   </div>
-  
+
   <div class="input-group">
     <input type="password" id="password" placeholder="Password" />
-    <span id="togglePass" class="toggle-pass">👁️</span>
+    <span class="toggle-pass" id="togglePass">👁️</span>
   </div>
 
   <button id="btnLogin">Masuk</button>
@@ -240,16 +248,15 @@ input:focus {
   </p>
 </div>
 
-<!-- ===================== LOADING ANIMATION ===================== -->
+<!-- ANIMASI LOADING -->
 <div id="loadingOverlay">
   <div class="scene-wrap">
-    <img id="monkeyBig" src="assets/monyet_mikir.png">
-
+    <img id="monkeyBig" src="assets/monyet_mikir.png" />
     <div class="road"></div>
 
     <div class="motor-group" id="motorGroup">
-      <img id="motorImg" src="assets/monyet_motor.png">
-      <div class="motor-label">kamu otw 👉</div>
+      <img id="motorImg" src="assets/monyet_motor.png" />
+      <div class="motor-label" id="motorLabel">kamu otw 👉</div>
     </div>
 
     <div class="smoke" id="smoke1"></div>
@@ -258,9 +265,11 @@ input:focus {
 </div>
 
 <script>
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
 
+const btn = document.getElementById("btnLogin");
+const toggle = document.getElementById("togglePass");
+const pass = document.getElementById("password");
 const card = document.getElementById("loginCard");
 const overlay = document.getElementById("loadingOverlay");
 const monkeyBig = document.getElementById("monkeyBig");
@@ -268,61 +277,49 @@ const motorGroup = document.getElementById("motorGroup");
 const smoke1 = document.getElementById("smoke1");
 const smoke2 = document.getElementById("smoke2");
 
-function setSession(u){
-  try{ localStorage.setItem("aj_user", JSON.stringify(u)); }catch{}
+toggle.onclick = () => {
+  pass.type = pass.type === "password" ? "text" : "password";
+  toggle.textContent = pass.type === "text" ? "🙈" : "👁️";
+};
+
+function setSession(u) {
+  try { localStorage.setItem("aj_user", JSON.stringify(u)); } catch {}
 }
 
-async function api(action, payload={}){
-  try{
-    const res = await fetch(API_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body:JSON.stringify({action, ...payload})
+async function api(action, payload = {}) {
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload })
     });
     return await res.json();
   } catch {
-    return { success:false };
+    return { success: false };
   }
 }
 
-/* ============= PASSWORD TOGGLE ============= */
-document.getElementById("togglePass").onclick = () => {
-  const p = document.getElementById("password");
-  p.type = p.type === "password" ? "text" : "password";
-};
-
-/* ============= SHOW LOADING ============= */
-function showOverlay(){
+function showOverlay() {
   card.style.display = "none";
   overlay.style.display = "flex";
+
   monkeyBig.src = "assets/monyet_mikir.png";
-
-  smoke1.className = "smoke";
-  smoke2.className = "smoke";
-
   motorGroup.classList.remove("driving","enter-portal","spin-fail");
-  motorGroup.style.transform = "translateX(0)";
 
-  setTimeout(()=>{
-    motorGroup.classList.add("driving");
-  },150);
+  setTimeout(()=> motorGroup.classList.add("driving"), 150);
 }
 
-/* ============= LOGIN SUKSES ============= */
-function loginSuccess(user){
+function handleSuccess(user) {
   monkeyBig.src = "assets/monyet_senang.png";
-
-  motorGroup.classList.remove("driving");
-  motorGroup.classList.add("enter-portal");
-
-  setTimeout(()=>{
+  setTimeout(()=> motorGroup.classList.add("enter-portal"), 700);
+  setTimeout(()=> overlay.classList.add("overlay-fade"), 1200);
+  setTimeout(()=> {
     setSession(user);
     window.location.href = "dashboard.html";
-  },1400);
+  }, 1600);
 }
 
-/* ============= LOGIN GAGAL ============= */
-function loginFail(){
+function handleFail() {
   monkeyBig.src = "assets/monyet_salah.png";
 
   motorGroup.classList.remove("driving");
@@ -331,28 +328,28 @@ function loginFail(){
   smoke1.classList.add("s1");
   smoke2.classList.add("s2");
 
-  setTimeout(()=>{
-    overlay.style.display="none";
-    card.style.display="block";
-  },2300);
+  setTimeout(() => {
+    overlay.style.display = "none";
+    card.style.display = "block";
+
+    motorGroup.classList.remove("spin-fail");
+    smoke1.classList.remove("s1");
+    smoke2.classList.remove("s2");
+  }, 2600);
 }
 
-/* ============= LOGIN BUTTON ============= */
-document.getElementById("btnLogin").onclick = async () => {
+btn.onclick = async () => {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if(!username || !password){
-    alert("Isi username dan password!");
-    return;
-  }
+  if (!username || !password) return alert("Isi username dan password!");
 
   showOverlay();
 
-  const res = await api("login",{ username,password });
+  const res = await api("login", { username, password });
 
-  if(res.success) loginSuccess(res.user);
-  else loginFail();
+  if (res.success) setTimeout(()=> handleSuccess(res.user), 900);
+  else setTimeout(()=> handleFail(), 1300);
 };
 </script>
 
