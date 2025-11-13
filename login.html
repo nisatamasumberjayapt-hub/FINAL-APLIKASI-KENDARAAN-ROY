@@ -1,240 +1,408 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - PT ANISA JAYA UTAMA</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-/* ===================== GLOBAL ===================== */
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
-body{
-  background:linear-gradient(180deg,#f1f6ff,#dbe7ff);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+/* ---------- Reset & dasar ---------- */
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+html,body { height:100%; margin:0; }
+
+/* ---------- Latar ---------- */
+body {
+  background: linear-gradient(180deg, #f1f6ff 0%, #dbe7ff 100%);
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
 }
 
-/* ===================== LOGIN CARD ===================== */
-.card{
-  background:rgba(255,255,255,0.9);
-  width:350px;
-  padding:30px 28px;
-  border-radius:18px;
-  text-align:center;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-  animation:fadeIn .4s ease;
+/* ---------- Card Login ---------- */
+.card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 0 12px rgba(0,100,255,0.05);
+  padding: 34px 32px;
+  width: min(92vw, 400px);
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(15px);}
-  to{opacity:1;transform:translateY(0);}
+h2 { font-size:20px; margin:0 0 6px; letter-spacing:1px; text-transform:uppercase; }
+.subtitle { color:#444; margin-bottom:20px; font-size:14px; }
+
+.input-group { position: relative; margin-bottom:14px; }
+input {
+  width:100%; padding:12px 14px; border-radius:10px;
+  border:1px solid #d0d7df; outline:none; font-size:14px;
+  transition: 0.18s;
+}
+input:focus { border-color:#2b7cff; box-shadow:0 0 8px rgba(43,124,255,0.12); }
+
+.toggle-pass { position:absolute; right:12px; top:10px; cursor:pointer; font-size:18px; }
+
+/* tombol */
+#btnLogin {
+  width:100%; padding:12px; border:none; border-radius:10px;
+  background:#196a2a; color:white; font-weight:700; cursor:pointer;
+  font-size:15px; box-shadow: 0 4px 12px rgba(25,106,42,0.18);
+}
+#btnLogin:hover { background:#13561f; }
+
+/* link */
+a { color:#196a2a; text-decoration:none; font-weight:600; }
+a:hover { text-decoration:underline; }
+
+/* ---------- LOADING OVERLAY / SCENE ---------- */
+#loadingOverlay {
+  position: fixed; inset:0; display:none; align-items:center; justify-content:center;
+  z-index:999; background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(241,246,255,0.95));
+  overflow:hidden;
 }
 
-.card h2{
-  font-size:22px;
-  margin-bottom:8px;
-  letter-spacing:1px;
-}
-.card h2::before{
-  content:"❤️";
-  margin-right:6px;
-  animation:beat 1.2s infinite;
-}
-@keyframes beat{
-  50%{transform:scale(1.25);}
+/* scene wrap area */
+.scene-wrap {
+  width: min(96vw,1200px);
+  height: min(78vh,620px);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
 }
 
-.subtitle{
-  font-size:14px;
-  color:#555;
-  margin-bottom:25px;
+/* jalan - kombinasi: lembut + marka putus-putus */
+.road {
+  position:absolute; left:5%; right:5%; bottom:22%;
+  height:56px; border-radius:40px;
+  background: linear-gradient(180deg,#f6f9ff 0%, #eef4ff 100%);
+  box-shadow: inset 0 -6px 16px rgba(0,0,0,0.03), 0 8px 30px rgba(0,0,0,0.06);
+  z-index:12; display:flex; align-items:center; justify-content:center;
+}
+.road .lane {
+  width:92%; height:6px; border-radius:3px; background:linear-gradient(90deg,#f1f3f8,#e9eef8);
+  position:relative;
+}
+.road .markings {
+  position:absolute; width:92%; height:6px; display:flex; align-items:center;
+  justify-content:space-between; pointer-events:none;
+}
+.road .mark { width:7%; height:4px; background:white; opacity:0.7; border-radius:2px; }
+
+/* monyet penjaga - kanan, besar */
+#monkeyBig {
+  position:absolute; right:9%; bottom:33%;
+  width:290px; max-width:28vw; z-index:40;
+  transform-origin:center bottom;
+  transition: transform .4s ease;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.12));
+}
+/* shadow kecil di bawah monyet besar */
+.monkey-shadow {
+  position:absolute; right:15%; bottom:29%;
+  width:200px; height:36px; border-radius:50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.25), rgba(0,0,0,0));
+  filter: blur(8px); opacity:0.28; z-index:35;
+  transform-origin:center;
 }
 
-.input-group{position:relative;margin-bottom:16px;}
-.input-group input{
-  width:100%;
-  padding:12px 14px;
-  border:1.4px solid #ccc;
-  border-radius:10px;
-  font-size:14px;
+/* motor group - start center-left */
+.motor-group {
+  position:absolute; left:22%; bottom: calc(22% - 36px);
+  display:flex; align-items:center; gap:10px; z-index:38;
+  transform: translateX(0);
+  transition: transform 0.6s ease;
 }
-.input-group input:focus{
-  border-color:#3085fe;
-  box-shadow:0 0 6px rgba(48,133,254,0.4);
+.motor-group img { width:108px; height:auto; filter: drop-shadow(0 10px 14px rgba(0,0,0,0.12)); }
+
+/* label kecil */
+.motor-label { font-weight:700; color:#0b4d1b; }
+
+/* bayangan motor */
+.motor-shadow {
+  position:absolute; left:24%; bottom: calc(22% - 52px);
+  width:120px; height:22px; border-radius:50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.28), rgba(0,0,0,0));
+  filter: blur(6px); opacity:0.28; z-index:28;
 }
 
-.toggle-pass{
-  position:absolute;
-  right:10px;top:10px;
-  cursor:pointer;
-  font-size:18px;
+/* gerak motor (driving) — kita kunci jarak supaya sampai ke kanan monyet */
+.driving {
+  animation: driveForward var(--drive-time, 2.4s) cubic-bezier(.22,.9,.32,1) forwards;
+}
+@keyframes driveForward {
+  0% { transform: translateX(0) }
+  40% { transform: translateX(28vw) translateY(-2px) scale(1.02) }
+  80% { transform: translateX(48vw) translateY(-1px) scale(1.00) }
+  100% { transform: translateX(50.5vw) translateY(0) scale(0.98) } /* mendekati monyet kanan */
 }
 
-/* ===================== LOGIN BUTTON ===================== */
-#btnLogin{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#16792c;
-  color:#fff;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 4px 10px rgba(22,121,44,0.4);
-  transition:.2s;
+/* enter portal (sukses) */
+.enter-portal {
+  animation: enterPortal 0.9s ease forwards;
 }
-#btnLogin:hover{background:#0f5c20;}
-
-.card a{color:#16792c;font-weight:600;text-decoration:none;}
-.card a:hover{text-decoration:underline;}
-
-/* ===================== STABLE LOADING ANIMATION ===================== */
-#loading{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(180deg,#ffffff,#f1f6ff);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+@keyframes enterPortal {
+  0% { opacity:1; transform: translateX(50.5vw) scale(1) rotate(0deg) }
+  100% { opacity:0; transform: translateX(55vw) scale(.6) rotate(8deg) }
 }
 
-.load-wrap{
-  text-align:center;
-  animation:fadeIn .5s ease;
+/* spin / jatuh saat gagal */
+.spin-fail {
+  animation: spinFail 0.9s cubic-bezier(.2,.9,.3,1) forwards;
+}
+@keyframes spinFail {
+  0% { transform: translateX(48vw) rotate(0deg) translateY(0) }
+  40% { transform: translateX(49.5vw) rotate(-10deg) translateY(-6px) }
+  100% { transform: translateX(49vw) rotate(18deg) translateY(40px) }
 }
 
-#monkey{
-  width:250px;
-  animation:float 3s infinite ease-in-out;
+/* asap */
+.smoke {
+  position:absolute; width:18px; height:18px; border-radius:50%;
+  background: rgba(120,120,120,0.24); filter:blur(2px); opacity:0;
+  z-index:37; bottom: calc(22% - 30px);
+}
+.s1 { animation: smoke1 1.2s ease forwards; left:calc(50vw + 20px); }
+.s2 { animation: smoke2 1.6s ease forwards; left:calc(50vw + 36px); }
+@keyframes smoke1 {
+  0% { opacity:0; transform:translateY(0) scale(.6) }
+  20% { opacity:1 }
+  100% { opacity:0; transform:translateY(-60px) scale(1.3) }
+}
+@keyframes smoke2 {
+  0% { opacity:0; transform:translateY(0) scale(.7) }
+  10% { opacity:.9 }
+  100% { opacity:0; transform:translateY(-75px) scale(1.5) }
 }
 
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
+/* portal graphic (optional) */
+.portal {
+  position:absolute; right:12%; bottom:31%;
+  width:80px; height:80px; z-index:36; opacity:0;
+  transition: opacity .25s ease;
 }
 
-#motor{
-  width:140px;
-  margin-top:-15px;
-  animation:drive 2.4s ease forwards;
-}
-@keyframes drive{
-  0%{transform:translateX(-40px);}
-  100%{transform:translateX(40px);}
-}
+/* overlay fade out class */
+.overlay-fade { animation: overlayFade .7s ease forwards; }
+@keyframes overlayFade { to { opacity:0 } }
 
-.load-text{
-  margin-top:8px;
-  font-weight:600;
-  color:#0053b8;
-  animation:fadeBlink 1.6s infinite;
-}
-@keyframes fadeBlink{
-  0%,100%{opacity:1;}
-  50%{opacity:0.4;}
+/* responsive */
+@media (max-width:700px) {
+  #monkeyBig { width:220px; right:6%; bottom:38%; }
+  .motor-group img { width:78px; }
+  .road { bottom:20%; height:48px; }
+  .motor-group { left:14%; }
+  .motor-shadow { left:16%; }
+  .scene-wrap { height:54vh; }
 }
 </style>
 </head>
-
 <body>
 
-<!-- ================= LOGIN FORM ================= -->
-<div class="card" id="formCard">
+<!-- ---------- FORM LOGIN ---------- -->
+<div class="card" id="loginCard" role="dialog" aria-label="Login">
   <h2>PT ANISA JAYA UTAMA</h2>
   <div class="subtitle">Login Pengguna</div>
 
   <div class="input-group">
-    <input type="text" id="username" placeholder="Username">
+    <input id="username" type="text" placeholder="Username" autocomplete="username" />
   </div>
 
   <div class="input-group">
-    <input type="password" id="password" placeholder="Password">
-    <span class="toggle-pass" id="togglePass">👁️</span>
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+    <span class="toggle-pass" id="togglePass" title="Tampilkan / sembunyikan">👁️</span>
   </div>
 
   <button id="btnLogin">Masuk</button>
 
-  <p style="margin-top:10px;">Belum punya akun?
-    <a href="register.html">Daftar di sini</a>
-  </p>
+  <p style="margin-top:12px; font-size:14px;">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 </div>
 
-<!-- ================= LOADING STABIL ================= -->
-<div id="loading">
-  <div class="load-wrap">
-    <img id="monkey" src="assets/monyet_mikir.png" alt="monyet">
-    <div>
-      <img id="motor" src="assets/monyet_motor.png">
+<!-- ---------- LOADING OVERLAY (scene) ---------- -->
+<div id="loadingOverlay" aria-hidden="true">
+  <div class="scene-wrap" id="sceneWrap" aria-hidden="true">
+
+    <!-- Jalan -->
+    <div class="road" aria-hidden="true">
+      <div class="lane"></div>
+      <div class="markings" aria-hidden="true">
+        <!-- multiple marks -->
+        <div class="mark"></div><div class="mark"></div><div class="mark"></div><div class="mark"></div>
+        <div class="mark"></div><div class="mark"></div><div class="mark"></div><div class="mark"></div>
+        <div class="mark"></div><div class="mark"></div>
+      </div>
     </div>
-    <div class="load-text">Sedang masuk...</div>
+
+    <!-- motor + label -->
+    <div class="motor-group" id="motorGroup" aria-hidden="true">
+      <img id="motorImg" src="assets/monyet_motor.png" alt="monyet naik motor" />
+      <div class="motor-label" id="motorLabel">kamu otw 👉</div>
+    </div>
+    <div class="motor-shadow" id="motorShadow" aria-hidden="true"></div>
+
+    <!-- portal (visual when success) -->
+    <img src="assets/portal.png" alt="portal" class="portal" id="portalImg" />
+
+    <!-- monyet besar (penjaga) kanan -->
+    <img id="monkeyBig" src="assets/monyet_mikir.png" alt="monyet mikir" />
+
+    <!-- shadow monyet -->
+    <div class="monkey-shadow"></div>
+
+    <!-- smoke -->
+    <div class="smoke" id="smoke1"></div>
+    <div class="smoke" id="smoke2"></div>
+
+    <!-- (hidden) text status under motor -->
+    <div style="position:absolute; bottom:16%; left:50%; transform:translateX(-50%); color:#2b6fb8; font-weight:600;" id="statusText">Sedang masuk...</div>
   </div>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
+/* ========= Konfigurasi API ========= */
+const API_URL = "https://script.google.com/macros/s/AKfycbwAH7TUpCMajOE3Mtuz0ELcsXVurKQkFz2e5vPVVf4IT4JPHhoErMvO9A-i0A4cGB4q/exec";
 
-function setSession(u){
-  localStorage.setItem("aj_user",JSON.stringify(u));
-}
+/* ========= Elemen penting ========= */
+const btnLogin = document.getElementById('btnLogin');
+const toggle = document.getElementById('togglePass');
+const passEl = document.getElementById('password');
+const card = document.getElementById('loginCard');
 
-async function api(action, payload={}){
-  try{
-    const res=await fetch(API_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body:JSON.stringify({action,...payload})
+const overlay = document.getElementById('loadingOverlay');
+const motorGroup = document.getElementById('motorGroup');
+const motorImg = document.getElementById('motorImg');
+const motorShadow = document.getElementById('motorShadow');
+const monkeyBig = document.getElementById('monkeyBig');
+const portalImg = document.getElementById('portalImg');
+const smoke1 = document.getElementById('smoke1');
+const smoke2 = document.getElementById('smoke2');
+const statusText = document.getElementById('statusText');
+
+function setSession(u){ try{ localStorage.setItem('aj_user', JSON.stringify(u)); }catch(e){} }
+
+/* ========= helper API ========= */
+async function api(action, payload = {}) {
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload }),
     });
-    return await res.json();
-  }catch(e){
-    return{success:false};
+    const text = await res.text();
+    try { return JSON.parse(text); } catch(e){ return { success:false, message:"Invalid server response"}; }
+  } catch (err) {
+    return { success:false, message:"Gagal menghubungi server" };
   }
 }
 
-/* SHOW/HIDE LOADING */
-function showLoading(){
-  document.getElementById("formCard").style.display="none";
-  document.getElementById("loading").style.display="flex";
+/* ========= toggle password ========= */
+toggle.addEventListener('click', () => {
+  if (passEl.type === 'password') { passEl.type = 'text'; toggle.textContent='🙈'; }
+  else { passEl.type = 'password'; toggle.textContent='👁️'; }
+});
+
+/* ========= tampilkan overlay & reset scene ========= */
+function showOverlay() {
+  // hide login card
+  card.style.display = 'none';
+  overlay.style.display = 'flex';
+  overlay.classList.remove('overlay-fade');
+
+  // reset visuals
+  monkeyBig.src = 'assets/monyet_mikir.png';
+  monkeyBig.style.transform = 'scale(1)';
+
+  portalImg.style.opacity = 0;
+  statusText.textContent = 'Sedang masuk...';
+
+  // reset motor position & classes
+  motorGroup.classList.remove('driving','enter-portal','spin-fail');
+  motorGroup.style.transform = 'translateX(0)';
+
+  // shadow initial
+  motorShadow.style.opacity = 1;
+
+  // hide smoke
+  smoke1.className = 'smoke';
+  smoke2.className = 'smoke';
+
+  // small delay then start drive
+  motorGroup.style.setProperty('--drive-time','2.6s');
+  setTimeout(()=> motorGroup.classList.add('driving'), 120);
 }
-function hideLoading(){
-  document.getElementById("loading").style.display="none";
-  document.getElementById("formCard").style.display="block";
+
+/* ========= handle success ========= */
+function handleSuccess(user) {
+  // switch to happy monkey
+  monkeyBig.src = 'assets/monyet_senang.png';
+  statusText.textContent = `Selamat datang, ${user.nama || user.username || 'pengguna'}!`;
+
+  // motor enters portal. show portal and animate
+  portalImg.style.opacity = 1;
+  // stop driving class, start enter
+  motorGroup.classList.remove('driving');
+  setTimeout(()=> {
+    motorGroup.classList.add('enter-portal');
+    // optional small visual: shrink shadow
+    motorShadow.style.transform = 'scaleX(.2)';
+    motorShadow.style.opacity = 0.12;
+  }, 220);
+
+  // finish: fade overlay, set session, redirect after short delay
+  setTimeout(()=> overlay.classList.add('overlay-fade'), 900);
+  setTimeout(()=> { setSession(user); window.location.href = 'dashboard.html'; }, 1400);
 }
 
-/* PASSWORD TOGGLE */
-document.getElementById("togglePass").onclick=()=>{
-  const p=document.getElementById("password");
-  if(p.type==="password"){ p.type="text"; togglePass.textContent="🙈"; }
-  else{ p.type="password"; togglePass.textContent="👁️"; }
-};
+/* ========= handle fail ========= */
+function handleFail() {
+  // monkey wrong
+  monkeyBig.src = 'assets/monyet_salah.png';
+  statusText.textContent = 'Login gagal — periksa username/password!';
+  // motor wobble then spin-fail (fall)
+  motorGroup.classList.remove('driving');
+  // small pause then spin
+  setTimeout(()=> {
+    motorGroup.classList.add('spin-fail');
+    // smoke
+    smoke1.classList.add('s1');
+    smoke2.classList.add('s2');
+  }, 300);
 
-/* LOGIN HANDLER */
-document.getElementById("btnLogin").onclick=async()=>{
-  const user=document.getElementById("username").value.trim();
-  const pass=document.getElementById("password").value.trim();
-  if(!user||!pass) return alert("Isi username dan password!");
+  // after animation show back login
+  setTimeout(()=> {
+    // reset scene and return to card
+    motorGroup.classList.remove('spin-fail','driving','enter-portal');
+    portalImg.style.opacity = 0;
+    smoke1.className = 'smoke';
+    smoke2.className = 'smoke';
+    overlay.style.display = 'none';
+    card.style.display = 'block';
+  }, 2000);
+}
 
-  showLoading();
+/* ========= Login click ========= */
+btnLogin.addEventListener('click', async () => {
+  const username = (document.getElementById('username').value || '').trim();
+  const password = (document.getElementById('password').value || '').trim();
+  if (!username || !password) { alert('Isi username dan password!'); return; }
 
-  const res=await api("login",{username:user,password:pass});
+  showOverlay();
 
-  if(res.success){
-    // beri setiap user emoji random (stabil)
-    const emojis=["🐵","🦊","🐯","🐼","🐨","🐸","🐧","🐤","🐰"];
-    res.user.emoji = emojis[Math.floor(Math.random()*emojis.length)];
-
-    setSession(res.user);
-    setTimeout(()=>location.href="dashboard.html", 1200);
-  }else{
-    alert("Username atau password salah!");
-    hideLoading();
+  try {
+    const res = await api('login', { username, password });
+    // small consistent delay for animation feel
+    if (res && res.success) {
+      // expecting res.user object
+      setTimeout(()=> handleSuccess(res.user || { username }), 900);
+    } else {
+      setTimeout(()=> handleFail(), 900);
+    }
+  } catch (err) {
+    setTimeout(()=> handleFail(), 900);
   }
-};
+});
+
+/* ========= Accessibility: Enter to submit ========= */
+document.getElementById('password').addEventListener('keypress', (e) => { if (e.key === 'Enter') btnLogin.click(); });
+document.getElementById('username').addEventListener('keypress', (e) => { if (e.key === 'Enter') btnLogin.click(); });
+
 </script>
-
 </body>
 </html>
