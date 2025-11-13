@@ -2,255 +2,287 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Manajemen User | PT ANISA JAYA UTAMA — BY ROY</title>
-  <link rel="stylesheet" href="styles.css" />
   <style>
-    body { font-family: "Poppins", sans-serif; background:#f6f9f6; margin:0; color:#123; }
-    header { background:#0c5d27; color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
-    header nav a { color:#fff; text-decoration:none; margin-left:16px; font-weight:500; }
-    header .user-info { display:flex; align-items:center; gap:8px; font-weight:600; }
-    main { max-width:1300px; margin:28px auto; padding:0 16px; }
-    .grid { display:grid; grid-template-columns:370px 1fr; gap:24px; }
-    .card { background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,.08); padding:20px; }
+    :root {
+      --accent:#0c5d27; --accent2:#13904a;
+      --danger:#c0392b; --warn:#f1c40f; --ok:#2ecc71;
+      --gray:#ddd; --soft:#f6faf7;
+    }
+    *{box-sizing:border-box;font-family:"Poppins",sans-serif;}
+    body{background:var(--soft);margin:0;color:#123;}
+    header{
+      background:var(--accent);color:#fff;padding:12px 18px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    header a{color:#fff;text-decoration:none;margin-left:16px;font-weight:500;}
+    #userInfo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;}
+    #userInfo span{font-size:22px;}
+    main{max-width:1400px;margin:38px auto;padding:0 20px;}
+    .grid{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:start;}
+    .card{
+      background:#fff;border-radius:14px;box-shadow:0 5px 15px rgba(0,0,0,.08);padding:26px;
+    }
+    h2{text-align:center;color:var(--accent);font-size:20px;margin-top:0;}
+    h2 span{margin-right:6px;font-size:22px;}
 
-    h2 { margin-top:0; color:#0b4d1b; text-align:center; text-transform:uppercase; }
-    label { display:block; font-weight:600; font-size:14px; margin:8px 0 4px; color:#0c5d27; }
-    input, select { width:100%; padding:9px 12px; border:1.4px solid #cdd9cd; border-radius:8px; }
-    input:focus, select:focus { outline:none; border-color:#0c5d27; box-shadow:0 0 4px rgba(12,93,39,.3); }
-
-    .username-row { display:flex; align-items:center; gap:6px; }
-    #usernameWarning { color:#c0392b; font-size:13px; display:none; font-weight:600; }
-
-    .row-btn { display:flex; gap:10px; margin-top:14px; justify-content:center; }
-    .btn { border:none; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; transition:0.2s; }
-    .btn-primary { background:#0c5d27; color:#fff; }
-    .btn-primary:hover { background:#137c36; }
-    .btn-cancel { background:#f1f1f1; color:#333; }
-    .btn-cancel:hover:not(:disabled) { background:#ddd; }
-    .btn-cancel:disabled { opacity:.5; cursor:not-allowed; }
-
-    .toolbar { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
-    #searchUser { flex:1; padding:10px 12px; border:1.5px solid #cdd9cd; border-radius:8px; }
-    #clearUserSearch { display:none; padding:6px 10px; border:none; border-radius:6px; background:#c0392b; color:#fff; cursor:pointer; }
-
-    table { width:100%; border-collapse:collapse; font-size:14px; table-layout:auto; }
-    th, td { padding:10px 14px; border-bottom:1px solid #e0ebe0; vertical-align:top; }
-    thead th { background:#0c5d27; color:#fff; text-align:left; }
-    tbody tr:hover { background:#f6fbf6; }
-
-    .btn-sm { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; font-size:13px; }
-    .btn-edit { background:#f1c40f; color:#000; }
-    .btn-delete { background:#c0392b; color:#fff; }
-
-    .avatar { font-size:28px; margin-right:4px; }
+    label{display:block;margin:12px 0 6px;font-weight:600;font-size:13.5px;color:#244;}
+    input,select{
+      width:100%;padding:11px 13px;border:1.6px solid #cdd9cd;
+      border-radius:8px;font-size:14px;transition:.2s;
+    }
+    input:disabled,select:disabled{background:#f9f9f9;opacity:.7;}
+    input:focus,select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(12,93,39,.1);}
+    .row-btn{display:flex;gap:12px;margin-top:20px;justify-content:center;}
+    .btn{
+      border:none;border-radius:8px;padding:11px 20px;font-weight:600;
+      cursor:pointer;transition:.2s;box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+    .btn-neutral{background:linear-gradient(135deg,#e0e0e0,#fafafa);color:#333;}
+    .btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none;}
+    .btn:hover{filter:brightness(1.1);}
+    #toast-container{
+      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+      z-index:9999;text-align:center;
+    }
+    .toast{
+      background:#fff;padding:14px 18px;border-radius:12px;
+      box-shadow:0 4px 18px rgba(0,0,0,0.15);
+      font-weight:600;min-width:250px;margin-top:8px;
+      animation:fadeIn .4s ease;
+    }
+    .toast.success{border-left:6px solid var(--ok);}
+    .toast.error{border-left:6px solid var(--danger);}
+    .toast.warn{border-left:6px solid var(--warn);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+    .search-wrap{position:relative;margin-bottom:14px;}
+    #searchInput{
+      width:100%;padding:11px 13px;border-radius:8px;
+      border:1.5px solid #dbe5dc;font-size:14px;
+    }
+    #clearSearch{
+      position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      background:#c0392b;color:#fff;border:none;border-radius:6px;
+      padding:3px 7px;cursor:pointer;font-size:13px;display:none;
+    }
+    #clearSearch:hover{background:#e74c3c;}
+    .table-wrap{max-height:560px;overflow:auto;border-radius:10px;
+      border:1px solid #e3eee3;box-shadow:inset 0 0 8px rgba(0,0,0,0.05);}
+    table{width:100%;border-collapse:collapse;font-size:14px;}
+    th,td{
+      padding:14px 18px;border-bottom:1px solid #e0ebe0;
+      text-align:left;white-space:nowrap;vertical-align:middle;
+    }
+    thead th{background:var(--accent);color:#fff;text-transform:uppercase;position:sticky;top:0;}
+    tbody tr:hover{background:#f9fcf9;}
+    .emoji-avatar{font-size:30px;text-align:center;width:45px;}
+    .action-btn{
+      border:none;border-radius:6px;padding:7px 11px;font-size:13px;
+      font-weight:600;cursor:pointer;
+    }
+    .edit{background:#f1c40f;color:#000;margin-right:6px;}
+    .del{background:var(--danger);color:#fff;}
+    .hint{font-size:12px;margin-top:4px;}
+    .warn-text{color:#e67e22;font-weight:600;}
+    .ok-text{color:#0c5d27;font-weight:600;}
   </style>
 </head>
-
 <body onload="initUserPage()">
   <header>
     <div><strong>👥 PT ANISA JAYA UTAMA — BY ROY</strong></div>
-    <div class="user-info" id="userInfo"></div>
-    <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="kendaraan.html">🚗 Kendaraan</a>
-      <a href="#" onclick="logout()">🔒 Logout</a>
-    </nav>
+    <div id="userInfo"></div>
   </header>
 
   <main>
     <div class="grid">
-      <!-- FORM -->
       <section class="card">
-        <h2>🧾 FORM USER</h2>
-
+        <h2><span>🧾</span>FORM USER</h2>
         <label>Username</label>
-        <div class="username-row">
-          <input type="text" id="username" placeholder="username unik" />
-          <span id="usernameWarning">⚠️ Sudah digunakan!</span>
-        </div>
-
-        <label>Password</label>
-        <input type="text" id="password" placeholder="password" />
-
-        <label>Role</label>
-        <select id="role">
-          <option value="user">user</option>
-          <option value="admin">admin</option>
-        </select>
+        <input id="username" type="text" placeholder="Masukkan username" disabled oninput="checkUsername()">
+        <div id="usernameHint" class="hint"></div>
 
         <label>Nama Lengkap</label>
-        <input type="text" id="nama" placeholder="nama lengkap" />
+        <input id="nama" type="text" placeholder="Masukkan nama lengkap" disabled>
+
+        <label>Password</label>
+        <input id="password" type="text" placeholder="Masukkan password" disabled>
+
+        <label>Peran</label>
+        <select id="role" disabled>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
 
         <div class="row-btn">
-          <button id="btnSave" class="btn btn-primary">💾 Simpan</button>
-          <button id="btnCancel" class="btn btn-cancel" disabled>❌ Batal</button>
+          <button id="btnPrimary" class="btn btn-primary" onclick="handlePrimaryClick()">➕ Tambah</button>
+          <button id="btnCancel" class="btn btn-neutral" onclick="handleCancel()" disabled>❌ Batal</button>
         </div>
       </section>
 
-      <!-- TABLE -->
       <section class="card">
-        <h2>📋 DAFTAR USER</h2>
-        <div class="toolbar">
-          <input id="searchUser" type="text" placeholder="🔍 Cari user / nama..." />
-          <button id="clearUserSearch">❌</button>
+        <h2><span>📋</span>DAFTAR USER</h2>
+        <div class="search-wrap">
+          <input id="searchInput" type="text" placeholder="🔍 Cari user (Username / Nama)">
+          <button id="clearSearch" title="Hapus pencarian">❌</button>
         </div>
-
-        <table id="tblUsers">
-          <thead>
-            <tr>
-              <th>AVATAR</th>
-              <th>USERNAME</th>
-              <th>ROLE</th>
-              <th>NAMA</th>
-              <th>AKSI</th>
-            </tr>
-          </thead>
-          <tbody><tr><td colspan="5" align="center">Memuat data...</td></tr></tbody>
-        </table>
+        <div class="table-wrap">
+          <table id="tblUser">
+            <thead>
+              <tr>
+                <th>🖼 AVATAR</th>
+                <th>👤 USERNAME</th>
+                <th>🪪 NAMA</th>
+                <th>🔑 PASSWORD</th>
+                <th>⚙️ ROLE</th>
+                <th>🛠 AKSI</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="6" align="center">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
       </section>
     </div>
   </main>
 
+  <div id="toast-container"></div>
   <script src="main.js?v=7.5"></script>
   <script>
-    let USER_DATA = [];
-    let USER_MODE = "add";
-    let USER_EDIT_OLD = "";
-
-    const $ = id => document.getElementById(id);
-    const EMOJIS = ["🐵","🐶","🐱","🦊","🐰","🐼","🐯","🐮","🐸","🐙","🐧","🦉","🐨","🐹","🦄"];
+    let MODE="view",DATA=[],EDIT_USER=null;
+    const $=id=>document.getElementById(id);
+    const AVATARS=["🐵","🦊","🐶","🐱","🐰","🐼","🐸","🐯","🦁","🐮","🐷","🐤","🦄","🐙","🐧","🐨"];
 
     function getAvatar(username){
-      // selalu pilih emoji tetap berdasarkan hash username
-      const hash = Array.from(username).reduce((a,c)=>a+c.charCodeAt(0),0);
-      return EMOJIS[hash % EMOJIS.length];
-    }
-
-    async function reloadUserList(){
-      const res = await api("getUsers");
-      const tbody = $("tblUsers").querySelector("tbody");
-      if(!res.success || !Array.isArray(res.data)){
-        tbody.innerHTML = `<tr><td colspan="5" align="center">Gagal memuat data</td></tr>`;
-        return;
+      const key="avatar_"+username;
+      let emoji=localStorage.getItem(key);
+      if(!emoji){
+        emoji=AVATARS[Math.floor(Math.random()*AVATARS.length)];
+        localStorage.setItem(key,emoji);
       }
-      USER_DATA = res.data;
-      renderUserTable(USER_DATA);
+      return emoji;
     }
 
-    function renderUserTable(rows){
-      const tbody = $("tblUsers").querySelector("tbody");
-      if(!rows.length){
-        tbody.innerHTML = `<tr><td colspan="5" align="center">Tidak ada data</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = rows.map(u => `
-        <tr>
-          <td><span class="avatar">${getAvatar(u.username)}</span></td>
-          <td>${u.username}</td>
-          <td>${u.role}</td>
-          <td>${u.nama}</td>
-          <td>
-            <button class="btn-sm btn-edit" onclick="editUser('${u.username}')">✏️ Edit</button>
-            <button class="btn-sm btn-delete" onclick="deleteUser('${u.username}')">🗑️ Hapus</button>
-          </td>
-        </tr>
-      `).join("");
+    function showToast(msg,type="info",dur=3000){
+      const box=document.createElement("div");
+      box.className="toast "+type;box.textContent=msg;
+      $("toast-container").appendChild(box);
+      setTimeout(()=>box.remove(),dur);
     }
 
-    async function saveUser(){
-      const username = $("username").value.trim();
-      const password = $("password").value.trim();
-      const role = $("role").value;
-      const nama = $("nama").value.trim();
-
-      if(!username || !password || !role || !nama)
-        return toast("Semua kolom wajib diisi!");
-
-      // cek duplikat username saat tambah
-      if(USER_MODE==="add" && USER_DATA.some(u=>u.username.toLowerCase()===username.toLowerCase())){
-        $("usernameWarning").style.display="inline";
-        return;
-      }
-
-      if(USER_MODE==="add"){
-        const res = await api("register",{username,password,nama});
-        toast(res.message);
-      }else{
-        const res = await api("updateUser",{oldUsername:USER_EDIT_OLD,username,password,role,nama});
-        toast(res.message);
-      }
-
-      await reloadUserList();
-      resetForm();
+    function setForm(disabled){
+      ["username","nama","password","role"].forEach(id=>$(id).disabled=disabled);
+      if(MODE==="edit")$("username").setAttribute("readonly","readonly");else $("username").removeAttribute("readonly");
+    }
+    function clearForm(){["username","nama","password"].forEach(id=>$(id).value="");$("role").value="user";$("usernameHint").textContent="";}
+    function syncBtn(){
+      const p=$("btnPrimary"),c=$("btnCancel");
+      if(MODE==="view"){p.textContent="➕ Tambah";c.disabled=true;}
+      if(MODE==="add"){p.textContent="💾 Simpan";c.disabled=false;}
+      if(MODE==="edit"){p.textContent="📝 Update";c.disabled=false;}
     }
 
-    function editUser(username){
-      const u = USER_DATA.find(x=>x.username===username);
-      if(!u) return toast("User tidak ditemukan!");
-
-      USER_MODE="edit";
-      USER_EDIT_OLD=username;
-      $("username").value=u.username;
-      $("username").setAttribute("disabled","disabled");
-      $("password").value=u.password||"";
-      $("role").value=u.role;
-      $("nama").value=u.nama;
-      $("btnCancel").disabled=false;
-      $("btnSave").textContent="✅ Update";
-    }
-
-    async function deleteUser(username){
-      if(!confirm(`Hapus user '${username}'?`)) return;
-      const res = await api("deleteUser",{username});
-      toast(res.message);
-      await reloadUserList();
-    }
-
-    function resetForm(){
-      USER_MODE="add";
-      USER_EDIT_OLD="";
-      $("username").removeAttribute("disabled");
-      ["username","password","nama"].forEach(id=>$(`${id}`).value="");
-      $("role").value="user";
-      $("btnCancel").disabled=true;
-      $("btnSave").textContent="💾 Simpan";
-      $("usernameWarning").style.display="none";
-    }
-
-    function initSearchUser(){
-      const input=$("searchUser");
-      const clearBtn=$("clearUserSearch");
-      input.addEventListener("input",()=>{
-        const val=input.value.toLowerCase();
-        const filtered=USER_DATA.filter(u=>u.username.toLowerCase().includes(val)||u.nama.toLowerCase().includes(val));
-        renderUserTable(filtered);
-        clearBtn.style.display=val?"inline-block":"none";
-      });
-      clearBtn.addEventListener("click",()=>{input.value="";input.dispatchEvent(new Event("input"));});
+    function showUserInfo(){
+      const u=getSession();
+      if(u){$("userInfo").innerHTML=`<span>${getAvatar(u.username)}</span>${u.nama} | <a href="login.html" style="color:#fff;">🔒 Logout</a>`;}
     }
 
     async function initUserPage(){
-      const user=getSession();
-      if(!user){location.href="login.html";return;}
-      if(user.role!=="admin"){
-        toast("🚫 Hanya admin yang bisa mengakses halaman ini!");
-        setTimeout(()=>location.href="dashboard.html",1500);
-        return;
-      }
-
-      // tampilkan info login
-      $("userInfo").innerHTML = `${getAvatar(user.username)} ${user.nama} (${user.role})`;
-
-      $("btnSave").addEventListener("click",saveUser);
-      $("btnCancel").addEventListener("click",resetForm);
-      $("username").addEventListener("input",()=>{
-        const val=$("username").value.trim().toLowerCase();
-        $("usernameWarning").style.display=USER_DATA.some(u=>u.username.toLowerCase()===val)?"inline":"none";
-      });
-      initSearchUser();
-      await reloadUserList();
+      const u=getSession();if(!u)return location.href="login.html";
+      showUserInfo();
+      $("searchInput").addEventListener("input",filter);
+      $("clearSearch").addEventListener("click",()=>{$("searchInput").value="";filter();});
+      setForm(true);syncBtn();await loadData();
     }
+
+    async function loadData(){
+      const tb=document.querySelector("#tblUser tbody");
+      tb.innerHTML=`<tr><td colspan=6 align=center>Memuat data...</td></tr>`;
+      const res=await api("getUsers");
+      if(!res.success){tb.innerHTML=`<tr><td colspan=6 align=center>Gagal memuat data</td></tr>`;return;}
+      DATA=res.data;
+      render(DATA);
+    }
+
+    function render(list){
+      const tb=document.querySelector("#tblUser tbody");
+      tb.innerHTML=list.map(u=>`
+        <tr>
+          <td class="emoji-avatar">${getAvatar(u.username)}</td>
+          <td><b>${u.username}</b></td>
+          <td>${u.nama}</td>
+          <td>${u.password}</td>
+          <td>${u.role}</td>
+          <td>
+            <button class="action-btn edit" onclick="editData('${encodeURIComponent(u.username)}')">✏️ Edit</button>
+            <button class="action-btn del" onclick="hapusData('${encodeURIComponent(u.username)}')">🗑 Hapus</button>
+          </td>
+        </tr>`).join("")||`<tr><td colspan=6 align=center>Tidak ada data</td></tr>`;
+      filter();
+    }
+
+    function filter(){
+      const q=$("searchInput").value.toLowerCase();
+      const clear=$("clearSearch");
+      document.querySelectorAll("#tblUser tbody tr").forEach(r=>{
+        r.style.display=r.innerText.toLowerCase().includes(q)?"":"none";
+      });
+      clear.style.display=q?"block":"none";
+    }
+
+    function handleCancel(){MODE="view";setForm(true);clearForm();syncBtn();}
+    function enterAdd(){MODE="add";setForm(false);clearForm();syncBtn();$("username").focus();}
+
+    function editData(str){
+      const username=decodeURIComponent(str),u=DATA.find(x=>x.username===username);
+      if(!u)return showToast("User tidak ditemukan","error");
+      MODE="edit";setForm(false);EDIT_USER=u.username;
+      $("username").value=u.username;$("nama").value=u.nama;
+      $("password").value=u.password;$("role").value=u.role;
+      syncBtn();
+    }
+
+    async function handlePrimaryClick(){
+      if(MODE==="view")return enterAdd();
+      const username=$("username").value.trim(),nama=$("nama").value.trim(),
+            pass=$("password").value.trim(),role=$("role").value;
+      if(!username||!nama||!pass)return showToast("Semua kolom wajib diisi!","error");
+
+      if(MODE==="add"){
+        if(DATA.some(x=>x.username.toLowerCase()===username.toLowerCase()))return showToast("Username sudah digunakan","warn");
+        const r=await api("register",{username,nama,password:pass,role});
+        getAvatar(username);
+        showToast(r.message||"User disimpan",r.success?"success":"error");
+      }
+      if(MODE==="edit"){
+        const r=await api("updateUser",{username,nama,password:pass,role});
+        showToast(r.message||"User diupdate",r.success?"success":"error");
+      }
+      MODE="view";setForm(true);clearForm();syncBtn();await loadData();
+    }
+
+    async function hapusData(str){
+      const username=decodeURIComponent(str);
+      if(!confirm("Yakin ingin menghapus "+username+" ?"))return;
+      const r=await api("deleteUser",{username});
+      localStorage.removeItem("avatar_"+username);
+      showToast(r.message||"Dihapus",r.success?"success":"error");
+      if(r.success)await loadData();
+    }
+
+    function checkUsername(){
+      const v=$("username").value.trim().toLowerCase();
+      const hint=$("usernameHint");
+      if(!v){hint.textContent="";return;}
+      if(DATA.some(x=>x.username.toLowerCase()===v)){
+        hint.innerHTML="⚠️ <span class='warn-text'>Username sudah digunakan</span>";
+      }else{
+        hint.innerHTML="✅ <span class='ok-text'>Username tersedia</span>";
+      }
+    }
+
+    window.editData=editData;
+    window.hapusData=hapusData;
   </script>
 </body>
 </html>
